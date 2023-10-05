@@ -37,7 +37,7 @@
 											</div>
 
 											<div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-3">
-												<label for="agente" class="form-label font-weight-bold">Agente:</label>
+												<label for="agente" class="form-label font-weight-bold">Agente que atiende:</label>
 												<select class="form-control" id="agente" name="agente" required>
 													<option selected value="">Todos los agentes</option>
 													<?php foreach ($body_data->empleados as $index => $empleado) { ?>
@@ -129,7 +129,7 @@
 											<tr>
 												<td class="text-center font-weight-bold"><?= $banavim->FOLIOID . '/' . $banavim->ANO ?></td>
 												<td class="text-center"><?= $banavim->FECHAFIRMA ?  date("d/m/Y", strtotime($banavim->FECHAFIRMA)) : '' ?></td>
-												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid : '' ?></td>
+												<td class="text-center font-weight-bold"><?= $expedienteid ? $expedienteid . '/' . $banavim->TIPOEXPEDIENTECLAVE: '' ?></td>
 												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>
 												<td class="text-center"><?= $banavim->MUNICIPIODESCR ?></td>
 												<td class="text-center"><?= $banavim->NOMBRE_MP ?></td>
@@ -222,6 +222,7 @@
 				El reporte sera generado de acuerdo a la siguiente información<br>
 				<ul style="text-align:left;">
 						<li><span style="font-weight:bold;">Municipio:</span> <?= isset($body_data->filterParams->MUNICIPIONOMBRE) ? $body_data->filterParams->MUNICIPIONOMBRE : '' ?></li>
+						<li><span style="font-weight:bold;">Agente que atiende:</span> <?= isset($body_data->filterParams->AGENTENOMBRE) ? $body_data->filterParams->AGENTENOMBRE : '' ?></li>
 						<li><span style="font-weight:bold;">Fecha inicio:</span> <?= isset($body_data->filterParams->fechaInicio) ? $body_data->filterParams->fechaInicio : '' ?></li>
 						<li><span style="font-weight:bold;">Fecha cierre:</span> <?= isset($body_data->filterParams->fechaFin) ? $body_data->filterParams->fechaFin : '' ?></li>
 						<li><span style="font-weight:bold;">Hora inicio:</span> <?= isset($body_data->filterParams->horaInicio) ? $body_data->filterParams->horaInicio : '' ?></li>

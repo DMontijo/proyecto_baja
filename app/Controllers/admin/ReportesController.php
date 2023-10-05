@@ -3107,6 +3107,11 @@ class ReportesController extends BaseController
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
 		//Generacion del filtro
+		if (isset($data['AGENTEATENCIONID'])) {
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
+
 		if (isset($data['MUNICIPIOID'])) {
 			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
 			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
@@ -3156,7 +3161,7 @@ class ReportesController extends BaseController
 		}
 
 		//Generacion del filtro
-		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($data);
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion_banavim($data);
 
 		//Inicio del XLSX
 		$spreadSheet = new Spreadsheet();
@@ -3297,7 +3302,7 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A' . $row, $row-4);
 			$sheet->setCellValue('B' . $row, $banavim->FOLIOID);
 			$sheet->setCellValue('C' . $row, $this->formatFecha($banavim->FECHAFIRMA));
-			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID));
+			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID). '/' . $banavim->TIPOEXPEDIENTECLAVE);
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('F' . $row,  $banavim->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $banavim->NOMBRE_MP);

@@ -33,7 +33,7 @@
 										<td class="text-center"><?= $folio->NOMBRE ?> <?= $folio->APELLIDO_PATERNO ?> <?= $folio->APELLIDO_MATERNO ? $folio->APELLIDO_MATERNO : '' ?></td>
 										<!-- <td class="text-center"><?= $folio->STATUS ?></td> -->
 										<td class="text-center">
-											<a type="button" href="<?= base_url('/admin/dashboard/modulo-litigantes-consulta?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO  ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a>
+											<a type="button" href="<?= base_url('/admin/dashboard/denuncia-escrita?folio=') . $folio->FOLIOID . '&year=' . $folio->ANO  ?>" class="btn btn-primary text-white"><i class="fas fa-eye"></i></a>
 											<?php if (session('ROLID') == 1 || session('ROLID') == 6 || session('ROLID') == 7) { ?>
 
 											<button type="button" class="btn btn-primary"onclick='asignarAgente(<?=$folio->FOLIOID?>,<?=$folio->ANO?>)' ><i class="fas fa-user-tag"></i></button>
