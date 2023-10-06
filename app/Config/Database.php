@@ -86,7 +86,7 @@ class Database extends Config
 
 	public $development = [
 		'DSN'      => '',
-		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-ro-cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
 		'database' => 'litigantes',
@@ -117,10 +117,6 @@ class Database extends Config
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
 		'database' => 'litigantes',
-		// 'hostname' => 'localhost',
-		// 'username' => 'root',
-		// 'password' => '',
-		// 'database' => 'litigantes',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -146,7 +142,7 @@ class Database extends Config
 		'hostname' => 'database-video-denuncia-baja-california-instance-1-us-east-1b.cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
-		'database' => 'video_service',
+		'database' => 'litigantes',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
