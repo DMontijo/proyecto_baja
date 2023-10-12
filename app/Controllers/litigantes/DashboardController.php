@@ -1629,7 +1629,7 @@ class DashboardController extends BaseController
 			}
 			$data->status = "PENDIENTE";
 			$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
-		}else if ($folioData->STATUS == 'ABIERTO' && $countDocumentos == 2) {
+		}else if ($folioData->STATUS == 'ABIERTO' && ($countDocumentos == 2 || $countDocumentos == 1) ) {
 			$data->archivos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			if ($data->archivos) {
 				foreach ($data->archivos as $key => $archivos) {
@@ -1800,17 +1800,19 @@ class DashboardController extends BaseController
 		$dataFolio = [
 			'STATUS' => "ABIERTO",
 		];
-		$updateFolio = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
-		if ($updateFolio) {
-			//Insercion del archivo
-			$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
-			$url = "/denuncia_litigantes/dashboard/subir_documentos_folio?folio=" . $folio . "&year=" . $year;
+		//archivoExterno del archivo
+		$archivoExterno = $this->_folioExpArchivo($data, $folio, $year);
+		$url = "/denuncia_litigantes/dashboard/subir_documentos_folio?folio=" . $folio . "&year=" . $year;
+		if ($archivoExterno) {
+			$updateFolio = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 			// $url = "/denuncia_litigantes/dashboard/pantalla_final";
-			if ($archivoExterno) {
+			if ($updateFolio) {
 				return redirect()->to(base_url($url))->with('message_success', 'Se ha enviado tu documento.');
 			} else {
 				return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 			}
+		}else{
+			return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 		}
 	}
 	/**Funcion para que el agente pueda cambiar el poder actual de la persona moral */

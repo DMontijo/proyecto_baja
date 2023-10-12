@@ -741,7 +741,7 @@ class DashboardController extends BaseController
 		foreach ($data->usuario as $user) {
 			if ($user->MUNICIPIOSOFICINASID) {
 
-				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID,$user->MUNICIPIOSOFICINASID );
+				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID, $user->MUNICIPIOSOFICINASID);
 				$user->MUNICIPIODESCR = $visualizador['municipios'][0]->municipios_concatenados;
 				$user->OFICINADESCR = $visualizador['oficinas'][0]->oficinas_concatenadas;
 			}
@@ -1216,7 +1216,7 @@ class DashboardController extends BaseController
 		$data->colonias = $this->_coloniasModelRead->asObject()->where('ESTADOID',  $data->personasmorales->ESTADOID)->where('MUNICIPIOID', $data->personasmorales->MUNICIPIOID)->where('LOCALIDADID', $data->personasmorales->LOCALIDADID)->findAll();
 		$data->giros = $this->_personaMoralGiroRead->asObject()->findAll();
 
-		$data->poderes = $this->_relacionPoderLitiganteRead->asObject()->where('PERSONAMORALID', $data->personasmorales->PERSONAMORALID)->orderBy('FECHAREGISTRO','DESC')->findAll();
+		$data->poderes = $this->_relacionPoderLitiganteRead->asObject()->where('PERSONAMORALID', $data->personasmorales->PERSONAMORALID)->orderBy('FECHAREGISTRO', 'DESC')->findAll();
 		if ($data->personasmorales->PODERARCHIVO) {
 			$file_info = new \finfo(FILEINFO_MIME_TYPE);
 			$type = $file_info->buffer($data->personasmorales->PODERARCHIVO);
@@ -1224,14 +1224,14 @@ class DashboardController extends BaseController
 			$data->personasmorales->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($data->personasmorales->PODERARCHIVO);
 		}
 		if ($data->poderes) {
-				foreach ($data->poderes as $key => $poder) {
-					$file_info = new \finfo(FILEINFO_MIME_TYPE);
-					$type = $file_info->buffer($poder->PODERARCHIVO);
-					$extension = strstr($type, '/'); 
-					$poder->EXTENSION = ltrim($extension, '/');
-					$poder->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($poder->PODERARCHIVO);
-				}
+			foreach ($data->poderes as $key => $poder) {
+				$file_info = new \finfo(FILEINFO_MIME_TYPE);
+				$type = $file_info->buffer($poder->PODERARCHIVO);
+				$extension = strstr($type, '/');
+				$poder->EXTENSION = ltrim($extension, '/');
+				$poder->PODERARCHIVO = 'data:' . $type . ';base64,' . base64_encode($poder->PODERARCHIVO);
 			}
+		}
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
 		$this->_loadView('Editar persona moral', '', '', $data, 'ligaciones/edit_persona_moral');
@@ -1811,36 +1811,36 @@ class DashboardController extends BaseController
 					if ($data->folio->STATUS == 'ABIERTO') {
 						$data->status = 1;
 
-					//Información de todo el folio consultado
-					$data->respuesta = $this->getDataFolio($numfolio, $year);
+						//Información de todo el folio consultado
+						$data->respuesta = $this->getDataFolio($numfolio, $year);
 
-					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
-					$datosBitacora = [
-						'ACCION' => 'Solicito la información para atender un folio.',
-						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
-					];
-					$this->_bitacoraActividad($datosBitacora);
-					return json_encode($data);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->AGENTEATENCIONID == session('ID')) {
-					$data->status = 1;
-					//Información de todo el folio consultado
-					$data->respuesta = $this->getDataFolio($numfolio, $year);
+						$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
+						$datosBitacora = [
+							'ACCION' => 'Solicito la información para atender un folio.',
+							'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
+						];
+						$this->_bitacoraActividad($datosBitacora);
+						return json_encode($data);
+					} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->AGENTEATENCIONID == session('ID')) {
+						$data->status = 1;
+						//Información de todo el folio consultado
+						$data->respuesta = $this->getDataFolio($numfolio, $year);
 
-					$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
-					$datosBitacora = [
-						'ACCION' => 'Solicito la información para atender un folio.',
-						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
-					];
-					$this->_bitacoraActividad($datosBitacora);
-					return json_encode($data);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD"  && $data->folio->AGENTEATENCIONID != session('ID')) {
-					$agente = $this->_usuariosModelRead->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
-					return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO', 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
-				} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA" && $data->folio->AGENTEATENCIONID == session('ID')) {
-					$data->status = 1;
+						$this->_folioModel->set(['STATUS' => 'EN PROCESO', 'AGENTEATENCIONID' => session('ID')])->where('ANO', $year)->where('FOLIOID', $numfolio)->update();
+						$datosBitacora = [
+							'ACCION' => 'Solicito la información para atender un folio.',
+							'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
+						];
+						$this->_bitacoraActividad($datosBitacora);
+						return json_encode($data);
+					} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "VD"  && $data->folio->AGENTEATENCIONID != session('ID')) {
+						$agente = $this->_usuariosModelRead->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+						return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO', 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+					} else if ($data->folio->STATUS == 'EN PROCESO' && $data->folio->TIPODENUNCIA == "DA" && $data->folio->AGENTEATENCIONID == session('ID')) {
+						$data->status = 1;
 
-					//Información de todo el folio consultado
-					$data->respuesta = $this->getDataFolio($numfolio, $year);
+						//Información de todo el folio consultado
+						$data->respuesta = $this->getDataFolio($numfolio, $year);
 
 						$datosBitacora = [
 							'ACCION' => 'Solicito la información para atender un folio anónimo.',
@@ -2273,7 +2273,7 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$coordinacion = $this->getCoordinacion();
-		if ($coordinacion == NULL) {
+		if ($coordinacion == NULL || $coordinacion->status == 401) {
 			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
 		}
 		$data = (object) array();
@@ -3180,9 +3180,9 @@ class DashboardController extends BaseController
 	{
 		$rfc = $this->request->getPost('rfc');
 		$data = (object) array();
-		$data->moral = $this->_personasMoralesRead->join('RELACIONPODERLITIGANTE','RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID AND RELACIONPODERLITIGANTE.ACTIVO =1')->where('RFC', $rfc)->first();
+		$data->moral = $this->_personasMoralesRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID AND RELACIONPODERLITIGANTE.ACTIVO =1')->where('RFC', $rfc)->first();
 		// var_dump($data->moral);exit;
-		
+
 		if ($data->moral == null) {
 			return json_encode(['exist' => 0,]);
 		} else if (count($data->moral) > 0) {
@@ -3190,9 +3190,9 @@ class DashboardController extends BaseController
 			if ($data->moral['PODERARCHIVO']) {
 				$file_info = new \finfo(FILEINFO_MIME_TYPE);
 				$type = $file_info->buffer($data->moral['PODERARCHIVO']);
-				$data->moral['PODERARCHIVO']= 'data:' . $type . ';base64,' . base64_encode($data->moral['PODERARCHIVO']);
+				$data->moral['PODERARCHIVO'] = 'data:' . $type . ';base64,' . base64_encode($data->moral['PODERARCHIVO']);
 			}
-			
+
 			return json_encode(['exist' => 1, 'notificaciones' => $data->notificacion, 'personamoralid' => $data->moral['PERSONAMORALID'], 'moral' => $data->moral]);
 		} else {
 			return json_encode(['exist' => 0]);
@@ -3647,7 +3647,7 @@ class DashboardController extends BaseController
 	{
 		$variables_limpias = array();
 		foreach ($variables as $nombre => $valor) {
-			if (is_string($valor)) {
+			if (is_string($valor) && ($nombre != 'FOTO' && $nombre != 'DOCUMENTO')) {
 				$variables_limpias[$nombre] = $this->quitar_caracteres_especiales($valor);
 			} else {
 				$variables_limpias[$nombre] = $valor;
@@ -3928,6 +3928,7 @@ class DashboardController extends BaseController
 											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
+													$vehiculo = $this->limpiar_variables($vehiculo);
 													if ($vehiculo['PLACAS'] == '') {
 														$vehiculo['PLACAS'] = 'VACIO';
 													}
@@ -3960,64 +3961,63 @@ class DashboardController extends BaseController
 							}
 							if ($archivosExternosVD) {
 								try {
-					
+
 									foreach ($archivosExternosVD as $key => $arch) {
-															//Se verifica que los archivos externos no esten subidos en Justicia para no repetirlos
-					$relacionDocArc = $this->_relacionFolioDocModelRead->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
-					if ($relacionDocArc == NULL) {
-						$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'EXPEDIENTE')->first();
-						$expediente = $foliovd['EXPEDIENTEID'];
-						$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
+										//Se verifica que los archivos externos no esten subidos en Justicia para no repetirlos
+										$relacionDocArc = $this->_relacionFolioDocModelRead->where('FOLIOID', $arch['FOLIOID'])->where('ANO', $arch['ANO'])->where('FOLIODOCID', $arch['FOLIOARCHIVOID'])->where('TIPO', 'ARCHIVO')->orderBy('FOLIODOCID', 'asc')->first();
+										if ($relacionDocArc == NULL) {
+											$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'EXPEDIENTE')->first();
+											$expediente = $foliovd['EXPEDIENTEID'];
+											$municipioid = $foliovd['MUNICIPIOID'] ? $foliovd['MUNICIPIOID'] : NULL;
 
-						//Se asigna el autor y oficina de acuerdo al .ENV
-						try {
-							if (ENVIRONMENT == 'development') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8987;
-									$oficina = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 3968;
-									$oficina = 394;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10872;
-									$oficina = 924;
-								}
-							}
+											//Se asigna el autor y oficina de acuerdo al .ENV
+											try {
+												if (ENVIRONMENT == 'development') {
+													if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+														$autor = 8987;
+														$oficina = 793;
+													} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+														$autor = 3968;
+														$oficina = 394;
+													} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+														$autor = 10872;
+														$oficina = 924;
+													}
+												}
 
-							if (ENVIRONMENT == 'production') {
-								if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
-									$autor = 8988;
-									$oficina = 793;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
-									$autor = 4179;
-									$oficina = 409;
-								} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
-									$autor = 10832;
-									$oficina = 924;
-								}
-							}
-							// Se suben los archivos externos a Justicia.
-							$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
-							if ($_archivo->status == 201) {
-								$datosRelacionFolio = [
-									'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
-									'FOLIOID' =>  $arch['FOLIOID'],
-									'ANO' => $arch['ANO'],
-									'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
-									'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
-									'TIPO' => 'ARCHIVO',
+												if (ENVIRONMENT == 'production') {
+													if ($foliovd['MUNICIPIOASIGNADOID'] == 1) {
+														$autor = 8988;
+														$oficina = 793;
+													} else if ($foliovd['MUNICIPIOASIGNADOID'] == 2 || $foliovd['MUNICIPIOASIGNADOID'] == 3) {
+														$autor = 4179;
+														$oficina = 409;
+													} else if ($foliovd['MUNICIPIOASIGNADOID'] == 4 || $foliovd['MUNICIPIOASIGNADOID'] == 5) {
+														$autor = 10832;
+														$oficina = 924;
+													}
+												}
+												// Se suben los archivos externos a Justicia.
+												$_archivo = $this->_createArchivosExternos($expediente, $folio, $year,  $municipioid, 53, $arch['ARCHIVODESCR'], $arch['ARCHIVO'], $arch['EXTENSION'], $autor, $oficina);
+												if ($_archivo->status == 201) {
+													$datosRelacionFolio = [
+														'FOLIODOCID' => $arch['FOLIOARCHIVOID'],
+														'FOLIOID' =>  $arch['FOLIOID'],
+														'ANO' => $arch['ANO'],
+														'EXPEDIENTEID' => $_archivo->EXPEDIENTEID,
+														'EXPEDIENTEARCHIVOID' => $_archivo->ARCHIVOID,
+														'TIPO' => 'ARCHIVO',
 
-								];
-								$this->_relacionFolioDocModel->insert($datosRelacionFolio);
-							}
-						} catch (\Exception $e) {
-						}
-					}
+													];
+													$this->_relacionFolioDocModel->insert($datosRelacionFolio);
+												}
+											} catch (\Exception $e) {
+											}
+										}
 									}
 								} catch (\Throwable $th) {
 								}
-								}
-
+							}
 						} catch (\Exception $e) {
 							throw new \Exception($e->getMessage());
 						}
@@ -8820,7 +8820,7 @@ class DashboardController extends BaseController
 		if ($data->folio->TIPODENUNCIA == 'ES') {
 			$data->foliomoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->first();
 			$data->personamoral = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $data->foliomoral->PERSONAMORALID)->first();
-			
+
 			if ($data->foliomoral) {
 				$data->plantilla = str_replace('[RAZON_SOCIAL]',  $data->foliomoral->DENOMINACION ?  $data->foliomoral->DENOMINACION : '-', $data->plantilla);
 				$data->plantilla = str_replace('[CARGO]',  $data->personamoral->CARGO ?  $data->personamoral->CARGO : '-', $data->plantilla);
