@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\OTPModel;
+use Error;
 use GuzzleHttp\Client;
 use MailerSend\MailerSend;
 use MailerSend\Helpers\Builder\Recipient;
@@ -140,12 +141,22 @@ class OTPController extends BaseController
 				$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGEBC/Estimado usuario, tu codigo es: ' . $otp);
 			}
 			try {
-				$result = $mailersend->email->send($emailParams);
-			} catch (MailerSendValidationException $e) {
-				$result = false;
-			} catch (MailerSendRateLimitException $e) {
+				$validationEmail = validateEmail($to);
+				if(!$validationEmail){
+					$result = false;
+				} else {
+					try {
+						$result = $mailersend->email->send($emailParams);
+					} catch (MailerSendValidationException $e) {
+						$result = false;
+					} catch (MailerSendRateLimitException $e) {
+						$result = false;
+					}
+				}
+			} catch (\Throwable $error) {
 				$result = false;
 			}
+			
 
 			if ($result) {
 				return json_encode((object)['status' => 200]);

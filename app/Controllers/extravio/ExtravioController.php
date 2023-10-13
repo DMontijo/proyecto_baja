@@ -300,14 +300,23 @@ class ExtravioController extends BaseController
 			->setReplyToName('FGEBC');
 
 		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
-
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
+			$validationEmail = validateEmail($to);
+			if(!$validationEmail){
+				$result = false;
+			} else {
+				try {	
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+			}
+		} catch (\Throwable $error) {
 			$result = false;
 		}
+		
 		if ($result) {
 			return true;
 		} else {
@@ -347,13 +356,21 @@ class ExtravioController extends BaseController
 			->setReplyToName('FGEBC');
 		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
+			$validationEmail = validateEmail($to);
+			if(!$validationEmail){
+				$result = false;
+			} else {
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+			}
+		} catch (\Throwable $error) {
 			$result = false;
 		}
-
 		if ($result) {
 			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 		} else {

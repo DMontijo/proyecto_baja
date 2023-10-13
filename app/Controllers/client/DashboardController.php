@@ -1148,13 +1148,21 @@ class DashboardController extends BaseController
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
 		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
-
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
-			$result = false;
+			$validationEmail = validateEmail($to);
+			if(!$validationEmail){
+				$result = false;
+			} else {
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+			}
+		} catch (\Throwable $error) {
+		
 		}
 		if ($result) {
 			return true;

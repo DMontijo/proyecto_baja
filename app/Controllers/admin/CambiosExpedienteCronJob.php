@@ -110,19 +110,27 @@ class CambiosExpedienteCronJob extends BaseController
             ->setText('El expediente se ha cambio de estado y se encuentra en:' . $estadojuridico . 'y se esta atendiendo en la oficina:' . $oficina)
             ->setReplyTo('notificacionfgebc@fgebc.gob.mx')
             ->setReplyToName('FGEBC');
-
         try {
-            $result = $mailersend->email->send($emailParams);
-        } catch (MailerSendValidationException $e) {
-            $result = false;
-        } catch (MailerSendRateLimitException $e) {
-            $result = false;
-        }
-        if ($result) {
-            return true;
-        } else {
+            $validationEmail = validateEmail($to);
+            if(!$validationEmail){
+                return false;
+            }else{
+                try {
+                    $result = $mailersend->email->send($emailParams);
+                } catch (MailerSendValidationException $e) {
+                    $result = false;
+                } catch (MailerSendRateLimitException $e) {
+                    $result = false;
+                }
+                if ($result) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (\Throwable $error) {
             return false;
-        }
+        }   
     }
 
     //Funcion CURL para conectar hacia Justicia

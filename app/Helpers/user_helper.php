@@ -44,3 +44,36 @@ function tipoExpediente($num)
 			break;
 	}
 }
+ 
+function validateEmail($dataEmail){
+	$ch = curl_init();
+	$bodyData = array('email' => $dataEmail);
+	
+	curl_setopt($ch, CURLOPT_URL, 'https://api.mailersend.com/v1/email-verification/verify');
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($bodyData));
+	$headers = array(
+		'Content-Type: application/json',
+		'Access-Control-Allow-Origin: *',
+		'Access-Control-Allow-Credentials: true',
+		'Access-Control-Allow-Headers: Content-Type',
+		'Authorization: Bearer '.EMAIL_TOKEN,
+	);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	$result = curl_exec($ch);
+
+	curl_close($ch);
+	// var_dump($data);
+	// var_dump($result);exit;
+	// return $result;
+	$dataResult = json_decode($result);
+	if(isset($dataResult->status) && $dataResult->status == "valid"){
+		return true;
+	}else{
+		return false;
+	}
+	///return json_decode($result);
+}

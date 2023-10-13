@@ -1264,6 +1264,14 @@ if ($agent->isMobile()) {
 								confirmButtonColor: '#bf9b55',
 							});
 						}
+						if (response.invalid === 1) {
+							e.target.value = '';
+							Swal.fire({
+								icon: 'error',
+								text: 'El correo no es valido, ingresa uno diferente.',
+								confirmButtonColor: '#bf9b55',
+							})
+						}
 					},
 					error: function(jqXHR, textStatus, errorThrown) {}
 				});
