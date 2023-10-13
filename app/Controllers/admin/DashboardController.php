@@ -712,7 +712,7 @@ class DashboardController extends BaseController
 		foreach ($data->usuario as $user) {
 			if ($user->MUNICIPIOSOFICINASID) {
 
-				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID,$user->MUNICIPIOSOFICINASID );
+				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID, $user->MUNICIPIOSOFICINASID);
 				$user->MUNICIPIODESCR = $visualizador['municipios'][0]->municipios_concatenados;
 				$user->OFICINADESCR = $visualizador['oficinas'][0]->oficinas_concatenadas;
 			}
@@ -3103,7 +3103,7 @@ class DashboardController extends BaseController
 					}
 
 					if ($folioRow['TIPODENUNCIA'] != 'ES') {
-						if (!$ofendidos) {
+						if (!$ofendidos || count($ofendidos) == 0) {
 							throw new \Exception('Debe existir al menos un ofendido');
 						}
 					}
