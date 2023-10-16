@@ -2938,9 +2938,9 @@ class DashboardController extends BaseController
 			->setReplyToName('FGEBC');
 		try {
 			$validationEmail = validateEmail($to);
-			if(!$validationEmail){
+			if (!$validationEmail) {
 				return false;
-			}else{
+			} else {
 				try {
 					$result = $mailersend->email->send($emailParams);
 				} catch (MailerSendValidationException $e) {
@@ -2948,7 +2948,7 @@ class DashboardController extends BaseController
 				} catch (MailerSendRateLimitException $e) {
 					$result = false;
 				}
-	
+
 				if ($result) {
 					return true;
 				} else {
@@ -2957,7 +2957,7 @@ class DashboardController extends BaseController
 			}
 		} catch (\Throwable $error) {
 			return false;
-		}		
+		}
 	}
 
 	/**
@@ -2996,7 +2996,7 @@ class DashboardController extends BaseController
 		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 		try {
 			$validationEmail = validateEmail($to);
-			if(!$validationEmail){
+			if (!$validationEmail) {
 				$result = false;
 			} else {
 				try {
@@ -3716,7 +3716,7 @@ class DashboardController extends BaseController
 					$parentescos = $this->_parentescoPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$vehiculos = $this->_folioVehiculoModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$ofendidos = $this->_folioPersonaFisicaModelRead->select('NOMBRE')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
-
+					$denunciante = $this->_denunciantesModelRead->select('NOMBRE')->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 					$personasMorales = $this->_folioPersonaMoralModelRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('FOLIOPERSONAMORAL.PERSONAMORALID', 'asc')->findAll();
 					$relacionMoralFis = $this->_folioRelacionMoralFisModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 
@@ -3753,7 +3753,12 @@ class DashboardController extends BaseController
 						if (!$ofendidos) {
 							throw new \Exception('Debe existir al menos un ofendido');
 						}
+					} else if ($folioRow['TIPODENUNCIA'] == 'ES') {
+						if (count($ofendidos) === 0 && count($personasMorales) === 0) {
+							throw new \Exception('Debe existir al menos un ofendido');
+						}
 					}
+
 					if (!$imputados) {
 						throw new \Exception('Debe existir al menos un imputado');
 					}
@@ -3777,7 +3782,7 @@ class DashboardController extends BaseController
 						if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
 							throw new \Exception('Todos los imputados deben tener una relación con una persona física');
 						}
-					} else {
+					} else if ($folioRow['TIPODENUNCIA'] == 'ES' && count($personasMorales) > 0) {
 						if ((count($relacionMoralFis) == 0 || count($relacionMoralFis) <= 0) && count($personasMorales) != 0) {
 							throw new \Exception('Todos los imputados deben tener una relación con una persona moral');
 						}
