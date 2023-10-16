@@ -3750,7 +3750,7 @@ class DashboardController extends BaseController
 					}
 
 					if ($folioRow['TIPODENUNCIA'] != 'ES') {
-						if (!$ofendidos) {
+						if (!$ofendidos || count($ofendidos) == 0) {
 							throw new \Exception('Debe existir al menos un ofendido');
 						}
 					} else if ($folioRow['TIPODENUNCIA'] == 'ES') {
@@ -3865,7 +3865,7 @@ class DashboardController extends BaseController
 								} else if ($persona['NOMBRE'] == 'QRO') {
 									$persona['NOMBRE'] = 'QUIEN RESULTE OFENDIDO';
 								}
-								$persona = $this->limpiar_variables($persona);
+								// $persona = $this->limpiar_variables($persona);
 								//Se crean todas las personas fisicas
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								if ($_persona->status == 201) {
@@ -3921,7 +3921,7 @@ class DashboardController extends BaseController
 											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
-													$vehiculo = $this->limpiar_variables($vehiculo);
+													// $vehiculo = $this->limpiar_variables($vehiculo);
 													if ($vehiculo['PLACAS'] == '') {
 														$vehiculo['PLACAS'] = 'VACIO';
 													}
