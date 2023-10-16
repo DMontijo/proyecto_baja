@@ -3865,7 +3865,7 @@ class DashboardController extends BaseController
 								} else if ($persona['NOMBRE'] == 'QRO') {
 									$persona['NOMBRE'] = 'QUIEN RESULTE OFENDIDO';
 								}
-								// $persona = $this->limpiar_variables($persona);
+								$persona = $this->limpiar_variables($persona);
 								//Se crean todas las personas fisicas
 								$_persona = $this->_createPersonaFisica($expedienteCreado->EXPEDIENTEID, $persona, $municipio);
 								if ($_persona->status == 201) {
@@ -3891,6 +3891,7 @@ class DashboardController extends BaseController
 							if (count($personasMorales) > 0) {
 								foreach ($personasMorales as $key => $personaMoral) {
 									try {
+										$personaMoral = $this->limpiar_variables($personaMoral);
 										//Se crean todas las personas morales
 										$_personaMoral = $this->_createPersonaMoral($expedienteCreado->EXPEDIENTEID, $personaMoral, $municipio);
 										$personasMoralesRelacionMysqlOracle[$personaMoral['PERSONAMORALID']] = ['calidad' => $personaMoral['CALIDADJURIDICAID'], 'id_mysql' => $personaMoral['PERSONAMORALID'], 'id_oracle' => $_personaMoral->PERSONAMORALID];
@@ -3921,7 +3922,7 @@ class DashboardController extends BaseController
 											//Si el delito asignado es robo de vehiculo se crea el expediente del vehiculo.
 											if (count($vehiculos) > 0) {
 												foreach ($vehiculos as $vehiculo) {
-													// $vehiculo = $this->limpiar_variables($vehiculo);
+													$vehiculo = $this->limpiar_variables($vehiculo);
 													if ($vehiculo['PLACAS'] == '') {
 														$vehiculo['PLACAS'] = 'VACIO';
 													}
