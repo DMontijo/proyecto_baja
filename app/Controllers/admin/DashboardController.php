@@ -3058,7 +3058,7 @@ class DashboardController extends BaseController
 				$folioRow = $this->_folioModelRead->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->where('EXPEDIENTEID IS NULL')->first();
 				$folioVehiculoRow = $this->_folioVehiculoModelRead->where('ANO', $year)->where('FOLIOID', $folio)->findAll();
 
-				if ($folioRow) {
+				if ($folioRow && $folioRow['AGENTEATENCIONID']) {
 					//Se detecta que en la DB existan todos los campos necesarios para Justicia
 
 					$this->deteccionErrores($folioRow, $folioVehiculoRow);
