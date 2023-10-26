@@ -1552,9 +1552,9 @@ class DashboardController extends BaseController
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
 
-		// if(!session('ID')){
-		// 	return json_encode(['status' => 4]);
-		// }
+		if(!session('ID')){
+			return json_encode(['status' => 4]);
+		}
 		if ($search != 'true') {
 			$data->folio = $this->_folioModelRead->asObject()->where('ANO', $year)->where('FOLIOID', $numfolio)->first();
 
