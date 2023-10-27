@@ -12,7 +12,7 @@
                     <div class="text-center" style="max-width:500px;">
                         <img src="<?= base_url() ?>/assets/img/FGEBC.png" alt="Loader FGEBC" class="mb-3" style="width:250px;">
                         <p class="fw-bold">Su denuncia por escrito se ha recepcionado con éxito.</p>
-                        <p> En un término no mayor a 48 hrs. le será notificado al medio electrónico autorizado el número de caso asignado.</p>
+                        <p> En un término no mayor a 48 horas le será notificado, por el medio electrónico autorizado, su número de expediente asignado.</p>
 						<div class="col-12 mt-5 text-center">
                             <a href="<?= base_url('/denuncia_litigantes/dashboard') ?>" type="button" name="" id="" class="btn btn-primary"><i class="bi bi-file-font"></i> INICIAR NUEVA DENUNCIA</a>
                             <a href="<?= base_url('/denuncia/logout') ?>" type="button" name="" id="" class="btn btn-secondary"><i class="bi bi-box-arrow-left"></i> CERRAR SESIÓN</a>

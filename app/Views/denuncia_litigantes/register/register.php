@@ -115,7 +115,7 @@ if ($agent->isMobile()) {
 				<div class="col-12 d-none step">
 					<div class="row">
 						<div class="col-12">
-							<h3 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DEL LITIGANTE</h3>
+							<h3 class="text-center mb-3 fw-bold">DATOS DE ORIGEN DEL LITIGANTE, REPRESENTANTE Y/O APODERADO LEGAL.</h3>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="nacionalidad" class="form-label fw-bold input-required">Nacionalidad</label>
@@ -177,7 +177,7 @@ if ($agent->isMobile()) {
 				<div class="col-12 d-none step">
 					<div class="row">
 						<div class="col-12">
-							<h3 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DEL LITIGANTE</h3>
+							<h3 class="text-center mb-3 fw-bold">DOMICILIO ACTUAL DEL LITIGANTE, REPRESENTANTE Y/O APODERADO LEGAL.</h3>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="pais_select" class="form-label fw-bold input-required">País</label>
@@ -275,7 +275,7 @@ if ($agent->isMobile()) {
 				<div class="col-12 d-none step">
 					<div class="row">
 						<div class="col-12">
-							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACIÓN DEL LITIGANTE</h3>
+							<h3 class="text-center mb-3 fw-bold">DATOS DE IDENTIFICACIÓN DEL LITIGANTE, REPRESENTANTE Y/O APODERADO LEGAL.</h3>
 						</div>
 						<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
 							<label for="perfil" class="form-label fw-bold input-required">Perfil</label>

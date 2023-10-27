@@ -14,7 +14,7 @@
 					<h1 class="text-center fw-bolder pb-1 text-blue">SUBIR ARCHIVO DE DENUNCIA POR ESCRITO Y ANEXOS</h1>
 					<p class="text-center fw-bold text-blue ">Recuerda subir solo uno a la vez.</p>
 					<div class="alert alert-warning" role="alert">
-						La denuncia por escrito es obligatorio, súbelo para finalizar.
+					La denuncia por escrito es obligatoria, adjunte la misma para poder finalizar su atención.
 					</div>
 					<form id="subirDocForm" name="subirDocForm" action="<?= base_url() ?>/denuncia_litigantes/dashboard/subir_documentos" method="POST" enctype="multipart/form-data" class="row needs-validation" novalidate>
 						<div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-3">
@@ -57,7 +57,7 @@
 							<?php if($body_data->status == "PENDIENTE"){?>
 							CREAR DENUNCIA
 							<?php }else{?>
-								YA ESTA COMPLETADA LA DENUNCIA
+								He finalizado de agregar documentación y anexos correspondientes.
 								<?php }?>
 						</button>
 						</div>
