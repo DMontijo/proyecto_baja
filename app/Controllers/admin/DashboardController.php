@@ -3665,8 +3665,7 @@ class DashboardController extends BaseController
 	{
 		$variables_limpias = array();
 		foreach ($variables as $nombre => $valor) {
-			var_dump($nombre);exit;
-			if (is_string($valor) && ($nombre != 'FOTO' && $nombre != 'PODER' && $nombre != 'DOCUMENTO' && $nombre != 'ARCHIVO'  && $nombre != 'PDF')) {
+			if (is_string($valor) && ($nombre != 'FOTO' && $nombre != 'PODERARCHIVO' && $nombre != 'DOCUMENTO' && $nombre != 'ARCHIVO'  && $nombre != 'PDF')) {
 				$variables_limpias[$nombre] = $this->quitar_caracteres_especiales($valor);
 			} else {
 				$variables_limpias[$nombre] = $valor;
@@ -3720,6 +3719,7 @@ class DashboardController extends BaseController
 					$denunciante = $this->_denunciantesModelRead->select('NOMBRE')->where('DENUNCIANTEID', $folioRow['DENUNCIANTEID'])->first();
 					$personasMorales = $this->_folioPersonaMoralModelRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('FOLIOPERSONAMORAL.PERSONAMORALID', 'asc')->findAll();
 					$relacionMoralFis = $this->_folioRelacionMoralFisModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+
 
 					$imputados_con_delito = array();
 					$imputados = $this->_folioPersonaFisicaModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 2)->findAll();
