@@ -3665,7 +3665,7 @@ class DashboardController extends BaseController
 	{
 		$variables_limpias = array();
 		foreach ($variables as $nombre => $valor) {
-			if (is_string($valor) && ($nombre != 'FOTO' && $nombre != 'DOCUMENTO')) {
+			if (is_string($valor) && ($nombre != 'FOTO' && $nombre != 'ARCHIVO')) {
 				$variables_limpias[$nombre] = $this->quitar_caracteres_especiales($valor);
 			} else {
 				$variables_limpias[$nombre] = $valor;
