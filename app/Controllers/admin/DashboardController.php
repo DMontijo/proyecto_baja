@@ -4879,7 +4879,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		return $this->_curlPostDataEncrypt($endpointUpdate, $data);
+		return $this->_curlPostTimeExceded($endpointUpdate, $data);
 	}
 
 	/**
@@ -5245,7 +5245,7 @@ class DashboardController extends BaseController
 	 * @param  mixed $endpoint
 	 * @param  mixed $data
 	 */
-	private function _curlPostCoordDataEncrypt($endpoint, $data)
+	private function _curlPostTimeExceded($endpoint, $data)
 	{
 		$ch = curl_init();
 
@@ -5264,7 +5264,7 @@ class DashboardController extends BaseController
 			'Key: ' . KEY_128
 		);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		// curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 600);
 
 		$result = curl_exec($ch);
 
