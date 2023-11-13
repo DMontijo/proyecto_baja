@@ -4812,7 +4812,7 @@ class DashboardController extends BaseController
 			$data['schema'] = $conexionMexicali->SCHEMA;
 
 			//Manda a traer todos los expedientes de la vista acumulada que solo se encuentra en Mexicali.
-			$response = $this->_curlPostDataEncrypt($endpoint, $data);
+			$response = $this->_curlPostTimeExceded($endpoint, $data);
 
 			if ($response->status == 201) {
 
