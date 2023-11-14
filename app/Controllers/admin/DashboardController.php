@@ -1899,8 +1899,6 @@ class DashboardController extends BaseController
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
 		$coordinacion = $this->getCoordinacion();
-		echo 'test';
-		exit;
 		if ($coordinacion == NULL) {
 			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
 		}
@@ -4699,8 +4697,6 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		var_dump($data);
-		exit;
 		return $this->_curlPostCoordDataEncrypt($endpoint, $data);
 	}
 
@@ -5212,7 +5208,6 @@ class DashboardController extends BaseController
 	 */
 	private function _curlPostDataEncrypt($endpoint, $data)
 	{
-		// var_dump($data);exit;
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_URL, $endpoint);
