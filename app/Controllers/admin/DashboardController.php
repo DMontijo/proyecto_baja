@@ -1899,6 +1899,7 @@ class DashboardController extends BaseController
 		}
 		$coordinacion = $this->getCoordinacion();
 		var_dump($coordinacion);
+		exit;
 		if ($coordinacion == NULL) {
 			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
 		}
