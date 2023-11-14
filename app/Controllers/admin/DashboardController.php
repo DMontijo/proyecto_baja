@@ -4697,7 +4697,7 @@ class DashboardController extends BaseController
 		$data['pwdDB'] = $conexion->PASSWORD;
 		$data['instance'] = $conexion->IP . '/' . $conexion->INSTANCE;
 		$data['schema'] = $conexion->SCHEMA;
-		return $this->_curlPostCoordDataEncrypt($endpoint, $data);
+		return $this->_curlPostTimeExceded($endpoint, $data);
 	}
 
 	/**
