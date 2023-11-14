@@ -1898,9 +1898,9 @@ class DashboardController extends BaseController
 		if (!$this->permisos('BANDEJA')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		$coordinacion = $this->getCoordinacion();
 		echo 'test';
 		exit;
-		$coordinacion = $this->getCoordinacion();
 		if ($coordinacion == NULL) {
 			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
 		}
