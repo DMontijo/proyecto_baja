@@ -1894,12 +1894,13 @@ class DashboardController extends BaseController
 	 */
 	public function bandeja_remision()
 	{
-		echo 'test';
-		exit;
+		
 		if (!$this->permisos('BANDEJA')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
+		echo 'test';
 		exit;
+		$coordinacion = $this->getCoordinacion();
 		if ($coordinacion == NULL) {
 			return redirect()->back()->with('message_error', 'No se encontrarón las coordinaciones, revisa con soporte técnico.');
 		}
