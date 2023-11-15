@@ -1552,7 +1552,7 @@ class DashboardController extends BaseController
 		$year = trim($this->request->getPost('year'));
 		$search = $this->request->getPost('search');
 
-		if(!session('ID')){
+		if (!session('ID')) {
 			return json_encode(['status' => 4]);
 		}
 		if ($search != 'true') {
@@ -1894,7 +1894,7 @@ class DashboardController extends BaseController
 	 */
 	public function bandeja_remision()
 	{
-		
+
 		if (!$this->permisos('BANDEJA')) {
 			return redirect()->back()->with('message_error', 'Acceso denegado, no tienes los permisos necesarios.');
 		}
@@ -4815,45 +4815,54 @@ class DashboardController extends BaseController
 			//Manda a traer todos los expedientes de la vista acumulada que solo se encuentra en Mexicali.
 			$response = $this->_curlPostTimeExceded($endpoint, $data);
 
+
 			if ($response->status == 201) {
 
 				if (count($response->data) <= 0) {
 					return json_encode(['status' => 1, 'message' => 'No hay expedientes por actualizar']);
 				}
 
-				foreach ($response->data as $expediente) {
+				//Se divide la respuesta en miniarrays de 20.
+				$casos = array_chunk($response->data, 20);
+				var_dump(count($casos));
 
-					//Se compara con los folios de Videodenuncia
-					$folioVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expediente->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expediente->MUNICIPIOID)->first();
+				foreach ($casos as $expedientes) {
+					$expedientesActualizados = [];
+					$expedientesNoActualizados = [];
+					$expedientesNoVD = [];
+					foreach ($expedientes as $expediente) {
+						//Se compara con los folios de Videodenuncia
+						$folioVD = $this->_folioModelRead->asObject()->select('EXPEDIENTEID,MUNICIPIOASIGNADOID')->where('EXPEDIENTEID', $expediente->EXPEDIENTEID)->where('MUNICIPIOASIGNADOID', $expediente->MUNICIPIOID)->first();
 
-					//Valida si lo encontro en vd, de lo contrario son folios que no están en videodenuncia.
-					if (isset($folioVD)) {
-						try {
-							$this->_folioModel->set('OFICINAASIGNADOID', $expediente->OFICINAIDCOORD)->asObject()->where('EXPEDIENTEID', $folioVD->EXPEDIENTEID)->update();
-							//Guarda en el arreglo $expedientesActualizados los expedinetes que se actualizaron en videodenuncia.
-							array_push($expedientesActualizados, $folioVD->EXPEDIENTEID);
-						} catch (\Error $e) {
-							//Guarda en el arreglo $expedientesNoActualizados los expedinetes que no se actualizaron en videodenuncia.
-							array_push($expedientesNoActualizados, $folioVD->EXPEDIENTEID);
+						//Valida si lo encontro en vd, de lo contrario son folios que no están en videodenuncia.
+						if (isset($folioVD)) {
+							try {
+								$this->_folioModel->set('OFICINAASIGNADOID', $expediente->OFICINAIDCOORD)->asObject()->where('EXPEDIENTEID', $folioVD->EXPEDIENTEID)->update();
+								//Guarda en el arreglo $expedientesActualizados los expedinetes que se actualizaron en videodenuncia.
+								array_push($expedientesActualizados, $folioVD->EXPEDIENTEID);
+							} catch (\Error $e) {
+								//Guarda en el arreglo $expedientesNoActualizados los expedinetes que no se actualizaron en videodenuncia.
+								array_push($expedientesNoActualizados, $folioVD->EXPEDIENTEID);
+							}
+						} else {
+							//Guarda en el arreglo $expedientesNoVD los expedinetes que no están en videodenuncia.
+							array_push($expedientesNoVD, $expediente->EXPEDIENTEID);
 						}
-					} else {
-						//Guarda en el arreglo $expedientesNoVD los expedinetes que no están en videodenuncia.
-						array_push($expedientesNoVD, $expediente->EXPEDIENTEID);
 					}
-				}
-				// return json_encode(['status' => 1, 'message' => ['Totales'=>count($response->data),'Actualizados' => $expedientesActualizados, 'No actualizados' => $expedientesNoVD]]);
 
-				foreach ($conexiones as $conexion) {
-					try {
-						//Actualiza en justicia los expedientes ya actualizados en videodenuncia.
-						$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesActualizados);
-					} catch (\Error $e) {
+					foreach ($conexiones as $conexion) {
+						try {
+							//Actualiza en justicia los expedientes ya actualizados en videodenuncia.
+							$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesActualizados);
+						} catch (\Error $e) {
+						}
+						try {
+							//Actualiza en justicia los expedientes que no son de videodenuncia.
+							$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesNoVD);
+						} catch (\Error $e) {
+						}
 					}
-					try {
-						//Actualiza en justicia los expedientes que no son de videodenuncia.
-						$this->updateOficinaJusticiaVideodenuncia($conexion, $expedientesNoVD);
-					} catch (\Error $e) {
-					}
+					// sleep(5);
 				}
 
 				return json_encode(['status' => 1, 'message' => 'Se han sincronizado las coordinaciones de los expedientes de CDTEC con Justicia Net correctamente.']);

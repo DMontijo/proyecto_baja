@@ -176,6 +176,7 @@ $file_text = $user_id . "_data.txt";
 
 		$.ajax({
 			url: "<?= base_url('/data/update-oficinas-by-justicia') ?>",
+			timeout: 7200000,
 			method: "GET",
 			dataType: "json",
 			beforeSend: function() {
@@ -222,7 +223,8 @@ $file_text = $user_id . "_data.txt";
 					timer: 2000,
 					timerProgressBar: true,
 				});
-				console.error('Error de boton de sincronización:', textStatus);
+				console.error('Error de boton de sincronización:', errorThrown);
+				btnActualizarExpedientes.click();
 			}
 		});
 	}, false);
