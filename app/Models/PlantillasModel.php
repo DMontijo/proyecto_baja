@@ -114,6 +114,8 @@ class PlantillasModel extends Model
 		if (!empty($bindParams['horaInicio']) && empty($bindParams['horaFin'])) $sql = $sql . ' AND FD.HORAFIRMA BETWEEN ' . "'" . $bindParams['horaInicio'] . "':00" . ' AND ' . "'" . '23:59:00' . "'";
 		if (empty($bindParams['horaInicio']) && !empty($bindParams['horaFin'])) $sql = $sql . ' AND FD.HORAFIRMA BETWEEN ' . "'" . '00:00:00' . "'" . ' AND ' . "'" . $bindParams['horaFin'] . "':00";
 
+		$sql = $sql . 'GROUP BY FD.FOLIOID';
+
 		$query = $this->db->query($sql);
 
 		return $query->getResult('object');
