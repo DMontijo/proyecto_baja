@@ -1585,6 +1585,8 @@
 
                     if (validarStep(vista[currentStep].id)) {
                         // quitarRequired();
+                        document.getElementById('datos_delito').classList.add('step');
+
                         document.getElementById('datos_ofendido').classList.add('step');
                         //Remover de persona moral
                         document.getElementById('datos_moral').classList.remove('step');
@@ -1734,24 +1736,7 @@
                         nextBtn.classList.add('d-inline-block');
                         prevBtn.classList.remove('d-none');
                         prevBtn.classList.add('d-inline-block');
-                        document.getElementById('datos_delito').classList.add('step');
-                        document.getElementById('datos_desaparecido').classList.add('step');
-                        document.getElementById('datos_robo_vehiculo').classList.add('step');
-                        document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
-                        document.getElementById('datos_ofendido').classList.add('step');
-                        document.getElementById('datos_moral').classList.add('step');
-                        document.getElementById('datos_ligacion').classList.add('step');
-                        document.getElementById('datos_delito_moral').classList.add('step');
 
-                        const datos_delito = document.getElementById('datos_delito');
-                        const datos_moral = document.getElementById('datos_moral');
-                        const datos_ligacion = document.getElementById('datos_ligacion');
-                        const datos_delito_moral = document.getElementById('datos_delito_moral');
-                        const datos_desaparecido = document.getElementById('datos_desaparecido');
-
-                        const datos_robo_vehiculo = document.getElementById('datos_robo_vehiculo');
-                        const datos_robo_vehiculo_completo = document.getElementById('datos_robo_vehiculo_completo');
-                        const datos_ofendido = document.getElementById('datos_ofendido');
 
                         const campos = litigantes_form.elements;
                         for (let i = 0; i < campos.length; i++) {
