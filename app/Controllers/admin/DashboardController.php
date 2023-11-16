@@ -8841,8 +8841,9 @@ class DashboardController extends BaseController
 		$data->plantilla = str_replace('[DENUNCIANTE_DOMICILIO]', ($data->denuncianteDomicilio->CALLE ? $data->denuncianteDomicilio->CALLE : 'DESCONOCIDO') . ($data->denuncianteDomicilio->NUMEROCASA ? ' Ext. ' . $data->denuncianteDomicilio->NUMEROCASA : '') . ($data->denuncianteDomicilio->NUMEROINTERIOR ? ' Int. ' . $data->denuncianteDomicilio->NUMEROINTERIOR : '') . ($data->denuncianteDomicilio->COLONIADESCR ? ' ' . $data->denuncianteDomicilio->COLONIADESCR : '') . (isset($data->denuncianteMunicipio) == true ? ' ' . $data->denuncianteMunicipio->MUNICIPIODESCR : '') . (isset($data->denuncianteEstado) == true ? ' ' . $data->denuncianteEstado->ESTADODESCR : ''), $data->plantilla);
 		//Expediente
 		$expediente = $data->folio->EXPEDIENTEID ? $data->folio->EXPEDIENTEID : null;
+		$personasMorales = $this->_folioPersonaMoralModelRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $year)->orderBy('FOLIOPERSONAMORAL.PERSONAMORALID', 'asc')->findAll();
 
-		if ($data->folio->TIPODENUNCIA == 'ES') {
+		if ($data->folio->TIPODENUNCIA == 'ES' && count($personasMorales) > 0) {
 			$data->foliomoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->first();
 			$data->personamoral = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $data->foliomoral->PERSONAMORALID)->first();
 
