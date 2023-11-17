@@ -58,6 +58,15 @@ class RELACIONPODERLITIGANTE extends Migration
                 'constraint' => '1',
                 'null' => true,
             ],
+            'CARGO' => [
+                'type' => 'VARCHAR',
+                'constraint' => '50',
+            ],
+            'DESCRIPCIONCARGO' => [
+                'type' => 'TEXT',
+                'null' => true,
+
+            ],
             'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL',
 			'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
         ]);

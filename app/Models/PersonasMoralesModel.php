@@ -25,8 +25,6 @@ class PersonasMoralesModel extends Model
 		'REFERENCIA',
 		'TELEFONO',
 		'CORREO',
-		'CARGO',
-		'DESCRIPCIONCARGO',
 		'CAMBIO',
 		'FECHAREGISTRO',
 		'FECHAACTUALIZACION',

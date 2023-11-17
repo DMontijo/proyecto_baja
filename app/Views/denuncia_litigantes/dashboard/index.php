@@ -2043,6 +2043,8 @@
                 packetData.append("fecha_inicio", document.querySelector('#fecha_inicio_poder_new').value);
                 packetData.append("fecha_fin", document.querySelector('#fecha_fin_poder_new').value);
                 packetData.append("personamoralid", empresaid);
+                packetData.append("cargo", document.querySelector('#cargo_new').value);
+                packetData.append("descr_cargo", document.querySelector('#descr_cargo_new').value);
 
                 $.ajax({
                     data: packetData,

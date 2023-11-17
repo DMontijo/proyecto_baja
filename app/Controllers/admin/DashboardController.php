@@ -8845,7 +8845,7 @@ class DashboardController extends BaseController
 
 		if ($data->folio->TIPODENUNCIA == 'ES' && count($personasMorales) > 0) {
 			$data->foliomoral = $this->_folioPersonaMoralModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->first();
-			$data->personamoral = $this->_personasMoralesRead->asObject()->where('PERSONAMORALID', $data->foliomoral->PERSONAMORALID)->first();
+			$data->personamoral = $this->_personasMoralesRead->asObject()->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID = PERSONASMORALES.PODERID')->where('PERSONASMORALES.PERSONAMORALID', $data->foliomoral->PERSONAMORALID)->first();
 
 			if ($data->foliomoral) {
 				$data->plantilla = str_replace('[RAZON_SOCIAL]',  $data->foliomoral->DENOMINACION ?  $data->foliomoral->DENOMINACION : '-', $data->plantilla);

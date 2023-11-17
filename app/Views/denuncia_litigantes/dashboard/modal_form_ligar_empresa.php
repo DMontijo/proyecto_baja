@@ -63,10 +63,10 @@
                             <option selected disabled value="">Selecciona su cargo en la persona moral</option>
                             <option value="APODERADO">APODERADO</option>
                             <option value="LITIGANTE">LITIGANTE</option>
-
+                            <option value="REPRESENTANTE LEGAL">REPRESENTANTE LEGAL</option>
                         </select>
                         <div class="invalid-feedback">
-                            El tipo de identificación es obligatorio.
+                            El tipo de cargo es obligatorio.
                         </div>
                     </div>
                     <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

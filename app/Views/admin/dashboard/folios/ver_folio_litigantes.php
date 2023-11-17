@@ -1182,6 +1182,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 						.PODERNONOTARIO : '';
 					document.querySelector('#poder_pm').value = personaMoral.PODERNOPODER ? personaMoral
 						.PODERNOPODER : '';
+					document.querySelector('#cargo_pm').value = foliopersonaMoral.CARGO ? foliopersonaMoral.CARGO : '';
 
 					$('#folio_persona_moral_modal').modal('show');
 

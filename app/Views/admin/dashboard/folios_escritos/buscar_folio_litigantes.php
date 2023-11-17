@@ -152,7 +152,7 @@
 												<td class="text-center font-weight-bold"><?= $expedienteid ?  $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : $folio->FOLIOID . '/' . $folio->ANO ?></td>
 												<td class="text-center"><?= $folio->STATUS ?></td>
 												<td class="text-center"><?= $tipo ?></td>
-												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR ? $folio->DELITOMODALIDADDESCR : $folio->HECHODELITO ?></td>
+												<td class="text-center"><?= $folio->DELITOMODALIDADDESCR_FIS ?? $folio->DELITOMODALIDADDESCR_MORAL ?? $folio->HECHODELITO ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_DENUNCIANTE ?></td>
 												<td class="text-center"><?= $folio->NOMBRE_AGENTE ?></td>
 												<td class="text-center"><?= $folio->MUNICIPIODESCR ?></td>

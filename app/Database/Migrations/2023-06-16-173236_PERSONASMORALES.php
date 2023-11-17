@@ -93,15 +93,6 @@ class PERSONASMORALES extends Migration
                 'null' => true,
 
             ],
-            'CARGO' => [
-                'type' => 'VARCHAR',
-                'constraint' => '50',
-            ],
-            'DESCRIPCIONCARGO' => [
-                'type' => 'TEXT',
-                'null' => true,
-
-            ],
             'CAMBIO' => [
                 'type' => 'CHAR',
                 'constraint' => '1',

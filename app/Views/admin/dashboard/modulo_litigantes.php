@@ -2760,6 +2760,8 @@
 						.PODERNONOTARIO : '';
 					document.querySelector('#poder_pm').value = foliopersonaMoral.PODERNOPODER ? foliopersonaMoral
 						.PODERNOPODER : '';
+
+					document.querySelector('#cargo_pm').value = foliopersonaMoral.CARGO ? foliopersonaMoral.CARGO : '';
 					document.querySelector('#btnLigacion').href = `<?= base_url('admin/dashboard/editar_persona_moral?id=') ?>${personaMoral.PERSONAMORALID}`;
 					document.querySelector('#btnLigacion').target = "_blank";
 

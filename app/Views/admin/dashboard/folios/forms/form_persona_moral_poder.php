@@ -18,6 +18,10 @@
         <label for="poder_pm" class="form-label font-weight-bold">Número poder</label>
         <input type="text" class="form-control" id="poder_pm" name="poder_pm">
     </div>
+    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+        <label for="cargo_pm" class="form-label font-weight-bold">Cargo</label>
+        <input type="text" class="form-control" id="cargo_pm" name="cargo_pm">
+    </div>
     <div class="col-12">
         <hr>
     </div>

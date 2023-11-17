@@ -45,6 +45,22 @@
                         <img id="poder_foto" class="img-fluid" src="" style="max-width:300px;">
                     </div>
 
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+                        <label for="cargo" class="form-label fw-bold input-required">¿Cúal es tu cargo en la persona moral?</label>
+                        <select class="form-select" id="cargo_new" name="cargo_new" required>
+                            <option selected disabled value="">Selecciona su cargo en la persona moral</option>
+                            <option value="APODERADO">APODERADO</option>
+                            <option value="LITIGANTE">LITIGANTE</option>
+                            <option value="REPRESENTANTE LEGAL">REPRESENTANTE LEGAL</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            El tipo de cargo es obligatorio.
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
+                        <label for="descr_cargo_new" class="form-label fw-bold">Descripcion del cargo:</label>
+                        <input type="text" class="form-control" id="descr_cargo_new" name="descr_cargo_new">
+                    </div>
                     <div class="col-12">
                         <hr>
                     </div>

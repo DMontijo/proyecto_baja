@@ -38,6 +38,8 @@
 
 									<option <?= $body_data->ligacion->CARGO == 'LITIGANTE' ? 'selected' : '' ?> value="LITIGANTE">LITIGANTE</option>
 									<option <?= $body_data->ligacion->CARGO == 'APODERADO' ? 'selected' : '' ?> value="APODERADO">APODERADO</option>
+									<option <?= $body_data->ligacion->CARGO == 'REPRESENTANTE LEGAL' ? 'selected' : '' ?> value="REPRESENTANTE LEGAL">REPRESENTANTE LEGAL</option>
+
 								</select>
 							</div>
 							<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">

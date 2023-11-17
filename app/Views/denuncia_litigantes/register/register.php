@@ -283,6 +283,7 @@ if ($agent->isMobile()) {
 								<option selected disabled value="">Selecciona su perfil en la empresa</option>
 								<option value="APODERADO">APODERADO</option>
 								<option value="LITIGANTE">LITIGANTE</option>
+								<option value="REPRESENTANTE LEGAL">REPRESENTANTE LEGAL</option>
 
 							</select>
 							<div class="invalid-feedback">

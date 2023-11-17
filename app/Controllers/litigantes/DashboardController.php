@@ -87,6 +87,7 @@ class DashboardController extends BaseController
 	private $_folioModelRead;
 	private $_personaMoralGiroRead;
 	private $_relacionMoralPoderRead;
+	private $_relacionMoralPoder;
 	private $_relacionPoderLitigantes;
 	private $_archivoExternoModel;
 	private $_archivoExternoModelRead;
@@ -1099,9 +1100,6 @@ class DashboardController extends BaseController
 			'REFERENCIA' => $this->request->getPost('referencia_empresa_c')  != "" ? $this->request->getPost('referencia_empresa_c') : NULL,
 			'TELEFONO' => $this->request->getPost('telefono_empresa_c'),
 			'CORREO' => $this->request->getPost('correo_empresa_c'),
-			'CARGO' => $this->request->getPost('cargo'),
-			'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,
-
 		];
 		$colonia = $this->_coloniasModelRead->asObject()->where('ESTADOID', $this->request->getPost('estado_empresa_c'))->where('MUNICIPIOID', $this->request->getPost('municipio_empresa_c'))->where('LOCALIDADID', $this->request->getPost('localidad_empresa_c'))->where('COLONIAID', $this->request->getPost('colonia_select_empresa_c'))->first();
 
@@ -1156,6 +1154,8 @@ class DashboardController extends BaseController
 				'PODERARCHIVO' => $poder_data,
 				'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
 				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
+				'CARGO' => $this->request->getPost('cargo'),
+				'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,	
 			];
 
 			$this->_relacionPoderLitigantes->save($dataPoder);
@@ -1820,10 +1820,10 @@ class DashboardController extends BaseController
 	{
 		$poderid = $this->request->getPost('poderid');
 		$moralid = $this->request->getPost('moralid');
-		$desactivar = $this->_relacionMoralPoderRead->set('ACTIVO', 0)->where('PERSONAMORALID', $moralid)->update();
-		$activar  = $this->_relacionMoralPoderRead->set('ACTIVO', 1)->where('PODERID', $poderid)->update();
+		$desactivar = $this->_relacionPoderLitigantes->set('ACTIVO', 0)->where('PERSONAMORALID', $moralid)->update();
+		$activar  = $this->_relacionPoderLitigantes->set('ACTIVO', 1)->where('PODERID', $poderid)->update();
 		if ($desactivar && $activar) {
-			$updateMoral = $this->_personasMoralesRead->set(['PODERID' => $poderid, 'CAMBIO' => 'N'])->where('PERSONAMORALID', $moralid)->update();
+			$updateMoral = $this->_personasMoralesModel->set(['PODERID' => $poderid, 'CAMBIO' => 'N'])->where('PERSONAMORALID', $moralid)->update();
 			if ($updateMoral) return json_encode(['status' => 1]);
 		}
 	}
@@ -1849,7 +1849,7 @@ class DashboardController extends BaseController
 					'ARCHIVO' =>  $personasMorales->PODERARCHIVO,
 					'EXTENSION' => $extension,
 				];
-				$archivos = $this->_archivoExternoModelRead->set($dataArchivo)->where('FOLIOID', $folio)->where('ANO', $year)->where('TIPO', 'PODER')->update();
+				$archivos = $this->_archivoExternoModel->set($dataArchivo)->where('FOLIOID', $folio)->where('ANO', $year)->where('TIPO', 'PODER')->update();
 				if ($archivos) {
 					$data = (object) array();
 					$data->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
@@ -1901,6 +1901,8 @@ class DashboardController extends BaseController
 			'PODERARCHIVO' => $poder_data,
 			'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio') != "" ? $this->request->getPost('fecha_inicio') : NULL,
 			'FECHAFINPODER' => $this->request->getPost('fecha_fin') != "" ? $this->request->getPost('fecha_fin') : NULL,
+			'CARGO' => $this->request->getPost('cargo'),
+			'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,
 		];
 		if ($this->_relacionPoderLitigantes->save($dataPoder)) {
 			$updateCambio = $this->_personasMoralesModel->set($data)->where('PERSONAMORALID', $personamoralid)->update();

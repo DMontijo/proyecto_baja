@@ -183,6 +183,7 @@
 								<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
 									<thead>
 										<tr>
+											<th class="text-center bg-primary text-white">CARGO</th>
 											<th class="text-center bg-primary text-white">VOLUMEN</th>
 											<th class="text-center bg-primary text-white">NO.NOTARIO</th>
 											<th class="text-center bg-primary text-white">NO.PODER</th>
@@ -198,6 +199,7 @@
 									<tbody>
 										<?php foreach ($body_data->poderes as $index => $poder) { ?>
 											<tr>
+												<td class="text-center"><?= $poder->CARGO ?></td>
 												<td class="text-center"><?= $poder->PODERVOLUMEN ?></td>
 												<td class="text-center"><?= $poder->PODERNONOTARIO ?></td>
 												<td class="text-center"><?= $poder->PODERNOPODER ?></td>
