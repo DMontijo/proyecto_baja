@@ -35,8 +35,8 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="municipio" class="form-label fw-bold">Municipio del delito:</label>
-		<select class="form-select" id="municipio" name="municipio">
+		<label for="municipio" class="form-label fw-bold input-required">Municipio del delito:</label>
+		<select class="form-select" id="municipio" name="municipio" required>
 			<option selected disabled value="">Elige el municipio</option>
 			<?php foreach ($body_data->municipios as $index => $municipio) { ?>
 				<option value="<?= $municipio->MUNICIPIOID ?>"> <?= $municipio->MUNICIPIODESCR ?> </option>

@@ -2,13 +2,16 @@
 	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehículo robado</h3>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tipo_vehiculo" class="form-label fw-bold">Tipo de vehículo:</label>
-		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo">
+		<label for="tipo_vehiculo" class="form-label fw-bold input-required">Tipo de vehículo:</label>
+		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" required  data-required-original="true">
 			<option selected disabled value="">Selecciona el tipo de vehículo</option>
 			<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
 				<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>"> <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>
 			<?php } ?>
 		</select>
+		<div class="invalid-feedback">
+			Por favor, seleccione un tipo de vehículo.
+		</div>
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
@@ -22,8 +25,8 @@
 	</div>
 
 	<div class="col-12 mb-3">
-		<label for="description_vehiculo" class="form-label fw-bold">Otras características que permitan identificar el vehículo:</label>
-		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10" maxlength="300" onkeyup="contarCaracteresVehiculo(this)"></textarea>
+		<label for="description_vehiculo" class="form-label fw-bold input-required">Otras características que permitan identificar el vehículo:</label>
+		<textarea class="form-control" id="description_vehiculo" name="description_vehiculo" rows="10" maxlength="300" onkeyup="contarCaracteresVehiculo(this)" oninput="mayuscTextarea(this)"  required  data-required-original="true"></textarea>
 		<small id="numCaracterVehiculo">300 caracteres restantes</small>
 	</div>
 
@@ -33,9 +36,12 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="documento_vehiculo_nc" class="form-label fw-bold">Documento del vehículo:</label>
-		<input class="form-control" type="file" id="documento_vehiculo_nc" name="documento_vehiculo_nc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
+		<label for="documento_vehiculo_nc" class="form-label fw-bold input-required">Documento del vehículo:</label>
+		<input class="form-control" type="file" id="documento_vehiculo_nc" name="documento_vehiculo_nc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf" required  data-required-original="true">
 	</div>
+	<div class="invalid-feedback">
+			Por favor, agregue el documento del vehículo.
+		</div>
 </div>
 <script>
 	//Funcion para contar los caracteres restantes de la descripcion del vehiculo

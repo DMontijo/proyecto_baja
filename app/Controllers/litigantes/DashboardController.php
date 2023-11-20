@@ -612,6 +612,7 @@ class DashboardController extends BaseController
 		$session = session();
 		//Valida los datos requeridos para hacer una denuncia
 		if (($this->request->getPost('delito') == null || $this->request->getPost('delito') == '')
+			|| ($this->request->getPost('municipio') == null || $this->request->getPost('municipio') == '')
 			|| ($this->request->getPost('lugar') == null || $this->request->getPost('lugar') == '')
 			|| ($this->request->getPost('fecha') == null || $this->request->getPost('fecha') == '')
 			|| ($this->request->getPost('hora') == null || $this->request->getPost('hora') == '')
@@ -1057,6 +1058,7 @@ class DashboardController extends BaseController
 		$session = session();
 		//Valida los datos requeridos para hacer una denuncia
 		if (($this->request->getPost('delito_moral') == null || $this->request->getPost('delito_moral') == '')
+			|| ($this->request->getPost('municipio_moral') == null || $this->request->getPost('municipio_moral') == '')
 			|| ($this->request->getPost('rfc_empresa') == null || $this->request->getPost('rfc_empresa') == '')
 			|| ($this->request->getPost('lugar_moral') == null || $this->request->getPost('lugar_moral') == '')
 			|| ($this->request->getPost('fecha_moral') == null || $this->request->getPost('fecha_moral') == '')
