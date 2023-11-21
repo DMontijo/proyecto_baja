@@ -732,7 +732,6 @@
                     'localidad_id': localidad
                 };
 
-                console.log(data);
 
                 if (estado == 2) {
                     select_colonia.classList.remove('d-none');
@@ -882,7 +881,6 @@
                     'localidad_id': localidad
                 };
 
-                console.log(data);
 
                 if (estado == 2) {
                     select_colonia.classList.remove('d-none');
@@ -1008,7 +1006,6 @@
                         method: "POST",
                         dataType: "json",
                         success: function(response) {
-                            console.log(response);
                             if (response.exist === 1) {
                                 const personamoral = response.moral;
                                 // e.target.value = '';
@@ -1105,7 +1102,6 @@
                                             select_colonia.add(option);
 
                                             select_colonia.value = personamoral.COLONIAID;
-                                            console.log(personamoral.COLONIAID);
                                             input_colonia.value = '-';
                                         },
                                         error: function(jqXHR, textStatus, errorThrown) {
@@ -1150,7 +1146,6 @@
                                 document.getElementById('fecha_fin_poder').value = personamoral.FECHAFINPODER ? personamoral.FECHAFINPODER : '';
                                 document.getElementById('cargo').value = personamoral.CARGO;
                                 document.getElementById('descr_cargo').value = personamoral.DESCRIPCIONCARGO ? personamoral.DESCRIPCIONCARGO : '';
-                                console.log("pm", personamoral);
                                 if (personamoral.PODERARCHIVO) {
                                     $("#poder_archivo").removeAttr("required");
                                     let extension = (((personamoral.PODERARCHIVO.split(';'))[0]).split('/'))[1];
@@ -1466,14 +1461,11 @@
                 //Agrega steps de acuerdo a las preguntas iniciales
                 var vista = document.querySelectorAll('.step');
                 if (tipo_persona.value == "MORAL") {
-                    console.log("aqui");
                     if (validarStepMoral(vista[currentStep].id)) {
-                        console.log(vista[currentStep].id);
-
                         document.getElementById('datos_delito').classList.remove('step');
                         document.getElementById('datos_desaparecido').classList.remove('step');
-                        // document.getElementById('datos_robo_vehiculo').classList.remove('step');
-                        // document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+                        document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                        document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                         document.getElementById('datos_ofendido').classList.remove('step');
 
                         const datos_delito = document.getElementById('datos_delito');
@@ -1490,14 +1482,14 @@
                         requiredFields2.forEach(field => {
                             field.removeAttribute('required');
                         });
-                        // const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
-                        // requiredFields3.forEach(field => {
-                        //     field.removeAttribute('required');
-                        // });
-                        // const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                        // requiredFields4.forEach(field => {
-                        //     field.removeAttribute('required');
-                        // });
+                        const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
+                        requiredFields3.forEach(field => {
+                            field.removeAttribute('required');
+                        });
+                        const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
+                        requiredFields4.forEach(field => {
+                            field.removeAttribute('required');
+                        });
                         const requiredFields5 = datos_ofendido.querySelectorAll('[required]');
                         requiredFields5.forEach(field => {
                             field.removeAttribute('required');
@@ -1511,66 +1503,11 @@
 
                         $('#delito_moral').change(function() {
 
-                            if (document.querySelector("#delito_moral").value == "ROBO DE VEHÍCULO") {
+
+                            if (this.value == "ROBO DE VEHÍCULO") {
                                 var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
                                 radio_doc_vehiculo.classList.remove('d-none');
-                                if (document.getElementById('documentos_vehiculo_moral').value == 'S') {
-                                    document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
-                                    document.getElementById('datos_robo_vehiculo').classList.remove('step');
-                                    const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
-                                    requiredFields3.forEach(field => {
-                                        field.removeAttribute('required');
-                                    });
-                                    const requiredFields5 = datos_robo_vehiculo_completo.querySelectorAll('[data-required-original]');
-                                    requiredFields5.forEach(field => {
-                                        field.setAttribute('required', true);
-                                    });
 
-
-                                } else if (document.getElementById('documentos_vehiculo_moral').value == 'N') {
-                                    document.getElementById('datos_robo_vehiculo').classList.add('step');
-                                    document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-                                    const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                                    requiredFields4.forEach(field => {
-                                        field.removeAttribute('required');
-                                    });
-                                    const requiredFields5 = datos_robo_vehiculo.querySelectorAll('[data-required-original]');
-                                    requiredFields5.forEach(field => {
-                                        field.setAttribute('required', true);
-                                    });
-                                }
-                                // document.querySelector('input[name="documentos_vehiculo"]:checked').value = 'N';
-                                // document.querySelector('#documentos_vehiculo > [value="N"]').checked = true;	
-                                // $("input[name=documentos_vehiculo][value='N']").prop("checked",true);
-
-                                $('input[type=radio][name=documentos_vehiculo_moral]').change(function() {
-                                    if (this.value == 'S') {
-                                        console.log("si");
-                                        document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
-                                        document.getElementById('datos_robo_vehiculo').classList.remove('step');
-                                        const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
-                                        requiredFields3.forEach(field => {
-                                            field.removeAttribute('required');
-                                        });
-                                        const requiredFields5 = datos_robo_vehiculo_completo.querySelectorAll('[data-required-original]');
-                                        requiredFields5.forEach(field => {
-                                            field.setAttribute('required', true);
-                                        });
-
-                                    } else if (this.value == 'N') {
-                                        document.getElementById('datos_robo_vehiculo').classList.add('step');
-                                        document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-                                        const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                                        requiredFields4.forEach(field => {
-                                            field.removeAttribute('required');
-                                        });
-                                        const requiredFields5 = datos_robo_vehiculo.querySelectorAll('[data-required-original]');
-                                        requiredFields5.forEach(field => {
-                                            field.setAttribute('required', true);
-                                        });
-                                    }
-
-                                });
                             } else {
                                 var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
 
@@ -1578,11 +1515,19 @@
                                 $("input[name=documentos_vehiculo_moral][value='O']").prop("checked", true);
                                 document.getElementById('datos_robo_vehiculo').classList.remove('step');
                                 document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
-
-
-
                             }
                         })
+
+                        var valorSeleccionado = $("input[name='documentos_vehiculo_moral']:checked").val();
+
+                        if (valorSeleccionado == "S") {
+                            document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
+                            document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                        } else {
+                            document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
+                            document.getElementById('datos_robo_vehiculo').classList.add('step');
+                        }
+
                         steps = document.querySelectorAll('.step');
                         var stepCount = steps.length - 1;
                         var width = 100 / stepCount;
@@ -1606,7 +1551,6 @@
                         progress.style.width = `${currentStep*width}%`
                         document.querySelector('#titulo').scrollIntoView();
                     } else {
-                        // console.log('NO SE VALIDO');
                         submitBtn.click();
                         Swal.fire({
                             icon: 'error',
@@ -1660,10 +1604,10 @@
                         requiredFields3.forEach(field => {
                             field.removeAttribute('required');
                         });
-                        // const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                        // requiredFields4.forEach(field => {
-                        //     field.removeAttribute('required');
-                        // });
+                        const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
+                        requiredFields4.forEach(field => {
+                            field.removeAttribute('required');
+                        });
 
                         if (document.querySelector("#delito").value == "PERSONA DESAPARECIDA") {
                             $("input[name=documentos_vehiculo_p][value='O']").prop("checked", true);
@@ -1785,13 +1729,9 @@
                         var width = 100 / stepCount;
 
                         currentStep++;
-                        console.log(steps);
-                        console.log(currentStep);
-                        console.log(stepCount);
 
                         let previousStep = currentStep - 1;
                         if ((currentStep > 0) && (currentStep <= stepCount)) {
-                            console.log("aqui");
                             prevBtn.classList.remove('d-none');
                             prevBtn.classList.add('d-inline-block');
                             steps[currentStep].classList.remove('d-none');
@@ -1985,23 +1925,22 @@
                             return false;
                         }
                         break;
-                        // case 'datos_robo_vehiculo':
-                        //     if (document.querySelector('#tipo_vehiculo').value != '' &&
-                        //         document.querySelector('#description_vehiculo').value != '' &&
-                        //         document.querySelector('#documento_vehiculo_nc').value != '') {
-                        //         return true;
-                        //     } else {
-                        //         return false;
-                        //     }
-                        //     break;
-                    case 'datos_robo_vehiculo_completo':
+                        case 'datos_robo_vehiculo':
                         if (document.querySelector('#tipo_vehiculo').value != '' &&
+                            document.querySelector('#description_vehiculo').value != '' &&
+                            document.querySelector('#documento_vehiculo_nc').value != '') {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                        break;
+                    case 'datos_robo_vehiculo_completo':
+                        if (document.querySelector('#tipo_vehiculo_sp').value != '' &&
                             document.querySelector('#tipo_placas_vehiculo').value != '' &&
                             document.querySelector('#placas_vehiculo').value != '' &&
                             document.querySelector('#serie_vehiculo').value != '' &&
                             document.querySelector('#description_vehiculo_sp').value != '' &&
-                            document.querySelector('#documento_vehiculo_sp').value != ''
-                        ) {
+                            document.querySelector('#documento_vehiculo_sp').value != '') {
                             return true;
                         } else {
                             return false;
@@ -2023,7 +1962,6 @@
 
             //Funcion para validar los elementos requeridos de cada step
             function validarStep(step) {
-                console.log(step);
                 switch (step) {
                     case 'datos_ofendido':
                         if (
@@ -2070,14 +2008,16 @@
                         }
                         break;
                     case 'datos_robo_vehiculo':
-                        if (true) {
+                        if (document.querySelector('#tipo_vehiculo').value != '' &&
+                            document.querySelector('#description_vehiculo').value != '' &&
+                            document.querySelector('#documento_vehiculo_nc').value != '') {
                             return true;
                         } else {
                             return false;
                         }
                         break;
                     case 'datos_robo_vehiculo_completo':
-                        if (document.querySelector('#tipo_vehiculo').value != '' &&
+                        if (document.querySelector('#tipo_vehiculo_sp').value != '' &&
                             document.querySelector('#tipo_placas_vehiculo').value != '' &&
                             document.querySelector('#placas_vehiculo').value != '' &&
                             document.querySelector('#serie_vehiculo').value != '' &&

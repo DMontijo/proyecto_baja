@@ -2,8 +2,8 @@
 	<h3 class="fw-bold text-center text-blue pb-3">Datos del vehículo robado</h3>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="tipo_vehiculo" class="form-label fw-bold input-required">Tipo de vehículo:</label>
-		<select class="form-select" id="tipo_vehiculo" name="tipo_vehiculo" required data-required-original="true">
+		<label for="tipo_vehiculo_sp" class="form-label fw-bold input-required">Tipo de vehículo:</label>
+		<select class="form-select" id="tipo_vehiculo_sp" name="tipo_vehiculo_sp" required data-required-original="true">
 			<option selected disabled value="">Selecciona el tipo de vehículo</option>
 			<?php foreach ($body_data->tipoVehiculo as $index => $tipo_vehiculo) { ?>
 				<option value="<?= $tipo_vehiculo->VEHICULOTIPOID ?>"> <?= $tipo_vehiculo->VEHICULOTIPODESCR ?></option>

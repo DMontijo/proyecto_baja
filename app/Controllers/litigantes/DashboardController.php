@@ -1025,7 +1025,7 @@ class DashboardController extends BaseController
 				}
 
 				$dataVehiculo = array(
-					'TIPOID' => $this->request->getPost('tipo_vehiculo'),
+					'TIPOID' => $this->request->getPost('tipo_vehiculo') ? $this->request->getPost('tipo_vehiculo') : $this->request->getPost('tipo_vehiculo_sp'),
 					'PRIMERCOLORID' => $this->request->getPost('color_vehiculo'),
 					'TIPOPLACA' => $this->request->getPost('tipo_placas_vehiculo'),
 					'PLACAS' => $this->request->getPost('placas_vehiculo'),
