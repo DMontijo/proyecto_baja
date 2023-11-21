@@ -1592,7 +1592,6 @@ class DashboardController extends BaseController
 
 					//Información de todo el folio consultado
 					$data->respuesta = $this->getDataFolio($numfolio, $year);
-
 					$datosBitacora = [
 						'ACCION' => 'Solicito la información para atender un folio anónimo.',
 						'NOTAS' => 'FOLIO: ' . $numfolio . ' AÑO: ' . $year,
@@ -1652,12 +1651,13 @@ class DashboardController extends BaseController
 		$data->correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($numfolio, $year);
 		$data->parentescoRelacion = $this->_parentescoPersonaFisicaModel->getRelacion($numfolio, $year);
 		$data->relacionFisFis = $this->_relacionIDOModelRead->get_by_folio($numfolio, $year);
+
 		$data->vehiculos = $this->_folioVehiculoModelRead->get_by_folio($numfolio, $year);
 		$data->fisicaImpDelito = $this->_imputadoDelitoModelRead->get_by_folio($numfolio, $year);
 		$data->delitosModalidadFiltro = $this->_delitoModalidadModelRead->get_delitodescr($numfolio, $year);
 		$data->objetos = $this->_folioObjetoInvolucradoModelRead->get_descripcion($numfolio, $year);
 		$data->documentos = $this->_folioDocModelRead->get_by_folio($numfolio, $year);
-		$data->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->findAll();
+		$data->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $numfolio)->where('ANO', $year)->where('EXTENSION !=', 'octet-stream')->findAll();
 
 
 		if ($data->archivosexternos) {
@@ -3336,7 +3336,7 @@ class DashboardController extends BaseController
 
 		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXTENSION !=', 'octet-stream')->findAll();
 		$folioDocPeritaje = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
 
 		if ($archivosExternosVD) {
@@ -3590,7 +3590,7 @@ class DashboardController extends BaseController
 		}
 		$foliovd = $this->_folioModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXPEDIENTEID', $expediente)->where('STATUS', 'EXPEDIENTE')->first();
 		$folioDoc = $this->_folioDocModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('STATUS', 'FIRMADO')->orderBy('FOLIODOCID', 'asc')->findAll();
-		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+		$archivosExternosVD = $this->_archivoExternoModelRead->where('FOLIOID', $folio)->where('ANO', $year)->where('EXTENSION !=', 'octet-stream')->findAll();
 		$folioDocPeritaje = $this->_folioDocModelRead->expedienteDocumentos($folio, $year);
 		try {
 
