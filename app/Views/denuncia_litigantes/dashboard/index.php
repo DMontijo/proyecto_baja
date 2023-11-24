@@ -1462,6 +1462,12 @@
                 var vista = document.querySelectorAll('.step');
                 if (tipo_persona.value == "MORAL") {
                     if (validarStepMoral(vista[currentStep].id)) {
+
+                        document.getElementById('datos_moral').classList.add('step');
+                        document.getElementById('datos_ligacion').classList.add('step');
+                        document.getElementById('datos_delito_moral').classList.add('step');
+
+
                         document.getElementById('datos_delito').classList.remove('step');
                         document.getElementById('datos_desaparecido').classList.remove('step');
                         document.getElementById('datos_robo_vehiculo').classList.remove('step');
@@ -1482,14 +1488,14 @@
                         requiredFields2.forEach(field => {
                             field.removeAttribute('required');
                         });
-                        const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
-                        requiredFields3.forEach(field => {
-                            field.removeAttribute('required');
-                        });
-                        const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                        requiredFields4.forEach(field => {
-                            field.removeAttribute('required');
-                        });
+                        // const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
+                        // requiredFields3.forEach(field => {
+                        //     field.removeAttribute('required');
+                        // });
+                        // const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
+                        // requiredFields4.forEach(field => {
+                        //     field.removeAttribute('required');
+                        // });
                         const requiredFields5 = datos_ofendido.querySelectorAll('[required]');
                         requiredFields5.forEach(field => {
                             field.removeAttribute('required');
@@ -1507,23 +1513,25 @@
                             if (this.value == "ROBO DE VEHÍCULO") {
                                 var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
                                 radio_doc_vehiculo.classList.remove('d-none');
-
+                                var documentos_v_m = $("input[name='documentos_vehiculo_moral']:checked");
+                                 documentos_v_m.attr('value', 'N');
                             } else {
                                 var radio_doc_vehiculo = document.getElementById("radio_documentos_vehiculo");
 
                                 radio_doc_vehiculo.classList.add('d-none');
                                 $("input[name=documentos_vehiculo_moral][value='O']").prop("checked", true);
+                                var documentos_v_m = $("input[name='documentos_vehiculo_moral']:checked");
+                                documentos_v_m.attr('value', 'O');
                                 document.getElementById('datos_robo_vehiculo').classList.remove('step');
                                 document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                             }
                         })
 
                         var valorSeleccionado = $("input[name='documentos_vehiculo_moral']:checked").val();
-
                         if (valorSeleccionado == "S") {
                             document.getElementById('datos_robo_vehiculo_completo').classList.add('step');
                             document.getElementById('datos_robo_vehiculo').classList.remove('step');
-                        } else {
+                        } else if (valorSeleccionado == "N") {
                             document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                             document.getElementById('datos_robo_vehiculo').classList.add('step');
                         }
@@ -1600,14 +1608,14 @@
                         requiredFields2.forEach(field => {
                             field.removeAttribute('required');
                         });
-                        const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
-                        requiredFields3.forEach(field => {
-                            field.removeAttribute('required');
-                        });
-                        const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                        requiredFields4.forEach(field => {
-                            field.removeAttribute('required');
-                        });
+                        // const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
+                        // requiredFields3.forEach(field => {
+                        //     field.removeAttribute('required');
+                        // });
+                        // const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
+                        // requiredFields4.forEach(field => {
+                        //     field.removeAttribute('required');
+                        // });
 
                         if (document.querySelector("#delito").value == "PERSONA DESAPARECIDA") {
                             $("input[name=documentos_vehiculo_p][value='O']").prop("checked", true);
@@ -1706,7 +1714,7 @@
                             // requiredFields5.forEach(field => {
                             //     field.setAttribute('required', true);
                             // });
-                        } else {
+                        } else if(valorSeleccionado == "N"){
                             document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                             document.getElementById('datos_robo_vehiculo').classList.add('step');
                             // const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
@@ -1795,9 +1803,17 @@
                 }
 
                 if (currentStep === 0) {
+                    var documentos_v_m = $("input[name='documentos_vehiculo_moral']:checked");
+                    documentos_v_m.attr('value', 'O');
+                    var documentos_v = $("input[name='documentos_vehiculo']:checked");
+                    documentos_v.attr('value', 'O');
+                    $("input[name=documentos_vehiculo_moral][value='O']").prop("checked", true);
                     prevBtn.classList.remove('d-inline-block');
                     prevBtn.classList.add('d-none');
-
+                    litigantes_form.reset();
+                    $("input[name=documentos_vehiculo_moral][value='O']").prop("checked", true);
+                    // document.getElementById('datos_robo_vehiculo').classList.remove('step');
+                    // document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                 }
 
                 progress.style.width = `${currentStep*width}%`
