@@ -515,6 +515,32 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		// 		})
 		// 	});
 		// });
+		/**Funcion para abrir el archivo pdf en otra pestaña */
+	function abrirPrevisualizador(url) {
+		let url_sin = url.replace("data:application/pdf;base64,", "");
+		//decodifica el base 64 y lo convierte en string
+		const binaryData = atob(url_sin);
+		//longitud del string
+		const arrayBuffer = new ArrayBuffer(binaryData.length);
+		//trata cada byte del ArrayBuffer como un número separado
+		const uint8Array = new Uint8Array(arrayBuffer);
+
+		for (let i = 0; i < binaryData.length; i++) {
+			uint8Array[i] = binaryData.charCodeAt(i);
+		}
+
+		//Se construye el PDF
+		const blob = new Blob([uint8Array], {
+			type: 'application/pdf'
+		});
+
+		// Crea el link y lo abre en nueva pestaña
+		const link = document.createElement('a');
+		console.log(link);
+		link.href = URL.createObjectURL(blob);
+		link.target = "_blank"
+		link.click();
+	}
 		// Funcion para visualizar la informacion del objeto involucrado, recibe por parametro el id del objeto
 
 		function viewObjetoInvolucrado(objetoid) {
