@@ -25,7 +25,7 @@
 					</div>
 					<div class="col-9">
 						<div class="tab-content" id="info_content">
-							<div class="tab-pane fade show active" id="v-pills-denuncia" role="tabpanel" aria-labelledby="v-pills-denuncia-tab">
+							<div class="tab-pane fade" id="v-pills-denuncia" role="tabpanel" aria-labelledby="v-pills-denuncia-tab">
 								<?= view('admin/dashboard/folios/forms/form_denuncia') ?>
 							</div>
 
@@ -116,7 +116,7 @@
 									</tr>
 								</table>
 							</div>
-							<div class="tab-pane fade" id="v-pills-archivos-externos" role="tabpanel" aria-labelledby="v-pills-archivos-externos-tab">
+							<div class="tab-pane fade show active" id="v-pills-archivos-externos" role="tabpanel" aria-labelledby="v-pills-archivos-externos-tab">
 								<div id="adicionados" class="d-none"></div>
 								<div class="table-responsive">
 									<table id="table-archivos" class="table table-bordered table-hover table-striped table-light">
