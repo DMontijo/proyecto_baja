@@ -11,7 +11,8 @@
 				<div class="row">
 					<div class="col-3">
 						<div class="nav flex-column nav-pills" id="info_tabs" role="tablist" aria-orientation="vertical">
-							<a class="nav-link active" id="v-pills-denuncia-tab" data-toggle="pill" href="#v-pills-denuncia" role="tab" aria-controls="v-pills-denuncia" aria-selected="false"><i class="fas fa-file-alt"></i> DENUNCIA</a>
+							<a class="nav-link active" id="v-pills-archivos-externos-tab" data-toggle="pill" href="#v-pills-archivos-externos" role="tab" aria-controls="v-pills-archivos-externo" aria-selected="false"><i class="fas fa-file"></i> ARCHIVOS EXTERNOS</a>
+							<a class="nav-link" id="v-pills-denuncia-tab" data-toggle="pill" href="#v-pills-denuncia" role="tab" aria-controls="v-pills-denuncia" aria-selected="false"><i class="fas fa-file-alt"></i> DENUNCIA</a>
 							<a class="nav-link" id="v-pills-personas-tab" data-toggle="pill" href="#v-pills-personas" role="tab" aria-controls="v-pills-personas" aria-selected="false"><i class="fas fa-users"></i> PERSONAS</a>
 							<a class="nav-link" id="v-pills-personas-morales-tab" data-toggle="pill" href="#v-pills-personas-morales" role="tab" aria-controls="v-pills-personas-morales" aria-selected="true"><i class="fas fa-home"></i> PERSONAS MORALES</a>
 							<a class="nav-link" id="v-pills-vehiculos-tab" data-toggle="pill" href="#v-pills-vehiculos" role="tab" aria-controls="v-pills-vehiculos" aria-selected="false"><i class="fas fa-car"></i> VEHICULOS</a>
@@ -19,7 +20,6 @@
 							<a class="nav-link" id="v-pills-delitos-cometidos-tab" data-toggle="pill" href="#v-pills-delitos-cometido" role="tab" aria-controls="v-pills-delitos-cometido" aria-selected="false"><i class='fas fa-user-alt-slash'></i> DELITOS COMETIDOS</a>
 							<a class="nav-link" id="v-pills-delitos-tab" data-toggle="pill" href="#v-pills-asignar-delitos" role="tab" aria-controls="v-pills-asignar-delitos" aria-selected="false"><i class='fas fa-handshake-slash'></i> DELITOS</a>
 							<a class="nav-link" id="v-pills-objetos-involucrados-tab" data-toggle="pill" href="#v-pills-objetos-involucrados" role="tab" aria-controls="v-pills-objetos-involucrados" aria-selected="false"><i class="fas fa-box"></i> OBJETOS INVOLUCRADOS</a>
-							<a class="nav-link" id="v-pills-archivos-externos-tab" data-toggle="pill" href="#v-pills-archivos-externos" role="tab" aria-controls="v-pills-archivos-externo" aria-selected="false"><i class="fas fa-file"></i> ARCHIVOS EXTERNOS</a>
 
 						</div>
 					</div>
