@@ -4,7 +4,7 @@
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 <?php $session = session(); ?>
-<?php if ($body_data->datosFolio->STATUS == 'EN PROCESO' || $body_data->datosFolio->STATUS == 'ABIERTO') { ?>
+<?php if ($body_data->datosFolio->STATUS == 'EN PROCESO' || $body_data->datosFolio->STATUS == 'ABIERTO' || $body_data->datosFolio->STATUS == 'PENDIENTE') { ?>
 	<div class="alert alert-warning" role="alert">
 		<h3 class="font-weigth-bold text-center">
 			<strong>FOLIO: </strong><?= $body_data->datosFolio->FOLIOID . '/' . $body_data->datosFolio->ANO ?>
