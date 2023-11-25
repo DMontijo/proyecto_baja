@@ -12,7 +12,7 @@
 		<strong>ESTATUS:</strong> <?= $body_data->datosFolio->STATUS ?>
 	</div>
 <?php } ?>
-<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
+<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO' && $body_data->datosFolio->STATUS != 'PENDIENTE') { ?>
 	<div class="alert alert-success" role="alert">
 		<h3 class="font-weigth-bold text-center">
 			<?php
