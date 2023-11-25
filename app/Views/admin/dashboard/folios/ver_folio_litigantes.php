@@ -483,7 +483,7 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 		});
 
 		//Validacion para habilitar el boton de documentos
-		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO') { ?>
+		<?php if ($body_data->datosFolio->STATUS != 'EN PROCESO' && $body_data->datosFolio->STATUS != 'ABIERTO' && $body_data->datosFolio->STATUS != 'PENDIENTE') { ?>
 
 			documentos_folio_btn.addEventListener('click', () => {
 				<?php if ($body_data->datosFolio->EXPEDIENTEID != NULL) { ?>
