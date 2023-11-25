@@ -436,14 +436,18 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 								if (archivos[i].EXTENSION == 'pdf' || archivos[i].EXTENSION == 'doc') {
 									var img = `<a id="downloadArchivo" download=""><img src='<?= base_url() ?>/assets/img/file.png'));'  width="50px" height="50px"></img></a>`;
+									var frame = `<a href="#" onclick="abrirPrevisualizador('${archivos[i].ARCHIVO}')">Abrir Previsualizador</a>`;
+
 								} else {
 									var img = `<a id="downloadArchivo" download=""><img src='${archivos[i].ARCHIVO}');' width="50px" height="50px"></img></a>`;
+									var frame = `<div id="docxViewer">No se puede visualizar este archivo, descargalo</div>`;
 								}
 
 								var fila =
 									`<tr id="row${i}">` +
 									`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${archivos[i].ARCHIVODESCR}</td>` +
 									`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${img}</td>` +
+									`<td class="text-center" value="${archivos[i].FOLIOARCHIVOID}">${frame}</td>` +
 
 									`</tr>`;
 
