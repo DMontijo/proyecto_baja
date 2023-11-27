@@ -1171,7 +1171,9 @@ class DashboardController extends BaseController
 		// }
 		$personamoralid = !$personamoralidExist ? $this->_personasMoralesModel->getInsertID() : $personamoralidExist;
 		$notificacionid = !$this->request->getPost('direccion') ? $this->_personasMoralesNotificacionesModel->getInsertID() : $this->request->getPost('direccion');
-		if ($personamoralid) {
+		$poderRelacion = $this->_relacionMoralPoderRead->asObject()->where('ACTIVO', 1)->where('PERSONAMORALID', $personamoralid)->first();
+
+		if ($personamoralid && $poderRelacion->PODERARCHIVO != null) {
 			$poder_existente = $this->_relacionMoralPoderRead->asObject()->where('ACTIVO', 1)->where('PERSONAMORALID', $personamoralid)->first();
 			$file_info = new \finfo(FILEINFO_MIME_TYPE);
 			$type = $file_info->buffer($poder_existente->PODERARCHIVO);
