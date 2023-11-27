@@ -1173,7 +1173,7 @@ class DashboardController extends BaseController
 		$notificacionid = !$this->request->getPost('direccion') ? $this->_personasMoralesNotificacionesModel->getInsertID() : $this->request->getPost('direccion');
 		$poderRelacion = $this->_relacionMoralPoderRead->asObject()->where('ACTIVO', 1)->where('PERSONAMORALID', $personamoralid)->first();
 
-		if ($personamoralid && $poderRelacion->PODERARCHIVO != null) {
+		if ($personamoralid && isset($poderRelacion)) {
 			$poder_existente = $this->_relacionMoralPoderRead->asObject()->where('ACTIVO', 1)->where('PERSONAMORALID', $personamoralid)->first();
 			$file_info = new \finfo(FILEINFO_MIME_TYPE);
 			$type = $file_info->buffer($poder_existente->PODERARCHIVO);
