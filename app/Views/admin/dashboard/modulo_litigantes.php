@@ -1180,11 +1180,28 @@
 				} else if (response.status === 2) {
 					Swal.fire({
 						icon: 'error',
-						html: 'El folio ya se encuentra atendido.',
+						html: response.motivo + '<strong>' + response.agente + '</strong>',
 						confirmButtonColor: '#bf9b55',
 					});
-
-				} else {
+				} else if(response.status==3) {
+					Swal.fire({
+						icon: 'error',
+						text: 'El folio tiene pendiente subir la denuncia por escrito.',
+						confirmButtonColor: '#bf9b55',
+					})
+				}
+				else if(response.status==4) {
+					let texto = 'El folio ya fue atendido por el agente<br><strong>' + response.agente +
+						'</strong><br><br><strong>' + response.motivo + '</strong>';
+					if (response.motivo == 'EXPEDIENTE') {
+						texto = texto + '<br><br><strong>' + expedienteConGuiones(response.expediente) + '</strong>';
+					}
+					Swal.fire({
+						icon: 'error',
+						html: texto,
+						confirmButtonColor: '#bf9b55',
+					})
+				}else if(response.status === 0) {
 					card2.classList.add('d-none');
 					card3.classList.add('d-none');
 					card4.classList.add('d-none');

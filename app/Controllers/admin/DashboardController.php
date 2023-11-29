@@ -1924,8 +1924,14 @@ class DashboardController extends BaseController
 						];
 						$this->_bitacoraActividad($datosBitacora);
 						return json_encode($data);
-					} else if ($data->folio->STATUS != 'EN PROCESO' || $data->folio->STATUS != 'ABIERTO') {
-						return json_encode(['status' => 2]);
+					} else if ($data->folio->STATUS == 'EN PROCESO'  && $data->folio->AGENTEATENCIONID != session('ID')) {
+						$agente = $this->_usuariosModelRead->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+						return json_encode(['status' => 2, 'motivo' => 'EL FOLIO YA ESTA SIENDO ATENDIDO', 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
+					} else if ($data->folio->STATUS == 'PENDIENTE') {
+						return json_encode(['status' => 3]);
+					} else {
+						$agente = $this->_usuariosModelRead->asObject()->where('ID', $data->folio->AGENTEATENCIONID)->first();
+						return json_encode(['status' => 4, 'motivo' => $data->folio->STATUS, 'expediente' => $data->folio->EXPEDIENTEID, 'agente' => $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO]);
 					}
 				} else {
 					return json_encode(['status' => 0]);
