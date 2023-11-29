@@ -1527,7 +1527,7 @@ class FirmaController extends BaseController
 		if (ENVIRONMENT == 'development') {
 			$to = ['andrea.solorzano@yocontigo-it.com', 'otoniel.f@yocontigo-it.com'];
 		} else {
-			$to = ['isnad.medel@fgebc.gob.mx', 'direcciongeneralsejap@fgebc.gob.mx'];
+			$to = ['jesusa.villalpando@fgebc.gob.mx', 'gianella.romero@fgebc.gob.mx'];
 		}
 
 		$body = view('email_template/alerta_email_template.php', ['folio' => $folio, 'year' => $year]);
