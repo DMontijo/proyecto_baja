@@ -36,8 +36,8 @@
 	</div>
 
 	<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3">
-		<label for="documento_vehiculo_nc" class="form-label fw-bold">Documento del vehículo:</label>
-		<input class="form-control" type="file" id="documento_vehiculo_nc" name="documento_vehiculo_nc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf">
+		<label for="documento_vehiculo_nc" class="form-label fw-bold input-required">Documento del vehículo:</label>
+		<input class="form-control" type="file" id="documento_vehiculo_nc" name="documento_vehiculo_nc" accept="image/jpeg, image/jpg, image/png, .doc, .pdf" required  data-required-original="true">
 	</div>
 	<div class="invalid-feedback">
 			Por favor, agregue el documento del vehículo.
