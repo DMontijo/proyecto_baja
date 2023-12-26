@@ -1993,8 +1993,7 @@
                         break;
                     case 'datos_robo_vehiculo':
                         if (document.querySelector('#tipo_vehiculo').value != '' &&
-                            document.querySelector('#description_vehiculo').value != '' &&
-                            document.querySelector('#documento_vehiculo_nc').value != '') {
+                            document.querySelector('#description_vehiculo').value != '') {
                             return true;
                         } else {
                             return false;
@@ -2075,8 +2074,7 @@
                         break;
                     case 'datos_robo_vehiculo':
                         if (document.querySelector('#tipo_vehiculo').value != '' &&
-                            document.querySelector('#description_vehiculo').value != '' &&
-                            document.querySelector('#documento_vehiculo_nc').value != '') {
+                            document.querySelector('#description_vehiculo').value != '') {
                             return true;
                         } else {
                             return false;
