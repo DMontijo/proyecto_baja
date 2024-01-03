@@ -121,7 +121,9 @@
 
 				<?php if ($permiso->PERMISOID == 4) { ?>
 					<li class="c-sidebar-nav-item" id="nav-constancias" name="nav-constancias">
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias">
+						<!-- <a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias"> -->
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/mantenimiento">
+
 							<i class="fas fa-folder c-sidebar-nav-icon"></i> Constancias de extravío
 						</a>
 					</li>

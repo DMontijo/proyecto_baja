@@ -39,7 +39,7 @@ $routes->setAutoRoute(true);
  */
 
 $routes->get('/', 'HomeController::index');
-// $routes->get('/', 'HomeController::maintenance');
+$routes->get('mantenimiento', 'HomeController::maintenance');
 $routes->get('derivaciones', 'DerivacionesController::index');
 $routes->get('canalizaciones', 'DerivacionesController::canalizaciones');
 $routes->get('salas_virtuales', 'DerivacionesController::salas_virtuales');

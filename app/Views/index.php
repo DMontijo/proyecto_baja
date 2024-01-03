@@ -63,8 +63,10 @@
 		<div class="col-4 d-none d-md-block text-center">
 			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
 				<div class="card-body">
-					<a href="<?= base_url() ?>/constancia_extravio" class="text-decoration-none" onclick="handleClickBTN(event)" name="ConstanciaExtravio" id="ConstanciaExtravio">
-						<img src="<?= base_url() ?>/assets/img/icons/constancia.png" class="w-75" alt="Constancia de extravío">
+					<!-- <a href="<?= base_url() ?>/constancia_extravio" class="text-decoration-none" onclick="handleClickBTN(event)" name="ConstanciaExtravio" id="ConstanciaExtravio"> -->
+					<a href="<?= base_url() ?>/mantenimiento" onclick="handleClickBTN(event)" class="text-decoration-none" name="ConstanciaExtravio" id="ConstanciaExtravio">
+	
+					<img src="<?= base_url() ?>/assets/img/icons/constancia.png" class="w-75" alt="Constancia de extravío">
 						<p class="fw-bold fs-5 mt-2  text-dark ">Constancia de extravío</p>
 					</a>
 				</div>
@@ -92,7 +94,9 @@
 	</section>
 	<section class="row d-block d-lg-none">
 		<div class="col-12 mt-4" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
-			<a href="<?= base_url() ?>/constancia_extravio" onclick="handleClickBTN(event)" class="text-decoration-none" name="ConstanciaExtravio" id="ConstanciaExtravio">
+			<!-- <a href="<?= base_url() ?>/constancia_extravio" onclick="handleClickBTN(event)" class="text-decoration-none" name="ConstanciaExtravio" id="ConstanciaExtravio"> -->
+			<a href="<?= base_url() ?>/mantenimiento" onclick="handleClickBTN(event)" class="text-decoration-none" name="ConstanciaExtravio" id="ConstanciaExtravio">
+
 				<div class="card text-white bg-light border-3 border-primary shadow rounded-3 mb-4">
 					<div class="card-body d-flex">
 						<div class="w-75 d-flex align-items-center" style="height:100px">
