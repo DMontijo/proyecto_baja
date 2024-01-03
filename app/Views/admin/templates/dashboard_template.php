@@ -117,18 +117,16 @@
 					</li>
 				<?php } ?>
 			<?php } ?>
-			<?php foreach ($body_data->rolPermiso as $permiso) { ?>
+			<!-- <?php foreach ($body_data->rolPermiso as $permiso) { ?> -->
 
-				<?php if ($permiso->PERMISOID == 4) { ?>
-					<li class="c-sidebar-nav-item" id="nav-constancias" name="nav-constancias">
-						<!-- <a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias"> -->
-						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/mantenimiento">
-
+				<!-- <?php if ($permiso->PERMISOID == 4) { ?> -->
+					<!-- <li class="c-sidebar-nav-item" id="nav-constancias" name="nav-constancias">
+						<a class="c-sidebar-nav-link font-weight-bold" href="<?= base_url() ?>/admin/dashboard/constancias">
 							<i class="fas fa-folder c-sidebar-nav-icon"></i> Constancias de extravío
 						</a>
-					</li>
-				<?php } ?>
-			<?php } ?>
+					</li> -->
+				<!-- <?php } ?> -->
+			<!-- <?php } ?> -->
 
 			<!-- <?php foreach ($body_data->rolPermiso as $permiso) { ?>
 				<?php if ($permiso->PERMISOID == 5) { ?>
