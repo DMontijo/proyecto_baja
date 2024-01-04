@@ -30,6 +30,7 @@ class ReportesController extends BaseController
 	private $_rolesPermisosModelRead;
 	private $_plantillasModelRead;
 	private $_videoCallModelRead;
+	private $_personasMoralesModelRead;
 
 	function __construct()
 	{
@@ -44,6 +45,8 @@ class ReportesController extends BaseController
 		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
 		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
 		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
+		$this->_personasMoralesModelRead = model('PersonasMoralesModel', true, $this->db_read);
+
 		$this->_videoCallModelRead = new VideoCallReadModel();
 	}
 
@@ -312,8 +315,10 @@ class ReportesController extends BaseController
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
-			} else {
+			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
 			}
 
 			$fechaSalida = '';
@@ -970,6 +975,8 @@ class ReportesController extends BaseController
 				$tipo = 'TELEFÓNICA';
 			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
 			}
 
 			$sheet->setCellValue('A' . $row, $row - 4);
@@ -1382,8 +1389,6 @@ class ReportesController extends BaseController
 		//Filtro
 
 		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion($dataPost);
-		//  var_dump($documentos);
-		//  exit();
 		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
 		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
 		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
@@ -1438,7 +1443,6 @@ class ReportesController extends BaseController
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
@@ -1704,16 +1708,13 @@ class ReportesController extends BaseController
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
@@ -1763,16 +1764,13 @@ class ReportesController extends BaseController
 
 		if (!empty($dataPost['AGENTEATENCIONID'])) {
 			foreach ($empleado as $index => $dato) {
-				//var_dump('info empleado', $dato);
 				if ($dato->ID == $dataPost['AGENTEATENCIONID']) {
-					//var_dump('info empleado', $dato);
 					$dataPost['nombreAgente'] = $dato->NOMBRE . ' ' . $dato->APELLIDO_PATERNO . ' ' . $dato->APELLIDO_MATERNO;
 				}
 			}
 		}
 		if (!empty($dataPost['MUNICIPIOID'])) {
 			foreach ($municipio as $index => $dato) {
-				///var_dump('info municipio', $dato);
 				if ($dato->MUNICIPIOID == $dataPost['MUNICIPIOID']) {
 					$dataPost['municipioDescr'] = $dato->MUNICIPIODESCR;
 				}
@@ -2313,15 +2311,16 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REPORTE DE ATENCIONES");
 			$tipo = '';
 			if ($folio->TIPODENUNCIA == 'VD') {
-				$tipo = 'VIDEO DENUNCIA';
+				$tipo = 'VIDEO';
 			} else if ($folio->TIPODENUNCIA == 'DA') {
 				$tipo = 'ANÓNIMA';
 			} else if ($folio->TIPODENUNCIA == 'TE') {
 				$tipo = 'TELEFÓNICA';
 			} else if ($folio->TIPODENUNCIA == 'EL') {
 				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
 			}
-
 			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $dateregistro);
 			$sheet->setCellValue('C' . $row, $folio->FOLIOID);
@@ -3027,7 +3026,317 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
+/**
+	 * Vista para ingresar a los reportes de BANAVIM
+	 * Se carga con un filtro default
+	 *
+	 */
+	public function getBanavim()
+	{
+		// Datos del filtro
+		$data = [
+			'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+			'fechaFin' => date("Y-m-d"),
+			'GENERO' => 'F'
+		];
+		
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion_banavim($data);
+		$tiposOrden = $this->_plantillasModelRead->get_tipos_orden_banavim();
 
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		//Filtro
+		// $resultFilter = $this->_personasMoralesModelRead->filterPersonasMorales($data);
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+
+		$dataView = (object)array();
+		// $dataView->result = $resultFilter->result;
+		$dataView->tiposOrden = (object)$tiposOrden;
+		$dataView->dataOrdenes = $documentos;
+		$dataView->municipios = $municipio;
+		$dataView->empleados = $empleado;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Reporte BANAVIM', 'reporte banavim', '', $dataView, 'reportes_banavim');
+	}
+
+	/**
+	 * Función para realizar un filtro en reporte de personas morales.
+	 * Recibe por metodo POST los datos del formulario del filtro
+	 *
+	 */
+	public function postBanavim()
+	{
+		//Datos del filtro
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('municipio'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin'),
+			'GENERO' => 'F',
+			'AGENTEATENCIONID' => $this->request->getPost('agente'),
+			'TIPOORDEN' => $this->request->getPost('tipo_orden'),
+
+		];
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		//Para cuando se borra el filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		$municipio = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->findAll();
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion_banavim($data);
+		$tiposOrden = $this->_plantillasModelRead->get_tipos_orden_banavim();
+		$where = "ROLID = 2 OR ROLID = 3 OR ROLID = 4 OR ROLID = 6 OR ROLID = 7 OR ROLID = 8 OR ROLID = 9 OR ROLID = 10";
+		$empleado = $this->_usuariosModelRead->asObject()->where($where)->orderBy('NOMBRE', 'ASC')->findAll();
+		//Generacion del filtro
+		if (isset($data['AGENTEATENCIONID'])) {
+			$agente = $this->_usuariosModelRead->asObject()->where('ID', $data['AGENTEATENCIONID'])->orderBy('NOMBRE', 'ASC')->first();
+			$data['AGENTENOMBRE'] = $agente->NOMBRE . ' ' . $agente->APELLIDO_PATERNO . ' ' . $agente->APELLIDO_MATERNO;
+		}
+
+		if (isset($data['MUNICIPIOID'])) {
+			$mun = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID', $data['MUNICIPIOID'])->first();
+			$data['MUNICIPIONOMBRE'] = $mun->MUNICIPIODESCR;
+		}
+		$dataView = (object)array();
+		// $dataView->result = $resultFilter->result;
+		$dataView->tiposOrden = (object)$tiposOrden;
+		$dataView->dataOrdenes = $documentos;
+		$dataView->empleados = $empleado;
+		$dataView->municipios = $municipio;
+		$dataView->filterParams = (object)$data;
+		$dataView->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
+		$this->_loadView('Reporte BANAVIM', 'reporte banavim', '', $dataView, 'reportes_banavim');
+	}
+
+	/**
+	 * Función para generar el reporte XLSX de banavim
+	 * Recibe por metodo POST los datos del filtro
+	 *
+	 */
+	public function createBanavimXlsx()
+	{
+		//Datos del filtro
+
+		$data = [
+			'MUNICIPIOID' => $this->request->getPost('MUNICIPIOID'),
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'GENERO' => $this->request->getPost('GENERO'),
+			'fechaRegistro' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+
+		$date = date("Y_m_d_h_i_s");
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+		//Cuando no hay filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		//Generacion del filtro
+		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion_banavim($data);
+
+		//Inicio del XLSX
+		$spreadSheet = new Spreadsheet();
+		$spreadSheet->getProperties()
+			->setCreator("Fiscalía General del Estado de Baja California")
+			->setLastModifiedBy("Fiscalía General del Estado de Baja California")
+			->setTitle("Reporte BANAVIM" . $date)
+			->setSubject("Reporte BANVIM" . $date)
+			->setDescription(
+				"El presente documento fue generado por el Centro de Denuncia Tecnológica de la Fiscalía General del Estado de Baja California."
+			)
+			->setKeywords("reporte banavim cdtec fgebc")
+			->setCategory("Reportes");
+		$sheet = $spreadSheet->getActiveSheet();
+
+		//Estilo del header
+		$styleHeaders = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => 'FFFFFF'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => '511229',
+				],
+				'endColor' => [
+					'argb' => '511229',
+				],
+			],
+		];
+		$styleCab = [
+			'font' => [
+				'bold' => true,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '12'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+
+			],
+
+		];
+		//Estilo de las celdas
+		$styleCells = [
+			'font' => [
+				'bold' => false,
+				'color' => ['argb' => '000000'],
+				'name' => 'Arial',
+				'size' => '10'
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '000000'],
+				],
+			],
+			'fill' => [
+				'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_GRADIENT_LINEAR,
+				'rotation' => 90,
+				'startColor' => [
+					'argb' => 'FFFFFF',
+				],
+				'endColor' => [
+					'argb' => 'FFFFFF',
+				],
+			],
+		];
+		$row = 4;
+
+		$columns = [
+			'A', 'B', 'C', 'D', 'E',
+			'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O',
+			'P', 'Q', 'R', 'S', 'T',
+			'U', 'V', 'W', 'X', 'Y', 'Z'
+		];
+		//Cabeceras
+		$headers = [
+			"No.",
+			"Folio",
+			"FECHA DE EXPEDICIÓN",
+			"NO. EXPEDIENTE",
+			"MODULO QUE EXPIDE",
+			"MUNICIPIO QUE ATIENDE",
+			"SERVIDOR PUBLICO SOLICITANTE",
+			"DELITO",
+			"TIPO DE ORDEN DE PROTECCIÓN",
+			"VICTIMA/OFENDIDO",
+			"GÉNERO",
+			"EDAD",
+			"VÍCTIMA LESIONADA",
+			"FECHA DE CAPTURA",
+			"EXPEDIENTE UNICO DE VICTIMA",
+			"ORDEN DE EMERGENCIA O PREVENTIVA",
+			"TIPO DE VIOLENCIA",
+			"AMBITO DE LA VIOLENCIA",
+
+		];
+
+
+		for ($i = 0; $i < count($headers); $i++) {
+			$sheet->setCellValue($columns[$i] . 4, $headers[$i]);
+			$sheet->getColumnDimension($columns[$i])->setAutoSize(true);
+		}
+
+		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+		$row++;
+		//Rellenado del XLSX
+		foreach ($documentos as $index => $banavim) {
+		
+			$this->separarExpID($banavim->EXPEDIENTEID);
+
+
+			$sheet->setCellValue('A1', "CENTRO DE DENUNCIA TECNOLÓGICA");
+			$sheet->setCellValue('A2', "REGISTRO BANAVIM");
+
+
+			$sheet->setCellValue('A' . $row, $row-4);
+			$sheet->setCellValue('B' . $row, $banavim->FOLIOID);
+			$sheet->setCellValue('C' . $row, $this->formatFecha($banavim->FECHAFIRMA));
+			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID). '/' . $banavim->TIPOEXPEDIENTECLAVE);
+			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
+			$sheet->setCellValue('F' . $row,  $banavim->MUNICIPIODESCR);
+			$sheet->setCellValue('G' . $row,  $banavim->NOMBRE_MP);
+			$sheet->setCellValue('H' . $row,  $banavim->DELITOMODALIDADDESCR);
+			$sheet->setCellValue('I' . $row,  $banavim->TIPODOC);
+			$sheet->setCellValue('J' . $row,  $banavim->NOMBRE_VTM);
+			$sheet->setCellValue('K' . $row, ($banavim->SEXO == 'M' ? 'MASCULINO' : ($banavim->SEXO == 'F' ? 'FEMENINO' : '')));
+			$sheet->setCellValue('L' . $row,  $banavim->EDADCANTIDAD ? $banavim->EDADCANTIDAD  . ' AÑOS' : "");
+			$sheet->setCellValue('M' . $row,  $banavim->LESIONES);
+
+			$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
+
+
+			if (!(($row - 4) >= count($documentos))) $row++;
+
+		}
+		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
+		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
+
+		$sheet->getStyle('A4:R4')->applyFromArray($styleHeaders);
+		$sheet->getStyle('A5:R' . $row)->applyFromArray($styleCells);
+
+		$sheet->mergeCells('A1:R1');
+		$sheet->mergeCells('A2:R2');
+		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+		$drawing->setName('FGEBC');
+		$drawing->setDescription('LOGO');
+		$drawing->setPath(FCPATH . 'assets/img/FGEBC_recortada.png'); // put your path and image here
+		$drawing->setHeight(60);
+		$drawing->setCoordinates('A1');
+		$drawing->setOffsetX(10);
+		$drawing->setWorksheet($spreadSheet->getActiveSheet());
+
+		$writer = new Xlsx($spreadSheet);
+
+		$filename = urlencode("Reporte_Banavim_" . $date . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
+		header("Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header("Content-Transfer-Encoding: binary");
+		header("Cache-Control: max-age=0");
+		$writer->save("php://output");
+	}
 	/**
 	 * Función CURL GET para el serivicio de videollamada 
 	 *

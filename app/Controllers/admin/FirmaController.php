@@ -1204,17 +1204,25 @@ class FirmaController extends BaseController
 			->setAttachments($attachments)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
-			$result = false;
-		}
-		if ($result) {
-			return true;
-		} else {
+			$validationEmail = validateEmail($to);
+			if(!$validationEmail){
+				return false;
+			} else {
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+				if ($result) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		} catch (\Throwable $error) {
 			return false;
 		}
 	}
@@ -1326,39 +1334,57 @@ class FirmaController extends BaseController
 				$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
 				if($ordenes){
 					try {
-						$result = $mailersend->email->send($emailParams);
-					} catch (MailerSendValidationException $e) {
-						$result = false;
-					} catch (MailerSendRateLimitException $e) {
-						$result = false;
-					}
-					if ($result) {
-						$datosUpdate = [
-							'ENVIADO' => 'S',
-						];
-						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
-		
-						return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
-					} else {
+						$validationEmail = validateEmail($to);
+						if(!$validationEmail){
+							return json_encode((object)['status' => 0]);
+						} else {
+							try {
+								$result = $mailersend->email->send($emailParams);
+							} catch (MailerSendValidationException $e) {
+								$result = false;
+							} catch (MailerSendRateLimitException $e) {
+								$result = false;
+							}
+							if ($result) {
+								$datosUpdate = [
+									'ENVIADO' => 'S',
+								];
+								$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
+				
+								return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
+							} else {
+								return json_encode((object)['status' => 0]);
+							}
+						}
+					} catch (\Throwable $error) {
 						return json_encode((object)['status' => 0]);
 					}
 				}
 			} else {
 				try {
-					$result = $mailersend->email->send($emailParams);
-				} catch (MailerSendValidationException $e) {
-					$result = false;
-				} catch (MailerSendRateLimitException $e) {
-					$result = false;
-				}
-				if ($result) {
-					$datosUpdate = [
-						'ENVIADO' => 'S',
-					];
-					$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
-	
-					return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
-				} else {
+					$validationEmail = validateEmail($to);
+					if(!$validationEmail){
+						return json_encode((object)['status' => 0]);
+					} else {
+						try {
+							$result = $mailersend->email->send($emailParams);
+						} catch (MailerSendValidationException $e) {
+							$result = false;
+						} catch (MailerSendRateLimitException $e) {
+							$result = false;
+						}
+						if ($result) {
+							$datosUpdate = [
+								'ENVIADO' => 'S',
+							];
+							$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento->FOLIODOCID)->update();
+			
+							return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
+						} else {
+							return json_encode((object)['status' => 0]);
+						}
+					}
+				} catch (\Throwable $error) {
 					return json_encode((object)['status' => 0]);
 				}
 			}
@@ -1472,41 +1498,60 @@ class FirmaController extends BaseController
 				$ordenes = $this->sendEmailOrdenesProteccion($folioM->MUNICIPIOASIGNADOID, $municipio, $fecha_actual, $ordenesProteccion);
 				if($ordenes){
 					try {
-						$result = $mailersend->email->send($emailParams);
-					} catch (MailerSendValidationException $e) {
-						$result = false;
-					} catch (MailerSendRateLimitException $e) {
-						$result = false;
-					}
-					if($result){
-						$datosUpdate = [
-							'ENVIADO' => 'S',
-						];
-						for ($i = 0; $i < count($documento); $i++) {
-							$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+						$validationEmail = validateEmail($to);
+						if(!$validationEmail){
+							return json_encode((object)['status' => 0]);
+						} else {
+							try {
+								$result = $mailersend->email->send($emailParams);
+							} catch (MailerSendValidationException $e) {
+								$result = false;
+							} catch (MailerSendRateLimitException $e) {
+								$result = false;
+							}
+							if($result){
+								$datosUpdate = [
+									'ENVIADO' => 'S',
+								];
+								for ($i = 0; $i < count($documento); $i++) {
+									$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+								}
+								return json_encode((object)['status' => 1]);
+							} else {
+								return json_encode((object)['status' => 0]);
+							}
 						}
-						return json_encode((object)['status' => 1]);
-					} else {
+					} catch (\Throwable $error) {
 						return json_encode((object)['status' => 0]);
 					}
+					
 				}
 			} else {
 				try {
-					$result = $mailersend->email->send($emailParams);
-				} catch (MailerSendValidationException $e) {
-					$result = false;
-				} catch (MailerSendRateLimitException $e) {
-					$result = false;
-				}
-				if($result){
-					$datosUpdate = [
-						'ENVIADO' => 'S',
-					];
-					for ($i = 0; $i < count($documento); $i++) {
-						$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+					$validationEmail = validateEmail($to);
+					if(!$validationEmail){
+						return json_encode((object)['status' => 0]);
+					} else {
+						try {
+							$result = $mailersend->email->send($emailParams);
+						} catch (MailerSendValidationException $e) {
+							$result = false;
+						} catch (MailerSendRateLimitException $e) {
+							$result = false;
+						}
+						if($result){
+							$datosUpdate = [
+								'ENVIADO' => 'S',
+							];
+							for ($i = 0; $i < count($documento); $i++) {
+								$update = $this->_folioDocModel->set($datosUpdate)->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIODOCID', $documento[$i]->FOLIODOCID)->update();
+							}
+							return json_encode((object)['status' => 1]);
+						} else {
+							return json_encode((object)['status' => 0]);
+						}
 					}
-					return json_encode((object)['status' => 1]);
-				} else {
+				} catch (\Throwable $error) {
 					return json_encode((object)['status' => 0]);
 				}
 			}

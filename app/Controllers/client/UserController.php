@@ -339,8 +339,6 @@ class UserController extends BaseController
 				return redirect()->to(base_url('/denuncia/dashboard'));
 			}
 		} catch (\Exception $e) {
-			// var_dump($data);
-			// exit;
 			session()->destroy;
 			return redirect()->to(base_url('/denuncia'))->with('message_error', 'No se pudo actualizar el registro, ingresa e intentalo de nuevo.');
 		}
@@ -429,13 +427,23 @@ class UserController extends BaseController
 	{
 		$email = $this->request->getPost('email');
 		$data = $this->_denunciantesModelRead->where('CORREO', $email)->first();
-		if ($data == NULL) {
-			return json_encode((object)['exist' => 0]);
-		} else if (count($data) > 0) {
-			return json_encode((object)['exist' => 1]);
-		} else {
-			return json_encode((object)['exist' => 0]);
+		try {
+			$validationEmail = validateEmail($this->request->getPost('email'));
+		} catch (\Throwable $th) {
+			return json_encode((object)['error' => 1]);
 		}
+		if($validationEmail){
+			if ($data == NULL) {
+				return json_encode((object)['exist' => 0]);
+			} else if (count($data) > 0) {
+				return json_encode((object)['exist' => 1]);
+			} else {
+				return json_encode((object)['exist' => 0]);
+			}
+		}else{
+			return json_encode((object)['invalid' => 1]);
+		}
+		
 	}
 
 	/**
@@ -461,7 +469,7 @@ class UserController extends BaseController
 	private function _sendEmailPassword($to, $telefono, $password)
 	{
 		$body = view('email_template/password_email_template.php', ['email' => $to, 'password' => $password]);
-		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);
+		$mailersend = new MailerSend(['api_key' => EMAIL_TOKEN]);		
 		$recipients = [
 			new Recipient($to, 'Your Client'),
 		];
@@ -476,14 +484,24 @@ class UserController extends BaseController
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
 		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
-
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
-			$result = false;
+			$validationEmail = validateEmail($to);
+			if(!$validationEmail){
+				$result = false;
+			} else {
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+			}
+		} catch (\Throwable $error) {
+			$data = ['message' => 'Error validando correo electronico'];
+			return json_encode((object)['status' => 500, 'data' => $data]);
 		}
+		
 		if ($result) {
 			return true;
 		} else {

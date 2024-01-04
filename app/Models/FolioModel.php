@@ -55,6 +55,36 @@ class FolioModel extends Model
 		'NOTIFICACIONES'
 	];
 
+	public function get_victimas($folio, $year)
+	{
+		$strQuery = 'SELECT 
+		t1.FOLIOID, t1.ANO, 
+		t2.NOMBRE, t2.PRIMERAPELLIDO, t2.SEGUNDOAPELLIDO, t2.PERSONAFISICAID,
+		NULL AS PERSONAMORALID, NULL AS DENOMINACION,
+		PFCJ.PERSONACALIDADJURIDICADESCR AS PFCJDESCR, NULL AS PMCJDESCR
+	  FROM
+		FOLIO t1
+		LEFT JOIN FOLIOPERSONAFISICA t2 ON t1.FOLIOID = t2.FOLIOID AND t1.ANO = t2.ANO AND (t2.CALIDADJURIDICAID = 1 OR t2.CALIDADJURIDICAID = 6 OR t2.CALIDADJURIDICAID = 3) 
+		LEFT JOIN PERSONACALIDADJURIDICA AS PFCJ ON PFCJ.PERSONACALIDADJURIDICAID = t2.CALIDADJURIDICAID
+	  WHERE
+		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year . ' AND t2.PERSONAFISICAID IS NOT NULL 
+	UNION 
+	SELECT 
+		t1.FOLIOID, t1.ANO, 
+		NULL AS NOMBRE, NULL AS PRIMERAPELLIDO, NULL AS SEGUNDOAPELLIDO, NULL AS PERSONAFISICAID,
+		t3.PERSONAMORALID, t3.DENOMINACION,
+		NULL AS PFCJDESCR, PMCJ.PERSONACALIDADJURIDICADESCR AS PMCJDESCR
+	  FROM
+		FOLIO t1
+		LEFT JOIN FOLIOPERSONAMORAL t3 ON t1.FOLIOID = t3.FOLIOID AND t1.ANO = t3.ANO AND t3.CALIDADJURIDICAID = 1
+		LEFT JOIN PERSONACALIDADJURIDICA AS PMCJ ON PMCJ.PERSONACALIDADJURIDICAID = t3.CALIDADJURIDICAID
+	  WHERE 		
+		t1.FOLIOID = ' . $folio . ' AND t1.ANO = ' . $year. ' AND t3.PERSONAMORALID IS NOT NULL ';
+		return $this->db->query($strQuery)->getResult('array');
+		// $query = $builder->get();
+		// return $query->getResult('array');
+	}
+
 	public function filterDates($obj)
 	{
 		$strQuery = 'SELECT
@@ -380,7 +410,93 @@ class FolioModel extends Model
 			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
 
+		$strQuery = $strQuery . 'AND TIPODENUNCIA != "ES"';
 		$strQuery = $strQuery . 'GROUP BY FOLIO.FOLIOID';
+		$result = $this->db->query($strQuery)->getResult();
+
+		$dataView = (object)array();
+		$dataView->result = $result;
+		// $dataView->strQuery = $strQuery;
+		return $dataView;
+	}
+
+	public function filterAllDatesLitigante($obj)
+	{
+		$strQuery = 'SELECT FOLIO.*, ESTADO.ESTADODESCR,MUNICIPIO.MUNICIPIODESCR,
+		CONCAT(DENUNCIANTES.NOMBRE," ",DENUNCIANTES.APELLIDO_PATERNO," ",DENUNCIANTES.APELLIDO_MATERNO) AS "NOMBRE_DENUNCIANTE",
+		CONCAT(USUARIOS.NOMBRE," ",USUARIOS.APELLIDO_PATERNO," ",USUARIOS.APELLIDO_MATERNO) AS "NOMBRE_AGENTE", 
+		MUNICIPIOASIGNADO.MUNICIPIODESCR AS MUNICIPIOASIGNADO, TIPOEXPEDIENTE.TIPOEXPEDIENTECLAVE,EMPLEADOS.OFICINADESCR,
+		GROUP_CONCAT(DELITOMODALIDAD_FIS.DELITOMODALIDADDESCR) AS "DELITOMODALIDADDESCR_FIS",
+    	GROUP_CONCAT(DELITOMODALIDAD_MORAL.DELITOMODALIDADDESCR) AS "DELITOMODALIDADDESCR_MORAL",		
+		BANDEJARAC.MODULODESCR
+		FROM FOLIO
+		LEFT JOIN USUARIOS ON USUARIOS.ID = FOLIO.AGENTEATENCIONID 
+		LEFT JOIN MUNICIPIO AS MUNICIPIOASIGNADO ON MUNICIPIOASIGNADO.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID AND MUNICIPIOASIGNADO.ESTADOID = 2
+		LEFT JOIN DENUNCIANTES ON DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID
+		LEFT JOIN TIPOEXPEDIENTE ON TIPOEXPEDIENTE.TIPOEXPEDIENTEID = FOLIO.TIPOEXPEDIENTEID
+		LEFT JOIN EMPLEADOS ON EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID
+		LEFT JOIN OFICINA ON OFICINA.OFICINAID = FOLIO.OFICINAASIGNADOID AND OFICINA.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID
+		LEFT JOIN ESTADO ON ESTADO.ESTADOID = FOLIO.ESTADOID
+		LEFT JOIN FOLIORELACIONFISFIS ON FOLIORELACIONFISFIS.FOLIOID = FOLIO.FOLIOID AND FOLIORELACIONFISFIS.ANO = FOLIO.ANO 
+		LEFT JOIN FOLIORELACIONMORALFIS ON FOLIORELACIONMORALFIS.FOLIOID = FOLIO.FOLIOID AND FOLIORELACIONMORALFIS.ANO = FOLIO.ANO 
+		LEFT JOIN DELITOMODALIDAD AS DELITOMODALIDAD_FIS  ON DELITOMODALIDAD_FIS.DELITOMODALIDADID = FOLIORELACIONFISFIS.DELITOMODALIDADID
+		LEFT JOIN DELITOMODALIDAD AS DELITOMODALIDAD_MORAL ON DELITOMODALIDAD_MORAL.DELITOMODALIDADID = FOLIORELACIONMORALFIS.DELITOMODALIDADID
+
+		LEFT JOIN MUNICIPIO ON MUNICIPIO.MUNICIPIOID = FOLIO.MUNICIPIOID AND MUNICIPIO.ESTADOID = FOLIO.ESTADOID
+		LEFT JOIN BANDEJARAC ON BANDEJARAC.FOLIOID = FOLIO.FOLIOID AND BANDEJARAC.ANO = FOLIO.ANO
+';
+
+		$fechaInicio = isset($obj['fechaInicio']) ? $obj['fechaInicio'] : '';
+		$fechaFin = isset($obj['fechaFin']) ? $obj['fechaFin'] : '';
+		$horaInicio = isset($obj['horaInicio']) ? $obj['horaInicio'] : null;
+		$horaFin = isset($obj['horaFin']) ? $obj['horaFin'] : null;
+
+		if (isset($obj['fechaInicio'])) {
+			unset($obj['fechaInicio']);
+		}
+		if (isset($obj['fechaFin'])) {
+			unset($obj['fechaFin']);
+		}
+		if (isset($obj['horaInicio'])) {
+			unset($obj['horaInicio']);
+		}
+		if (isset($obj['horaFin'])) {
+			unset($obj['horaFin']);
+		}
+
+		$count = count($obj);
+
+		if ($count > 0) {
+			$strQuery = $strQuery . ' WHERE ';
+		}
+
+		foreach ($obj as $clave => $valor) {
+			$count -= 1;
+			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
+				$strQuery = $strQuery . 'FOLIO.' . $clave . ' = ' . '"' . $valor . '"';
+
+				if ($count > 0) {
+					$strQuery = $strQuery . ' AND ';
+				}
+			}
+		}
+
+		if (count($obj) > 0) {
+			$strQuery = $strQuery . ' AND ';
+		} else {
+			$strQuery = $strQuery . ' WHERE ';
+		}
+
+
+		$strQuery =
+			$strQuery . 'FOLIO.FECHAREGISTRO BETWEEN CAST("' .
+			(isset($fechaInicio) ? date("Y-m-d", strtotime($fechaInicio)) : date("Y-m-d")) . ' ' .
+			(isset($horaInicio) ? (date('H:i:s', strtotime($horaInicio))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
+			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
+			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
+
+		$strQuery = $strQuery . ' AND FOLIO.TIPODENUNCIA = "ES"';
+		$strQuery = $strQuery . ' GROUP BY FOLIO.FOLIOID';
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();
@@ -825,6 +941,19 @@ class FolioModel extends Model
 		$builder = $this->db->table($this->table);
 		$builder->select(['FOLIO.*', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
 		$builder->where('FOLIO.STATUS', 'ABIERTO');
+		$builder->where('TIPODENUNCIA !=','ES');
+		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
+		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
+		$query = $builder->get();
+		return $query->getResult('object');
+	}
+
+	public function get_folios_abiertos_escrita()
+	{
+		$builder = $this->db->table($this->table);
+		$builder->select(['FOLIO.*', 'DENUNCIANTES.NOMBRE', 'DENUNCIANTES.APELLIDO_PATERNO', 'DENUNCIANTES.APELLIDO_MATERNO']);
+		$builder->where('FOLIO.STATUS', 'ABIERTO');
+		$builder->where('TIPODENUNCIA','ES');
 		$builder->join('DENUNCIANTES', 'DENUNCIANTES.DENUNCIANTEID = FOLIO.DENUNCIANTEID', 'LEFT');
 		$builder->orderBy('FOLIO.FECHAREGISTRO ASC');
 		$query = $builder->get();

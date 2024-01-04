@@ -928,7 +928,7 @@
 	function llenarTablaFisFis(relacionFisFis) {
 		for (let i = 0; i < relacionFisFis.length; i++) {
 			var btn =
-				`<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID})'><i class='fa fa-trash'></i></button>`
+				`<button type='button'  class='btn btn-primary' onclick='eliminarArbolDelictivo(${relacionFisFis[i].PERSONAFISICAIDVICTIMA},${relacionFisFis[i].PERSONAFISICAIDIMPUTADO},${relacionFisFis[i].DELITOMODALIDADID}, 0)'><i class='fa fa-trash'></i></button>`
 
 			var fila =
 				`<tr id="row${i}">` +
@@ -998,7 +998,7 @@
 	}
 
 	//Funcion para eliminar la relacion del arbol delictivo, recibe como parametro el imputado, victima y el id del delito
-	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId) {
+	function eliminarArbolDelictivo(personafisicavictima, personafisicaimputado, delitoModalidadId, tipo) {
 		$.ajax({
 			data: {
 				'personafisicavictima': personafisicavictima,
@@ -1006,6 +1006,7 @@
 				'delito': delitoModalidadId,
 				'folio': inputFolio.value,
 				'year': year_select.value,
+				'tipo': tipo,
 
 			},
 			url: "<?= base_url('/data/delete-arbol_delictivo-by-folio') ?>",
@@ -1353,7 +1354,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 							select_victima_documento.add(option, null);
 						});
 
@@ -1400,7 +1401,7 @@
 
 							const option = document.createElement('option');
 							option.value = victima.PERSONAFISICAID;
-							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+							option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 							select_victima_ofendido.add(option, null);
 						});
 						$('#imputado_delito_cometido').empty();
@@ -2418,7 +2419,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 						select_victima_ofendido.add(option, null);
 					});
 					const option_vacio_vd = document.createElement('option');
@@ -2437,7 +2438,7 @@
 
 						const option = document.createElement('option');
 						option.value = victima.PERSONAFISICAID;
-						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+						option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 						select_victima_documento.add(option, null);
 					});
 					const option_vacio_id = document.createElement('option');
@@ -3492,7 +3493,7 @@
 				if (!form_delito.checkValidity()) {
 					event.preventDefault();
 					event.stopPropagation();
-					form_preguntas.classList.add('was-validated')
+					form_delito.classList.add('was-validated')
 				} else {
 					event.preventDefault();
 					event.stopPropagation();
@@ -4786,7 +4787,7 @@
 					input_colonia.value = '-';
 				}
 			});
-
+			
 			//Funcion  para actualizar los hechos de la denuncia
 			function actualizarDenuncia() {
 				const data = {
@@ -5597,7 +5598,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							$('#victima_modal_documento').empty();
@@ -5609,7 +5610,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_modal.add(option, null);
 							});
 							document.getElementById('subirFotoPersona').value = '';
@@ -6715,7 +6716,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_ofendido.add(option, null);
 							});
 							const option_vacio_vd = document.createElement('option');
@@ -6734,7 +6735,7 @@
 
 								const option = document.createElement('option');
 								option.value = victima.PERSONAFISICAID;
-								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PERSONACALIDADJURIDICADESCR;
+								option.text = victima.NOMBRE + ' ' + primer_apellido + ' | ' + victima.PFCJDESCR;
 								select_victima_documento.add(option, null);
 							});
 							const option_vacio_id = document.createElement('option');

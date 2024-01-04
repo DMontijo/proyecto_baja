@@ -68,6 +68,11 @@ class FOLIOARCHIVOEXTERNO extends Migration
                 'constraint' => '20',
                 'null' => true,
             ],
+            'TIPO' => [
+                'type' => 'VARCHAR',
+                'constraint' => '10',
+                'null' => true,
+            ],
             'FECHAREGISTRO DATETIME DEFAULT CURRENT_TIMESTAMP',
             'FECHAACTUALIZACION DATETIME ON UPDATE CURRENT_TIMESTAMP',
         ]);

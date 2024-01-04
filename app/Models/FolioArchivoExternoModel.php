@@ -24,7 +24,8 @@ class FolioArchivoExternoModel extends Model
 		'PUBLICADO',
 		'RUTAALMACENAMIENTOID',
 		'STATUSALMACENID',
-		'EXPORTAR'
+		'EXPORTAR',
+		'TIPO'
     ];
 	public function get_by_folio($folio, $year)
 	{

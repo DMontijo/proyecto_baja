@@ -93,6 +93,7 @@
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'DA' ? 'selected' : '') : null ?> value="DA">DENUNCIA ANÓNIMA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'TE' ? 'selected' : '') : null ?> value="TE">TELEFÓNICA</option>
 													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'EL' ? 'selected' : '') : null ?> value="EL">ELECTRÓNICA</option>
+													<option <?= isset($body_data->filterParams->TIPODENUNCIA) ? ($body_data->filterParams->TIPODENUNCIA == 'ES' ? 'selected' : '') : null ?> value="ES">ESCRITA</option>
 
 												</select>
 											</div>
@@ -155,9 +156,12 @@
 												$tipo = 'ANÓNIMA';
 											} else if ($folio->TIPODENUNCIA == 'TE') {
 												$tipo = 'TELEFÓNICA';
-											} else {
-												$tipo = 'ELECTRÓNICA';
+											} else if ($folio->TIPODENUNCIA == 'EL') {
+												$tipo = 'ELECTRONICA';
+											} else if ($folio->TIPODENUNCIA == 'ES') {
+												$tipo = 'ESCRITA';
 											}
+								
 										?>
 											<tr>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>

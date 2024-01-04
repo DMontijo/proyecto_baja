@@ -236,8 +236,6 @@ class ConstanciaExtravioModel extends Model
 				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 		}
 
-		// var_dump($strQuery);
-		// exit;
 		$result = $this->db->query($strQuery)->getResult();
 		$dataView = (object)array();
 		$dataView->result = $result;
