@@ -90,7 +90,7 @@
 
 
                                 <p class="text-center">
-                                    <i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu video denuncia aceptes los derechos de víctima u ofendido.</i>
+                                    <i class="bi bi-exclamation-triangle"> Es muy importante que antes de iniciar tu denuncia por escrito aceptes los derechos de víctima u ofendido.</i>
                                     <br>
                                     Para consultar la constancia de Derechos, da clic <a target="_blank" href="" data-bs-toggle="modal" data-bs-target="#exampleModal">aquí</a>
                                     <br><br>
@@ -1740,13 +1740,13 @@
                                 document.getElementById('datos_robo_vehiculo').classList.remove('step');
                                 document.getElementById('datos_robo_vehiculo_completo').classList.remove('step');
                                 const requiredFields3 = datos_robo_vehiculo.querySelectorAll('[required]');
-                            requiredFields3.forEach(field => {
-                                field.removeAttribute('required');
-                            });
-                            const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
-                            requiredFields4.forEach(field => {
-                                field.removeAttribute('required');
-                            });
+                                requiredFields3.forEach(field => {
+                                    field.removeAttribute('required');
+                                });
+                                const requiredFields4 = datos_robo_vehiculo_completo.querySelectorAll('[required]');
+                                requiredFields4.forEach(field => {
+                                    field.removeAttribute('required');
+                                });
 
 
                             }
@@ -2165,6 +2165,10 @@
                                 confirmButtonColor: '#bf9b55',
                             });
                             $('#agregarDireccionModal').modal('hide');
+                            form_direccion_btn.disabled = false;
+                            spinner_documentos.classList.add('d-none');
+                            btn_text_documentos.classList.remove('d-none');
+                            form_agregar_direccion.classList.add('was-validated')
 
                         } else {
                             Swal.fire({
