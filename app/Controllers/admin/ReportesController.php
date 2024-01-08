@@ -941,23 +941,41 @@ class ReportesController extends BaseController
 			}
 
 			// Información del las llamadas por folio
-			foreach ($infoCall as $obj) {
-				if ($obj->folio === $folio->FOLIOFULL) {
-					$inicio = $this->stringToTime($obj->sessionStartedAt);
-
-					if ($obj->sessionFinishedAt) {
-						$fin = $this->stringToTime($obj->sessionFinishedAt);
-					}
-
-					$duracion = $obj->duration;
-					$horas = floor($duracion / 3600);
-					$minutos = floor(($duracion - ($horas * 3600)) / 60);
-					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
-					$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
-					$prioridad = $obj->priority;
-					break;
+			$filteredInfoCall = array_filter($infoCall, function ($obj) use ($folio) {
+				return $obj->folio === $folio->FOLIOFULL;
+			});
+			if (!empty($filteredInfoCall)) {
+				$obj = reset($filteredInfoCall); // Obtiene el primer elemento del arreglo filtrado
+				$inicio = $this->stringToTime($obj->sessionStartedAt);
+			
+				if ($obj->sessionFinishedAt) {
+					$fin = $this->stringToTime($obj->sessionFinishedAt);
 				}
+			
+				$duracion = $obj->duration;
+				$horas = floor($duracion / 3600);
+				$minutos = floor(($duracion - ($horas * 3600)) / 60);
+				$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				$duracion_total = $this->stringToTime(strval($horas) . ':' . $minutos . ':' . number_format($segundos, 0));
+				$prioridad = $obj->priority;
 			}
+			// foreach ($infoCall as $obj) {
+			// 	if ($obj->folio === $folio->FOLIOFULL) {
+			// 		$inicio = $this->stringToTime($obj->sessionStartedAt);
+
+			// 		if ($obj->sessionFinishedAt) {
+			// 			$fin = $this->stringToTime($obj->sessionFinishedAt);
+			// 		}
+
+			// 		$duracion = $obj->duration;
+			// 		$horas = floor($duracion / 3600);
+			// 		$minutos = floor(($duracion - ($horas * 3600)) / 60);
+			// 		$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+			// 		$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
+			// 		$prioridad = $obj->priority;
+			// 		break;
+			// 	}
+			// }
 
 
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
