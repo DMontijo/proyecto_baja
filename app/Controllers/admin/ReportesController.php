@@ -920,9 +920,9 @@ class ReportesController extends BaseController
 		}
 		// Información del las llamadas por folio
 		$infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($foliosConsulta);
-
+		//Rellenado del XLSX
 		foreach ($resultFilter->result 	as $index => $folio) {
-
+			// $folioAno=$folio->FOLIOID.'/'. $folio->ANO;
 			$inicio = '';
 			$fin = '';
 			$duracion = '';
@@ -961,13 +961,14 @@ class ReportesController extends BaseController
 					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
 					$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
 					$prioridad = $obj->priority;
+					break;
 				}
 			}
 
+			// $infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($folio->FOLIOID, $folio->ANO);
+
 			// if (count($infoCall) > 0) {
-
 			// 	$infoCall = (object)$infoCall[0];
-
 			// 	$inicio = $this->stringToTime($infoCall->sessionStartedAt);
 
 			// 	if ($infoCall->sessionFinishedAt) {
@@ -981,7 +982,6 @@ class ReportesController extends BaseController
 			// 	$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
 			// 	$prioridad = $infoCall->priority;
 			// }
-
 
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$fechasalida = strtotime($folio->FECHASALIDA);
@@ -1045,15 +1045,15 @@ class ReportesController extends BaseController
 				$countTipoVD++;
 			}
 		}
-
+	
 		foreach ($columnValues as $time) {
 			$totalSeconds += $this->timeToSeconds($time);
 		}
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
-
+	
 		// $totalRegistro =  count($resultFilter->result);
-
+		
 		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
@@ -2386,6 +2386,7 @@ class ReportesController extends BaseController
 			if ($cellValue != "NO HAY VIDEO" && $cellValueType == "VIDEO") {
 				$columnValues[] = $cellValue;
 				$countTipoVD++;
+
 			}
 		}
 		foreach ($columnValues as $time) {
@@ -2436,7 +2437,7 @@ class ReportesController extends BaseController
 		list($hours, $minutes, $seconds) = explode(':', $time);
 		return ($hours * 3600) + ($minutes * 60) + $seconds;
 	}
-
+	
 
 	// Function to convert seconds to time string
 	function secondsToTime($seconds)
@@ -3049,7 +3050,7 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-	/**
+/**
 	 * Vista para ingresar a los reportes de BANAVIM
 	 * Se carga con un filtro default
 	 *
@@ -3062,7 +3063,7 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d"),
 			'GENERO' => 'F'
 		];
-
+		
 		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion_banavim($data);
 		$tiposOrden = $this->_plantillasModelRead->get_tipos_orden_banavim();
 
@@ -3305,7 +3306,7 @@ class ReportesController extends BaseController
 		$row++;
 		//Rellenado del XLSX
 		foreach ($documentos as $index => $banavim) {
-
+		
 			$this->separarExpID($banavim->EXPEDIENTEID);
 
 
@@ -3313,10 +3314,10 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO BANAVIM");
 
 
-			$sheet->setCellValue('A' . $row, $row - 4);
+			$sheet->setCellValue('A' . $row, $row-4);
 			$sheet->setCellValue('B' . $row, $banavim->FOLIOID);
 			$sheet->setCellValue('C' . $row, $this->formatFecha($banavim->FECHAFIRMA));
-			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID) . '/' . $banavim->TIPOEXPEDIENTECLAVE);
+			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID). '/' . $banavim->TIPOEXPEDIENTECLAVE);
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('F' . $row,  $banavim->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $banavim->NOMBRE_MP);
@@ -3331,6 +3332,7 @@ class ReportesController extends BaseController
 
 
 			if (!(($row - 4) >= count($documentos))) $row++;
+
 		}
 		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
