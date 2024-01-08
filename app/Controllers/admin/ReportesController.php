@@ -909,7 +909,12 @@ class ReportesController extends BaseController
 		$sheet->getRowDimension($row)->setRowHeight(20, 'pt');
 
 		$row++;
-
+		$foliosConsulta = [];
+		foreach ($resultFilter->result as $index => $folio) {
+			$foliosConsulta[] = $folio->FOLIOFULL;
+		}
+		// Información del las llamadas por folio
+		$infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($foliosConsulta);
 		//Rellenado del XLSX
 		foreach ($resultFilter->result 	as $index => $folio) {
 			$inicio = '';
@@ -936,23 +941,24 @@ class ReportesController extends BaseController
 			}
 
 			// Información del las llamadas por folio
-			$infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($folio->FOLIOID, $folio->ANO);
+			foreach ($infoCall as $obj) {
+				if ($obj->folio === $folio->FOLIOFULL) {
+					$inicio = $this->stringToTime($obj->sessionStartedAt);
 
-			if (count($infoCall) > 0) {
-				$infoCall = (object)$infoCall[0];
-				$inicio = $this->stringToTime($infoCall->sessionStartedAt);
+					if ($obj->sessionFinishedAt) {
+						$fin = $this->stringToTime($obj->sessionFinishedAt);
+					}
 
-				if ($infoCall->sessionFinishedAt) {
-					$fin = $this->stringToTime($infoCall->sessionFinishedAt);
+					$duracion = $obj->duration;
+					$horas = floor($duracion / 3600);
+					$minutos = floor(($duracion - ($horas * 3600)) / 60);
+					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+					$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
+					$prioridad = $obj->priority;
+					break;
 				}
-
-				$duracion = $infoCall->duration;
-				$horas = floor($duracion / 3600);
-				$minutos = floor(($duracion - ($horas * 3600)) / 60);
-				$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
-				$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
-				$prioridad = $infoCall->priority;
 			}
+
 
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$fechasalida = strtotime($folio->FECHASALIDA);
@@ -1014,15 +1020,15 @@ class ReportesController extends BaseController
 				$countTipoVD++;
 			}
 		}
-	
+
 		foreach ($columnValues as $time) {
 			$totalSeconds += $this->timeToSeconds($time);
 		}
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
-	
+
 		// $totalRegistro =  count($resultFilter->result);
-		
+
 		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
@@ -2363,7 +2369,6 @@ class ReportesController extends BaseController
 			if ($cellValue != "NO HAY VIDEO" && $cellValueType == "VIDEO") {
 				$columnValues[] = $cellValue;
 				$countTipoVD++;
-
 			}
 		}
 		foreach ($columnValues as $time) {
@@ -2414,7 +2419,7 @@ class ReportesController extends BaseController
 		list($hours, $minutes, $seconds) = explode(':', $time);
 		return ($hours * 3600) + ($minutes * 60) + $seconds;
 	}
-	
+
 
 	// Function to convert seconds to time string
 	function secondsToTime($seconds)
