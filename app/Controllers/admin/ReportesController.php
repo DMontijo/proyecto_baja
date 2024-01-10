@@ -1677,6 +1677,7 @@ class ReportesController extends BaseController
 			if (!(($row - 4) >= count($documentos))) $row++;
 			$num++;
 		}
+		unset($sheet); 
 		$sheet->getStyle('A1:N1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:N2')->applyFromArray($styleCab);
 
