@@ -235,6 +235,8 @@ class ConstanciaExtravioModel extends Model
 				(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 				(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
 		}
+		$strQuery = $strQuery . ' GROUP BY CONSTANCIAEXTRAVIO.CONSTANCIAEXTRAVIOID, CONSTANCIAEXTRAVIO.ANO';
+
 
 		// var_dump($strQuery);
 		// exit;

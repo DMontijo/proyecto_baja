@@ -226,7 +226,8 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				// [0, 'asc'],
+				[1, 'DESC'],
+				[0, 'DESC'],
 			],
 			searching: true,
 			pageLength: 25,

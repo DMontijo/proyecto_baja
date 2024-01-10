@@ -947,11 +947,11 @@ class ReportesController extends BaseController
 			if (!empty($filteredInfoCall)) {
 				$obj = reset($filteredInfoCall); // Obtiene el primer elemento del arreglo filtrado
 				$inicio = $this->stringToTime($obj->sessionStartedAt);
-			
+
 				if ($obj->sessionFinishedAt) {
 					$fin = $this->stringToTime($obj->sessionFinishedAt);
 				}
-			
+
 				$duracion = $obj->duration;
 				$horas = floor($duracion / 3600);
 				$minutos = floor(($duracion - ($horas * 3600)) / 60);
