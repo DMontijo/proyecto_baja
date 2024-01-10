@@ -111,8 +111,10 @@
 			autoWidth: true,
 			ordering: true,
 			order: [
-				[1, 'desc'],
-				[2, 'desc'],
+				[2, 'DESC'],
+								[1, 'DESC'],
+
+
 			],
 			searching: true,
 			pageLength: 25,

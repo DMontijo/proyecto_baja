@@ -114,6 +114,7 @@
 										<tr>
 											<th class="text-center">No.</th>
 											<th class="text-center">FOLIO</th>
+											<th class="text-center">AÑO</th>
 											<th class="text-center">FECHA DE ATENCIÓN</th>
 											<th class="text-center" style="min-width:150px;">EXPEDIENTE</th>
 											<th class="text-center" style="min-width:150px;">MODULO QUE EXPIDE</th>
@@ -133,6 +134,7 @@
 											<tr>
 												<td class="text-center"><?= $num ?></td>
 												<td class="text-center font-weight-bold"><?= $orden->FOLIOID ?></td>
+												<td class="text-center font-weight-bold"><?= $orden->ANO ?></td>
 												<td class="text-center"><?= date("d/m/Y", strtotime($orden->HECHOFECHA)) ?></td>
 												<td class="text-center"><?= isset($orden->EXPEDIENTEID) ? $array[1] . $array[2] . $array[4] . $array[5] . '-' . $array[6] . $array[7] . $array[8] . $array[9] . '-' . $array[10] . $array[11] . $array[12] . $array[13] . $array[14] : '' ?></td>
 												<td class="text-center">CENTRO DE DENUNCIA TECNÓLOGICA</td>

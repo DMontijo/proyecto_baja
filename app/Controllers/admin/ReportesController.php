@@ -948,41 +948,42 @@ class ReportesController extends BaseController
 			}
 
 			// Información del las llamadas por folio
-			foreach ($infoCall as $obj) {
-				if ($obj->folio === $folio->FOLIOFULL) {
-					$inicio = $this->stringToTime($obj->sessionStartedAt);
+			$filteredInfoCall = array_filter($infoCall, function ($obj) use ($folio) {
+				return $obj->folio === $folio->FOLIOFULL;
+			});
+			if (!empty($filteredInfoCall)) {
+				$obj = reset($filteredInfoCall); // Obtiene el primer elemento del arreglo filtrado
+				$inicio = $this->stringToTime($obj->sessionStartedAt);
 
-					if ($obj->sessionFinishedAt) {
-						$fin = $this->stringToTime($obj->sessionFinishedAt);
-					}
-
-					$duracion = $obj->duration;
-					$horas = floor($duracion / 3600);
-					$minutos = floor(($duracion - ($horas * 3600)) / 60);
-					$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
-					$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
-					$prioridad = $obj->priority;
-					break;
+				if ($obj->sessionFinishedAt) {
+					$fin = $this->stringToTime($obj->sessionFinishedAt);
 				}
+
+				$duracion = $obj->duration;
+				$horas = floor($duracion / 3600);
+				$minutos = floor(($duracion - ($horas * 3600)) / 60);
+				$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				$duracion_total = $this->stringToTime(strval($horas) . ':' . $minutos . ':' . number_format($segundos, 0));
+				$prioridad = $obj->priority;
 			}
+			// foreach ($infoCall as $obj) {
+			// 	if ($obj->folio === $folio->FOLIOFULL) {
+			// 		$inicio = $this->stringToTime($obj->sessionStartedAt);
 
-			// $infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($folio->FOLIOID, $folio->ANO);
+			// 		if ($obj->sessionFinishedAt) {
+			// 			$fin = $this->stringToTime($obj->sessionFinishedAt);
+			// 		}
 
-			// if (count($infoCall) > 0) {
-			// 	$infoCall = (object)$infoCall[0];
-			// 	$inicio = $this->stringToTime($infoCall->sessionStartedAt);
-
-			// 	if ($infoCall->sessionFinishedAt) {
-			// 		$fin = $this->stringToTime($infoCall->sessionFinishedAt);
+			// 		$duracion = $obj->duration;
+			// 		$horas = floor($duracion / 3600);
+			// 		$minutos = floor(($duracion - ($horas * 3600)) / 60);
+			// 		$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+			// 		$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
+			// 		$prioridad = $obj->priority;
+			// 		break;
 			// 	}
-
-			// 	$duracion = $infoCall->duration;
-			// 	$horas = floor($duracion / 3600);
-			// 	$minutos = floor(($duracion - ($horas * 3600)) / 60);
-			// 	$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
-			// 	$duracion_total = $this->stringToTime(strval($horas)  . ':' . $minutos . ':' . number_format($segundos, 0));
-			// 	$prioridad = $infoCall->priority;
 			// }
+
 
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
 			$fechasalida = strtotime($folio->FECHASALIDA);
@@ -1046,15 +1047,15 @@ class ReportesController extends BaseController
 				$countTipoVD++;
 			}
 		}
-	
+
 		foreach ($columnValues as $time) {
 			$totalSeconds += $this->timeToSeconds($time);
 		}
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
-	
+
 		// $totalRegistro =  count($resultFilter->result);
-		
+
 		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
@@ -2387,7 +2388,6 @@ class ReportesController extends BaseController
 			if ($cellValue != "NO HAY VIDEO" && $cellValueType == "VIDEO") {
 				$columnValues[] = $cellValue;
 				$countTipoVD++;
-
 			}
 		}
 		foreach ($columnValues as $time) {
@@ -2438,7 +2438,7 @@ class ReportesController extends BaseController
 		list($hours, $minutes, $seconds) = explode(':', $time);
 		return ($hours * 3600) + ($minutes * 60) + $seconds;
 	}
-	
+
 
 	// Function to convert seconds to time string
 	function secondsToTime($seconds)
