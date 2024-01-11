@@ -45,12 +45,12 @@ class ReportesController extends BaseController
 		$this->db_read_report = db_connect('reporte_read');
 		$this->urlApi = VIDEOCALL_URL;
 		//Models reader
-		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
-		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
-		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
-		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
-		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
-		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read_report);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read_report);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read_report);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read_report);
+		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read_report);
+		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read_report);
 		$this->_videoCallModelRead = new VideoCallReadModel();
 	}
 
