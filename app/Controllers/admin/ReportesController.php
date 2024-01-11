@@ -1086,6 +1086,8 @@ class ReportesController extends BaseController
 		// $drawing2->setWorksheet($spreadSheet->getActiveSheet());
 		// $drawing->setOffsetX(110);
 		// $drawing->setRotation(25);
+		ob_start();
+
 		$writer = new Xlsx($spreadSheet);
 
 		$filename = urlencode("Registro_Diario_" . session('NOMBRE') . ".xlsx");
@@ -1095,6 +1097,7 @@ class ReportesController extends BaseController
 		header("Content-Transfer-Encoding: binary");
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
+		ob_end_flush();
 	}
 	/**
 	 * Vista para ingresar a los reportes de firmas FIEL
