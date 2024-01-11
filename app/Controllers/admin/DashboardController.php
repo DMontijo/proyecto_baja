@@ -1283,7 +1283,7 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			if ($data['ROLID'] != '5' && $data['ROLID'] != '13') {
+			if ($data['ROLID'] != '5' &&  $data['ROLID'] != '12' && $data['ROLID'] != '13') {
 				try {
 					$dataApi = array();
 					$dataApi['names'] = $this->request->getPost('nombre_usuario');
@@ -1381,7 +1381,7 @@ class DashboardController extends BaseController
 		}
 
 		if ($usuario) {
-			if ($data['ROLID'] != '5' &&  $data['ROLID'] != '13') {
+			if ($data['ROLID'] != '5'  &&  $data['ROLID'] != '12' &&  $data['ROLID'] != '13') {
 				try {
 					try {
 						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
