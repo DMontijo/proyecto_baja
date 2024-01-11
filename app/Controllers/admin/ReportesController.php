@@ -17,6 +17,12 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // use FFMpeg\FFProbe;
 // use DateTime;
 // use DateTimeZone;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Common\Entity\Style\CellAlignment;
 
 class ReportesController extends BaseController
 {
@@ -40,13 +46,13 @@ class ReportesController extends BaseController
 		$this->db_read_report = db_connect('reporte_read');
 		$this->urlApi = VIDEOCALL_URL;
 		//Models reader
-		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
-		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read);
-		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read);
-		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read);
-		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read);
-		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read);
-		$this->_personasMoralesModelRead = model('PersonasMoralesModel', true, $this->db_read);
+		$this->_folioModelRead = model('FolioModel', true, $this->db_read_report);
+		$this->_municipiosModelRead = model('MunicipiosModel', true, $this->db_read_report);
+		$this->_usuariosModelRead = model('UsuariosModel', true, $this->db_read_report);
+		$this->_constanciaExtravioModelRead = model('ConstanciaExtravioModel', true, $this->db_read_report);
+		$this->_rolesPermisosModelRead = model('RolesPermisosModel', true, $this->db_read_report);
+		$this->_plantillasModelRead = model('PlantillasModel', true, $this->db_read_report);
+		$this->_personasMoralesModelRead = model('PersonasMoralesModel', true, $this->db_read_report);
 
 		$this->_videoCallModelRead = new VideoCallReadModel();
 	}
@@ -752,6 +758,256 @@ class ReportesController extends BaseController
 	 *
 	 */
 	public function createRegistroDiarioXlsx()
+	{
+		$data = [
+			'AGENTEATENCIONID' => $this->request->getPost('AGENTEATENCIONID'),
+			'STATUS' => $this->request->getPost('STATUS'),
+			'TIPODENUNCIA' => $this->request->getPost('TIPODENUNCIA'),
+			'GENERO' => $this->request->getPost('GENERO'),
+			'TIPOEXP' => $this->request->getPost('TIPOEXP'),
+			'fechaInicio' => $this->request->getPost('fechaInicio'),
+			'fechaFin' => $this->request->getPost('fechaFin'),
+			'horaInicio' => $this->request->getPost('horaInicio'),
+			'horaFin' => $this->request->getPost('horaFin')
+		];
+		$date = date("Y_m_d_h_i_s");
+
+		foreach ($data as $clave => $valor) {
+			//Recorre el array y elimina los valores que nulos o vacíos
+			if (empty($valor)) unset($data[$clave]);
+		}
+
+		//Cuando no hay filtro
+		if (count($data) <= 0) {
+			$data = [
+				'fechaInicio' => date("Y-m-d", strtotime('-1 month')),
+				'fechaFin' => date("Y-m-d"),
+			];
+		}
+
+		//Generacion del filtro
+		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
+		$fileName = 'Registro_Diario.xlsx';
+		$filePath = FCPATH . $fileName;
+		$writer = WriterEntityFactory::createXLSXWriter();
+		$writer->openToFile($filePath);
+		/** Create a style with the StyleBuilder */
+		$border = (new BorderBuilder())
+			->setBorderBottom(Color::BLACK, Border::WIDTH_THIN, Border::STYLE_SOLID)
+			->setBorderRight(Color::BLACK, Border::WIDTH_THIN, Border::STYLE_SOLID)
+			->setBorderLeft(Color::BLACK, Border::WIDTH_THIN, Border::STYLE_SOLID)
+			->setBorderTop(Color::BLACK, Border::WIDTH_THIN, Border::STYLE_SOLID)
+
+			->build();
+		$styleHeaders = (new StyleBuilder())
+			->setFontBold()
+			->setFontSize(10)
+			->setFontName('Arial')
+			->setFontColor(Color::WHITE)
+			->setShouldWrapText()
+			->setCellAlignment(CellAlignment::CENTER)
+			->setBorder($border)
+			->setBackgroundColor('511229')
+			->build();
+
+		$styleCells = (new StyleBuilder())
+			->setFontSize(10)
+			->setFontName('Arial')
+			->setFontColor(Color::BLACK)
+			// ->setShouldWrapText(true)
+			->setCellAlignment(CellAlignment::CENTER)
+			->setBorder($border)
+			->build();
+
+
+
+		$styleCab = (new StyleBuilder())
+			->setFontBold()
+			->setFontSize(12)
+			->setFontName('Arial')
+			->setFontColor(Color::BLACK)
+			->setCellAlignment(CellAlignment::CENTER)
+			->setBorder($border)
+			->build();
+
+		$rowTitle = WriterEntityFactory::createRowFromArray(['CENTRO TELEFÓNICO Y EN LÍNEA DE ATENCIÓN Y ORIENTACIÓN TEMPRANA'], $styleCab);
+		$writer->addRow($rowTitle);
+		$rowTitle2 = WriterEntityFactory::createRowFromArray(['REGISTRO ESTATAL DE PRE DENUNCIA TELEFÓNICA Y EN LÍNEA'], $styleCab);
+		$writer->addRow($rowTitle2);
+
+		// Cabecera
+		$header = WriterEntityFactory::createRowFromArray([
+			'NO.',
+			'FOLIO',
+			'AÑO',
+			'FECHA RECEPCIÓN',
+			'FECHA ATENCIÓN',
+			'HORA ATENCIÓN',
+			'INICIO',
+			'CONCLUSIÓN',
+			'DURACIÓN DE ATENCION',
+			'TIPO DE ATENCIÓN',
+			'MUNICIPIO',
+			'NOMBRE (S)',
+			'APELLIDO PATERNO',
+			'APELLIDO MATERNO',
+			'GENÉRO',
+			'TELEFONO',
+			'CORREO ELECTRÓNICO',
+			'DELITOS',
+			'SERVIDOR PÚBLICO QUE ATIENDE',
+			'TIPO DE EXPEDIENTE GENERADO',
+			'NO. EXPEDIENTE GENERADO',
+			'REMISIÓN',
+			'PRIORIDAD DE ATENCIÓN'
+		], $styleHeaders);
+		$writer->addRow($header);
+		$foliosConsulta = [];
+		foreach ($resultFilter->result as $index => $folio) {
+			$foliosConsulta[] = $folio->FOLIOFULL;
+		}
+		$timeAll = array();
+		$countTipoVD = 0;
+
+		// Información del las llamadas por folio
+		$infoCall = $this->_videoCallModelRead->getReporteDiarioInfoByFolio($foliosConsulta);
+		foreach ($resultFilter->result 	as $index => $folio) {
+			$inicio = '';
+			$fin = '';
+			$duracion = '';
+			$duracion_total = '';
+			$horas = '';
+			$segundos = '';
+			$minutos = '';
+			$prioridad = '';
+			$remision = '';
+			$totalSeconds = 0;
+			$totalSeconds2 = 0;
+			$totalDuration = 0;
+
+			if ($folio->TIPOEXPEDIENTEID == 1 || $folio->TIPOEXPEDIENTEID == 4) {
+				$remision = $folio->OFICINA_EMP;
+			} else if ($folio->TIPOEXPEDIENTEID == 5) {
+				$remision = $folio->REMISION_RAC;
+			} else if ($folio->STATUS == "DERIVADO") {
+				$remision = $folio->REMISION_DERIVACION;
+			} else if ($folio->STATUS == "CANALIZADO") {
+				$remision = $folio->REMISION_CANALIZACION;
+			}
+
+			// Información del las llamadas por folio
+			$filteredInfoCall = array_filter($infoCall, function ($obj) use ($folio) {
+				return $obj->folio === $folio->FOLIOFULL;
+			});
+			if (!empty($filteredInfoCall)) {
+				$obj = reset($filteredInfoCall); // Obtiene el primer elemento del arreglo filtrado
+				$inicio = $this->stringToTime($obj->sessionStartedAt);
+
+				if ($obj->sessionFinishedAt) {
+					$fin = $this->stringToTime($obj->sessionFinishedAt);
+				}
+
+				$duracion = $obj->duration;
+				$horas = floor($duracion / 3600);
+				$minutos = floor(($duracion - ($horas * 3600)) / 60);
+				$segundos = $duracion - ($horas * 3600) - ($minutos * 60);
+				$prioridad = $obj->priority;
+				$duracion_total = $this->stringToTime(strval($horas) . ':' . $minutos . ':' . number_format($segundos, 0));
+				if ($duracion_total != "") {
+					array_push($timeAll, $duracion_total);
+					// $totalDuration += $this->timeToSeconds($duracion_total);
+				}
+			}
+
+			$fecharegistro = strtotime($folio->FECHAREGISTRO);
+			$fechasalida = strtotime($folio->FECHASALIDA);
+			$dateregistro = date('d-m-Y', $fecharegistro);
+			$datesalida = date('d-m-Y', $fechasalida);
+			$horaregistro = date('H:i:s', $fecharegistro);
+			$tipo = '';
+			if ($folio->TIPODENUNCIA == 'VD') {
+				$tipo = 'VIDEO';
+			} else if ($folio->TIPODENUNCIA == 'DA') {
+				$tipo = 'ANÓNIMA';
+			} else if ($folio->TIPODENUNCIA == 'TE') {
+				$tipo = 'TELEFÓNICA';
+			} else if ($folio->TIPODENUNCIA == 'EL') {
+				$tipo = 'ELECTRONICA';
+			} else if ($folio->TIPODENUNCIA == 'ES') {
+				$tipo = 'ESCRITA';
+			}
+			if (isset($folio->EXPEDIENTEID)) {
+				$arrayExpediente = str_split($folio->EXPEDIENTEID);
+				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
+			}
+			$row = WriterEntityFactory::createRowFromArray([
+				$index + 1,
+				$folio->FOLIOID,
+				$folio->ANO,
+				$dateregistro,
+				$datesalida,
+				$horaregistro,
+				$inicio != '' ? $inicio : '',
+				isset($fin) ? $fin : '',
+				$duracion_total != '' ? $duracion_total : 'NO HAY VIDEO',
+				$tipo,
+				$folio->MUNICIPIODESCR,
+				$folio->N_DENUNCIANTE,
+				$folio->APP_DENUNCIANTE,
+				$folio->APM_DENUNCIANTE,
+				$folio->GENERO == "F" ? "FEMENINO" : "MASCULINO",
+				$folio->TELEFONODENUNCIANTE,
+				$folio->CORREODENUNCIANTE,
+				isset($folio->DELITOMODALIDADDESCR) ? $folio->DELITOMODALIDADDESCR : 'NO EXISTE',
+				$folio->N_AGENT . ' ' . $folio->APP_AGENT . ' ' . $folio->APM_AGENT,
+				isset($folio->TIPOEXPEDIENTECLAVE) ? $folio->TIPOEXPEDIENTECLAVE : $folio->STATUS,
+				$folio->EXPEDIENTEID ? $expedienteid . '/' . $folio->TIPOEXPEDIENTECLAVE : ($folio->FOLIOID . '/' . $folio->ANO),
+				$remision,
+				$prioridad == '' ? 1 : $prioridad
+			], $styleCells);
+			$writer->addRow($row);
+			// var_dump($duracion_total);
+			if ($tipo == 'VIDEO' && $duracion_total != '') {
+				$countTipoVD++;
+			}
+		}
+		$rowVacio = WriterEntityFactory::createRowFromArray([]);
+		$writer->addRow($rowVacio);
+		$writer->addRow($rowVacio);
+
+		foreach ($timeAll as $time) {
+			$totalSeconds += $this->timeToSeconds($time);
+		}
+
+		$totalTime = $this->secondsToTime($totalSeconds);
+		$totalSeconds2 = $this->timeToSeconds($totalTime);
+
+		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
+		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
+
+		$rowPromedio = WriterEntityFactory::createRowFromArray(['PROMEDIO DE DURACIÓN DE LLAMADAS:', $promedioDuracion], $styleCells);
+		$writer->addRow($rowPromedio);
+		$writer->addRow($rowVacio);
+		$writer->addRow($rowVacio);
+		$rowCantidad = WriterEntityFactory::createRowFromArray(['CANTIDAD DE RESULTADOS:', count($resultFilter->result)], $styleCells);
+		$writer->addRow($rowCantidad);
+
+		$writer->close();
+
+		$filename = urlencode("Registro_Diario_" . session('NOMBRE') . ".xlsx");
+		$filename = str_replace(array(" ", "+"), '_', $filename);
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header("Content-Disposition: attachment; filename=\"$filename\"");
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate');
+		header('Pragma: public');
+		header('Content-Length: ' . filesize($filePath));
+		readfile($filePath);
+	}
+
+
+	public function createRegistroDiarioXlsxOriginal()
 	{
 		//Datos del filtro
 
@@ -1681,7 +1937,7 @@ class ReportesController extends BaseController
 			if (!(($row - 4) >= count($documentos))) $row++;
 			$num++;
 		}
-		unset($sheet); 
+		unset($sheet);
 		$sheet->getStyle('A1:N1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:N2')->applyFromArray($styleCab);
 
@@ -3056,7 +3312,7 @@ class ReportesController extends BaseController
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
 	}
-/**
+	/**
 	 * Vista para ingresar a los reportes de BANAVIM
 	 * Se carga con un filtro default
 	 *
@@ -3069,7 +3325,7 @@ class ReportesController extends BaseController
 			'fechaFin' => date("Y-m-d"),
 			'GENERO' => 'F'
 		];
-		
+
 		$documentos = $this->_plantillasModelRead->filtro_ordenes_proteccion_banavim($data);
 		$tiposOrden = $this->_plantillasModelRead->get_tipos_orden_banavim();
 
@@ -3312,7 +3568,7 @@ class ReportesController extends BaseController
 		$row++;
 		//Rellenado del XLSX
 		foreach ($documentos as $index => $banavim) {
-		
+
 			$this->separarExpID($banavim->EXPEDIENTEID);
 
 
@@ -3320,10 +3576,10 @@ class ReportesController extends BaseController
 			$sheet->setCellValue('A2', "REGISTRO BANAVIM");
 
 
-			$sheet->setCellValue('A' . $row, $row-4);
+			$sheet->setCellValue('A' . $row, $row - 4);
 			$sheet->setCellValue('B' . $row, $banavim->FOLIOID);
 			$sheet->setCellValue('C' . $row, $this->formatFecha($banavim->FECHAFIRMA));
-			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID). '/' . $banavim->TIPOEXPEDIENTECLAVE);
+			$sheet->setCellValue('D' . $row, $this->separarExpID($banavim->EXPEDIENTEID) . '/' . $banavim->TIPOEXPEDIENTECLAVE);
 			$sheet->setCellValue('E' . $row, 'CENTRO DE DENUNCIA TECNÓLOGICA');
 			$sheet->setCellValue('F' . $row,  $banavim->MUNICIPIODESCR);
 			$sheet->setCellValue('G' . $row,  $banavim->NOMBRE_MP);
@@ -3338,7 +3594,6 @@ class ReportesController extends BaseController
 
 
 			if (!(($row - 4) >= count($documentos))) $row++;
-
 		}
 		$sheet->getStyle('A1:R1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:R2')->applyFromArray($styleCab);
