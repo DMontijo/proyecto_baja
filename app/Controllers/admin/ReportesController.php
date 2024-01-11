@@ -789,7 +789,7 @@ class ReportesController extends BaseController
 		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
 		// $fileName = 'Registro_Diario.xlsx';
 		// $filePath = FCPATH . $fileName;
-		$uniqueFileName = 'Registro_Diario_' . session('NOMBRE') . '.xlsx'; 
+		$uniqueFileName = 'Registro_Diario_' . session('NOMBRE') . date('ddmmYYYY') . '.xlsx';
 		$uniqueFilePath = FCPATH . $uniqueFileName;
 		$writer = WriterEntityFactory::createXLSXWriter();
 		$writer->openToFile($uniqueFilePath);
@@ -1009,7 +1009,6 @@ class ReportesController extends BaseController
 		header('Content-Length: ' . filesize($uniqueFileName));
 		readfile($uniqueFileName);
 		unlink($uniqueFilePath);
-
 	}
 
 
