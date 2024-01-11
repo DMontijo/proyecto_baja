@@ -23,6 +23,7 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Style\CellAlignment;
+
 class ReportesController extends BaseController
 {
 
@@ -781,10 +782,14 @@ class ReportesController extends BaseController
 
 		//Generacion del filtro
 		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
-		$fileName = 'Registro_Diario.xlsx';
-		$filePath = FCPATH . $fileName;
+		// $fileName = 'Registro_Diario.xlsx';
+		// $filePath = FCPATH . $fileName;
+		$uniqueFileName = 'Registro_Diario_' . session('NOMBRE') . date('ddmmYYYY') . '.xlsx';
+		$uniqueFilePath = FCPATH . $uniqueFileName;
 		$writer = WriterEntityFactory::createXLSXWriter();
-		$writer->openToFile($filePath);
+		$writer->openToFile($uniqueFilePath);
+		// $writer->setTempFolder($filePath);
+
 		/** Create a style with the StyleBuilder */
 		$border = (new BorderBuilder())
 			->setBorderBottom(Color::BLACK, Border::WIDTH_THIN, Border::STYLE_SOLID)
@@ -909,9 +914,8 @@ class ReportesController extends BaseController
 				$duracion_total = $this->stringToTime(strval($horas) . ':' . $minutos . ':' . number_format($segundos, 0));
 				if ($duracion_total != "") {
 					array_push($timeAll, $duracion_total);
-				// $totalDuration += $this->timeToSeconds($duracion_total);
+					// $totalDuration += $this->timeToSeconds($duracion_total);
 				}
-
 			}
 
 			$fecharegistro = strtotime($folio->FECHAREGISTRO);
@@ -936,7 +940,7 @@ class ReportesController extends BaseController
 				$expedienteid = $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 			}
 			$row = WriterEntityFactory::createRowFromArray([
-				$index+1,
+				$index + 1,
 				$folio->FOLIOID,
 				$folio->ANO,
 				$dateregistro,
@@ -976,8 +980,8 @@ class ReportesController extends BaseController
 
 		$totalTime = $this->secondsToTime($totalSeconds);
 		$totalSeconds2 = $this->timeToSeconds($totalTime);
-		
-		$promedioDuracionSegundos =$totalSeconds2 /  $countTipoVD;
+
+		$promedioDuracionSegundos = $totalSeconds2 /  $countTipoVD;
 		$promedioDuracion = $this->secondsToTime($promedioDuracionSegundos);
 
 		$rowPromedio = WriterEntityFactory::createRowFromArray(['PROMEDIO DE DURACIÓN DE LLAMADAS:', $promedioDuracion], $styleCells);
@@ -997,8 +1001,9 @@ class ReportesController extends BaseController
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
-		header('Content-Length: ' . filesize($filePath));
-		readfile($filePath);
+		header('Content-Length: ' . filesize($uniqueFileName));
+		readfile($uniqueFileName);
+		unlink($uniqueFilePath);
 	}
 
 	public function createRegistroDiarioXlsxOriginal()
