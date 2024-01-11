@@ -787,10 +787,14 @@ class ReportesController extends BaseController
 
 		//Generacion del filtro
 		$resultFilter = $this->_folioModelRead->filterDatesRegistroDiario($data);
-		$fileName = 'Registro_Diario.xlsx';
-		$filePath = FCPATH . $fileName;
+		// $fileName = 'Registro_Diario.xlsx';
+		// $filePath = FCPATH . $fileName;
+		$uniqueFileName = 'Registro_Diario_' . session('NOMBRE') . '.xlsx'; 
+		$uniqueFilePath = FCPATH . $uniqueFileName;
 		$writer = WriterEntityFactory::createXLSXWriter();
-		$writer->openToFile($filePath);
+		$writer->openToFile($uniqueFilePath);
+		// $writer->setTempFolder($filePath);
+
 		/** Create a style with the StyleBuilder */
 		$border = (new BorderBuilder())
 			->setBorderBottom(Color::BLACK, Border::WIDTH_THIN, Border::STYLE_SOLID)
@@ -1002,8 +1006,10 @@ class ReportesController extends BaseController
 		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
-		header('Content-Length: ' . filesize($filePath));
-		readfile($filePath);
+		header('Content-Length: ' . filesize($uniqueFileName));
+		readfile($uniqueFileName);
+		unlink($uniqueFilePath);
+
 	}
 
 
