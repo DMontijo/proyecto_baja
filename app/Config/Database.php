@@ -111,12 +111,12 @@ class Database extends Config
 	 * @var array
 	 */
 
-	public $development = [
+	 public $development = [
 		'DSN'      => '',
-		'hostname' => 'database-video-denuncia-baja-california-instance-1.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
-		'database' => 'cdtec',
+		'database' => 'litigantes',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -130,6 +130,7 @@ class Database extends Config
 		'failover' => [],
 		'port'     => 3306,
 	];
+
 
 	/**
 	 * This database connection is used when
@@ -138,12 +139,12 @@ class Database extends Config
 	 * @var array
 	 */
 
-	public $development_read = [
+	 public $development_read = [
 		'DSN'      => '',
-		'hostname' => 'database-video-denuncia-baja-california-instance-1-us-east-1b.cenwfxggsegs.us-east-1.rds.amazonaws.com',
+		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-ro-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
 		'password' => 'fgebc_dba0wner',
-		'database' => 'cdtec',
+		'database' => 'litigantes',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
@@ -157,6 +158,7 @@ class Database extends Config
 		'failover' => [],
 		'port'     => 3306,
 	];
+
 
 	/**
 	 * This database connection is used for videocall registers
