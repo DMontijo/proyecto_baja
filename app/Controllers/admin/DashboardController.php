@@ -7695,7 +7695,7 @@ class DashboardController extends BaseController
 		$data->nacionalidadVictima = $this->_nacionalidadModelRead->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
 		$data->edoCivilVictima = $this->_estadoCivilModelRead->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
 		//Rasgos de la victima
-		$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+		$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $victima)->first();
 
 		//Info imputado
 		$data->imputado = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
@@ -8527,7 +8527,7 @@ class DashboardController extends BaseController
 			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . ($data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-');;
 
 			//VICTIMA RASGOS PERSONA DESAPARECIDA
-			$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+			$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('ANO',$year)->where('PERSONAFISICAID', $victima)->first();
 			if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 				$colorOjos = $this->_ojoColorModelRead->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 				$colorCabello = $this->_cabelloColorModelRead->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();
