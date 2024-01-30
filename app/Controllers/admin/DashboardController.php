@@ -2772,7 +2772,6 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId = "";
 		if (session('ID')) {
 			$agenteId = session('ID');
 		} else {
@@ -3054,6 +3053,9 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
+		if (!session('ID')) {
+			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
+		}
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
 				$folioRow = $this->_folioModelRead->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->where('EXPEDIENTEID IS NULL')->first();
