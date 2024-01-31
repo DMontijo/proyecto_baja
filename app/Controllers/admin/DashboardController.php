@@ -3455,9 +3455,15 @@ class DashboardController extends BaseController
 					$relacionFisFis = $this->_relacionIDOModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
 					$imputados_con_delito = array();
 					$ofendidos = $this->_folioPersonaFisicaModelRead->select('NOMBRE')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('PERSONAFISICAID', 'asc')->where('CALIDADJURIDICAID', 1)->orWhere('CALIDADJURIDICAID', 6)->findAll();
+					$relacionMoralFis = $this->_folioRelacionMoralFisModelRead->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->findAll();
+					$personasMorales = $this->_folioPersonaMoralModelRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $folioRow['FOLIOID'])->where('ANO', $year)->orderBy('FOLIOPERSONAMORAL.PERSONAMORALID', 'asc')->findAll();
 
 					if ($folioRow['TIPODENUNCIA'] != 'ES') {
-						if (!$ofendidos) {
+						if (!$ofendidos || count($ofendidos) == 0) {
+							throw new \Exception('Debe existir al menos un ofendido');
+						}
+					} else if ($folioRow['TIPODENUNCIA'] == 'ES') {
+						if (count($ofendidos) === 0 && count($personasMorales) === 0) {
 							throw new \Exception('Debe existir al menos un ofendido');
 						}
 					}
@@ -3475,8 +3481,18 @@ class DashboardController extends BaseController
 						throw new \Exception('Todos los imputados deben tener al menos 1 delito asignado');
 					}
 
-					if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
-						throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+					if ($folioRow['TIPODENUNCIA'] != 'ES') {
+						if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+							throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+						}
+					} else if ($folioRow['TIPODENUNCIA'] == 'ES' && count($personasMorales) == 0) {
+						if (count($relacionFisFis) == 0 || count($relacionFisFis) <= 0) {
+							throw new \Exception('Todos los imputados deben tener una relación con una persona física');
+						}
+					} else if ($folioRow['TIPODENUNCIA'] == 'ES' && count($personasMorales) > 0) {
+						if ((count($relacionMoralFis) == 0 || count($relacionMoralFis) <= 0) && count($personasMorales) != 0) {
+							throw new \Exception('Todos los imputados deben tener una relación con una persona moral');
+						}
 					}
 
 					$update = $this->_folioModel->set($data)->where('ANO', $year)->where('FOLIOID', $folio)->update();
