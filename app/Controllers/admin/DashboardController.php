@@ -664,7 +664,7 @@ class DashboardController extends BaseController
 		$roles = [1, 2, 6, 7, 9, 11];
 
 		if (in_array($agente->ROLID, $roles)) {
-			$data->cantidad_folios = count($this->_folioModelRead->asObject()->findAll());
+			// $data->cantidad_folios = count($this->_folioModelRead->asObject()->findAll());
 			$data->cantidad_abiertos = count($this->_folioModelRead->asObject()->where('STATUS', 'ABIERTO')->findAll());
 			$data->cantidad_derivados = count($this->_folioModelRead->asObject()->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_canalizados = count($this->_folioModelRead->asObject()->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
@@ -675,7 +675,7 @@ class DashboardController extends BaseController
 			$data->sesiones_denunciantes = count($this->_sesionesDenunciantesModelRead->sesiones_abiertas()->result);
 			$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		} else {
-			$data->cantidad_folios = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
+			// $data->cantidad_folios = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
 			$data->cantidad_abiertos = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'ABIERTO')->findAll());
 			$data->cantidad_derivados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_canalizados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
