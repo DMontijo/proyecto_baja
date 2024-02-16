@@ -213,7 +213,6 @@
 				method: "POST",
 				dataType: "json",
 				success: function(response) {
-					console.log(response);
 					let delito_descr = '';
 					for (let index = 0; index < response.length; index++) {
 						if (index == response.length - 1) {
@@ -295,7 +294,6 @@
 	//Funcion para eliminar el parentesco, se tiene que recibir por parametro la persona fisica1, personafisica2 y el parentesco a eliminar
 
 	function eliminarparentesco(personofisica1, personafisica2, parentesco) {
-		console.log("eliminar 2", parentesco);
 		$.ajax({
 			data: {
 				'personafisica1': personofisica1,
@@ -760,7 +758,6 @@
 
 		// Crea el link y lo abre en nueva pestaña
 		const link = document.createElement('a');
-		console.log(link);
 		link.href = URL.createObjectURL(blob);
 		link.target = "_blank"
 		link.click();
@@ -3323,7 +3320,6 @@
 					'localidad_id': localidad
 				};
 
-				console.log(data);
 
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
@@ -3465,8 +3461,6 @@
 					'municipio_id': municipio,
 					'localidad_id': localidad
 				};
-
-				console.log(data);
 
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
@@ -3755,7 +3749,6 @@
 				document.querySelector('#imputado_arbol').value = '';
 				document.querySelector('#delito_cometido').value = '';
 				document.querySelector('#victima_ofendido').value = '';
-				console.log(document.querySelector('#victima_ofendido').value);
 
 				$('#insert_asignar_arbol_delictual_modal').modal('show');
 			}, false);
@@ -4340,7 +4333,6 @@
 					dataType: "json",
 					success: function(response) {
 						let localidades = response.data;
-						console.log('Localidades');
 						clearSelect(select_localidad);
 						clearSelect(select_colonia);
 						localidades.forEach(localidad => {
@@ -4386,7 +4378,6 @@
 					dataType: "json",
 					success: function(response) {
 						clearSelect(select_colonia);
-						console.log(response);
 						let colonias = response.data;
 						colonias.forEach(colonia => {
 							var option = document.createElement("option");
@@ -4881,8 +4872,6 @@
 					'municipio_id': municipio,
 					'localidad_id': localidad
 				};
-
-				console.log(data);
 
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
@@ -5459,8 +5448,6 @@
 					'localidad_id': localidad
 				};
 
-				console.log(data);
-
 				if (estado == 2) {
 					select_colonia.classList.remove('d-none');
 					input_colonia.classList.add('d-none');
@@ -5545,7 +5532,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
@@ -5604,7 +5590,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						const personas = response.personas;
 						const imputados = response.imputados;
 						const victimas = response.victimas;
@@ -5792,7 +5777,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 1) {
 							Swal.fire({
 								icon: 'success',
@@ -6019,7 +6003,6 @@
 					// 'parentesco_mf': document.querySelector('#parentesco_mf').value?document.querySelector('#parentesco_mf').value:document.querySelector('#parentesco_mf1').value,
 
 				};
-				// console.log(id);
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/update-media-filiacion-by-id') ?>",
@@ -6107,7 +6090,7 @@
 					'personaFisica2': document.querySelector('#personaFisica2_I').value,
 					'parentesco_mf': document.querySelector('#parentesco_mf_I').value,
 				};
-				// console.log(data);
+
 				$.ajax({
 					data: data,
 					url: "<?= base_url('/data/create-parentesco-by-id') ?>",
@@ -6199,7 +6182,6 @@
 					processData: false,
 					cache: false,
 					success: function(response) {
-						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
 							const vehiculos = response.vehiculos;
 							Swal.fire({
@@ -6245,7 +6227,6 @@
 					if ($("#documentoArchivo")[0].files[0].type == "image/jpeg" || $("#documentoArchivo")[0].files[0].type == "image/png" || $("#documentoArchivo")[0].files[0].type == "image/jpg") {
 						nombre_documento = $("#documentoArchivo")[0].files[0].name;
 						documento = await comprimirImagen($("#documentoArchivo")[0].files[0], 50);
-						console.log(documento);
 					} else {
 						nombre_documento = $("#documentoArchivo")[0].files[0].name;
 						documento = $("#documentoArchivo")[0].files[0];
@@ -6277,7 +6258,6 @@
 					cache: false,
 					success: function(response) {
 						const archivos = response.archivos.archivosexternos;
-						console.log(response);
 						document.getElementById('archivo_content').classList.remove('d-none');
 						document.getElementById('documentos_anexar_spinner').classList.add('d-none');
 						if (response.status == 1) {
@@ -6404,7 +6384,6 @@
 					processData: false,
 					cache: false,
 					success: function(response) {
-						// console.log(respobse.idcalidad);
 						if (response.status == 1) {
 							const vehiculos = response.vehiculos;
 							Swal.fire({
@@ -6734,7 +6713,6 @@
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
-						console.log(response);
 						if (response.status == 3) {
 							Swal.fire({
 								icon: 'error',

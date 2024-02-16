@@ -144,7 +144,6 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 				dataType: "json",
 				success: function(response) {
 					respuesta = response;
-					console.log(respuesta);
 					if (response.status === 1) {
 						const folio = response.folio;
 						const preguntas = response.respuesta.preguntas_iniciales;
@@ -358,9 +357,9 @@ if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->ME
 
 								var fila2 =
 									`<tr id="row${i}">` +
-									`<td class="text-center">${personaiduno[i].NOMBRE}</td>` +
-									`<td class="text-center">${parentesco[i].PERSONAPARENTESCODESCR}</td>` +
-									`<td class="text-center">${personaidDos[i].NOMBRE}</td>` +
+									`<td class="text-center">${relacion_parentesco[i].NOMBREP1}</td>` +
+									`<td class="text-center">${relacion_parentesco[i].PERSONAPARENTESCODESCR}</td>` +
+									`<td class="text-center">${relacion_parentesco[i].NOMBREP2}</td>` +
 									// `<td class="text-center">${btn}</td>` +
 									`</tr>`;
 

@@ -3206,9 +3206,8 @@ class DashboardController extends BaseController
 	{
 		$rfc = $this->request->getPost('rfc');
 		$data = (object) array();
-		$data->moral = $this->_personasMoralesRead->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID AND RELACIONPODERLITIGANTE.ACTIVO =1')->where('RFC', $rfc)->first();
-		// var_dump($data->moral);exit;
-
+		$data->moral = $this->_personasMoralesRead
+			->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PERSONAMORALID = PERSONASMORALES.PERSONAMORALID AND RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID AND RELACIONPODERLITIGANTE.ACTIVO =1')->where('RFC', $rfc)->first();
 		if ($data->moral == null) {
 			return json_encode(['exist' => 0,]);
 		} else if (count($data->moral) > 0) {

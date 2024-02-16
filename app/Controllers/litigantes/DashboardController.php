@@ -1195,7 +1195,7 @@ class DashboardController extends BaseController
 		$relacionPoder = $this->_relacionMoralPoderRead->asObject()->select('PODERID,PERSONAMORALID, PODERVOLUMEN,PODERNONOTARIO,PODERNOPODER')->where('PERSONAMORALID', $personamoralid)->where('ACTIVO', 1)->first();
 		$poderid = !$relacionPoder ? $this->_relacionPoderLitigantes->getInsertID() : $relacionPoder->PODERID;
 
-		$updatePersonaMoral = $this->_personasMoralesModel->set('PODERID', $poderid)->update();
+		$updatePersonaMoral = $this->_personasMoralesModel->where('PERSONAMORALID',$personamoralid)->set('PODERID', $poderid)->update();
 
 
 		//Datos a insertar en folio
@@ -1837,9 +1837,9 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$year = $this->request->getPost('year');
 
-		$folioPM = $this->_folioPersonaMoralModelRead->asObject()->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID')->where('FOLIOID', $folio)->where('ANO', $year)->first();
+		$folioPM = $this->_folioPersonaMoralModelRead->asObject()->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= FOLIOPERSONAMORAL.PODERID AND RELACIONPODERLITIGANTE.PERSONAMORALID= FOLIOPERSONAMORAL.PERSONAMORALID')->where('FOLIOID', $folio)->where('ANO', $year)->first();
 
-		$personasMorales = $this->_personasMoralesRead->asObject()->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID')->where('PERSONASMORALES.PERSONAMORALID', $folioPM->PERSONAMORALID)->first();
+		$personasMorales = $this->_personasMoralesRead->asObject()->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PODERID= PERSONASMORALES.PODERID AND RELACIONPODERLITIGANTE.PERSONAMORALID= PERSONASMORALES.PERSONAMORALID')->where('PERSONASMORALES.PERSONAMORALID', $folioPM->PERSONAMORALID)->first();
 		if ($personasMorales->ACTIVO == 1) {
 			$updateFolioPM = $this->_folioPersonaMoralModel->set('PODERID', $personasMorales->PODERID)->where('FOLIOID', $folio)->where('ANO', $year)->update();
 			if ($updateFolioPM) {

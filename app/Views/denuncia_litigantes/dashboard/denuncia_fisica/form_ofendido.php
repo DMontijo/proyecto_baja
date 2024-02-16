@@ -204,6 +204,18 @@
 	</div>
 </div>
 <script>
+	//Mayusculas descripcion de ofendido
+	document.querySelector('#description_fisica_ofendido').addEventListener('input', (event) => {
+		event.target.value = clearText(event.target.value).toUpperCase();
+	}, false)
+		//Funcion para eliminar caracteres especiales del texto
+		function clearText(text) {
+		return text
+			.normalize('NFD')
+			.replaceAll(/([^n\u0300-\u036f]|n(?!\u0303(?![\u0300-\u036f])))[\u0300-\u036f]+/gi, "$1")
+			.normalize()
+			.replaceAll('´', '');
+	}
 	//Funcion para contar caracteres de la descripcion
 	function contarCaracteresImp(obj) {
 		var maxLength = 300;
