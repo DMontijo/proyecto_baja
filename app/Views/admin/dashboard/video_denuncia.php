@@ -540,7 +540,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.js?v=<?= rand() ?>"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css?v=<?= rand() ?>">
-<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.27.0.min.js?v=<?= rand() ?>"></script>
+<script type="text/javascript" src="<?= base_url() ?>/assets/agent/assets/openvidu-browser-2.29.0.min.js?v=<?= rand() ?>"></script>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js?v=<?= rand() ?>" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="<?= base_url() ?>/assets/js/video_denuncia.js?v=<?= rand() ?>" type="module"></script>
 <script>
