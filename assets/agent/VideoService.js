@@ -2,7 +2,7 @@
  *
  *  VIDEO SERVICE
  *
- * @author César Arley Ojeda Escobar
+ * @author Yo Contigo IT
  ****************************************/
 
 import { ExceptionOpenViduNotImported, ExceptionMissingParameter, ExceptionConstructorMissingParameter, ExceptionOpenViduSessionNotCreated } from "./exceptions.js";
@@ -15,7 +15,7 @@ export default class VideoCall {
 
 
     #token;
-    
+
     #OV;
     #session;
     #remoteVideoSelector;
@@ -71,7 +71,7 @@ export default class VideoCall {
         });
 
         this.#session.on('recordingStarted', event => {
-            console.log('****************************recordingStarted************************************', event)
+            console.log('[******** RECORDING_STARTED ********]', event);
             this.#startVideoCallTime = new Date();
         })
     }
@@ -87,7 +87,7 @@ export default class VideoCall {
      * Recording start time for current call
      */
     get startVideoCallTime() {
-        console.log(this.#startVideoCallTime);
+        console.log('[START_VIDEOCALL_TIME]', this.#startVideoCallTime);
         return this.#startVideoCallTime;
     }
 
@@ -132,25 +132,25 @@ export default class VideoCall {
         this.#localVideoSelector = localVideoSelector;
 
         this.#session.connect(this.#token)
-        .then(async () => {
-            this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
-                audioSource: this.#audioSource,     // The source of audio. If undefined default microphone
-                videoSource: this.#videoSource,     // The source of video. If undefined default webcam
-                publishAudio: this.#publishAudio,   // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: this.#publishVideo,   // Whether you want to start publishing with your video enabled or not
-                resolution: this.#resolution,       // The resolution of your video
-                frameRate: 30,			            // The frame rate of your video
-                insertMode: 'APPEND',	            // How the video is inserted in the target element 'video-container'
-                mirror: false       	            // Whether to mirror your local video or not
-            });
-            
-            this.#session.publish(this.#publisher);
+            .then(async () => {
+                this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
+                    audioSource: this.#audioSource,     // The source of audio. If undefined default microphone
+                    videoSource: this.#videoSource,     // The source of video. If undefined default webcam
+                    publishAudio: this.#publishAudio,   // Whether you want to start publishing with your audio unmuted or not
+                    publishVideo: this.#publishVideo,   // Whether you want to start publishing with your video enabled or not
+                    resolution: this.#resolution,       // The resolution of your video
+                    frameRate: 30,			            // The frame rate of your video
+                    insertMode: 'APPEND',	            // How the video is inserted in the target element 'video-container'
+                    mirror: false       	            // Whether to mirror your local video or not
+                });
 
-            if (typeof callback === 'function') callback();
-        })
-        .catch(error => {
-            console.log('There was an error connecting to the session:', error.code, error.message);
-        });
+                this.#session.publish(this.#publisher);
+
+                if (typeof callback === 'function') callback();
+            })
+            .catch(error => {
+                console.error('[ERROR_CONNECTING_SESSION]', error);
+            });
     }
 
 
@@ -169,7 +169,7 @@ export default class VideoCall {
      */
     toggleAudio() {
         if (!this.#publisher) throw ExceptionOpenViduSessionNotCreated();
-        this.#publishAudio =!this.#publishAudio;
+        this.#publishAudio = !this.#publishAudio;
         this.#publisher.publishAudio(this.#publishAudio);
     }
 
@@ -177,7 +177,7 @@ export default class VideoCall {
      * Force agent disconnection to session
      */
     async forceDisconnection() {
-        console.log("FORZANDO DESCONEXIÓN");
+        console.warn("[FORCE_DISCONNECTION]", 'Forzando la desconección');
         await this.#session.unpublish(this.#publisher);
         await this.#session.disconnect(this.#session.connection);
     }

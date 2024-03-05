@@ -274,110 +274,115 @@ no_disponible_connect.addEventListener("click", () => {
 aceptar_llamada.addEventListener("click", () => {
 	console.log("Aceptando llamada...");
 	aceptar_llamada.disabled = true;
-	agentVideoService.acceptCall(
-		"agn_vf",
-		"main_video",
-		(response, agent, { guest, guestConnection }) => {
-			console.log("¡Llamada aceptada con éxito!");
-			clearVideoCall();
-			video_container.style.display = "block";
-			document.querySelector(
-				"#secondary_video_details_name"
-			).innerHTML = `${agent.names} ${agent.lastnames}`;
-			document.querySelector("#main_video_details_name").innerHTML =
-				guest.name;
-			folio_llamada.innerHTML = guestConnection.folio;
-			denunciante_nombre_llamada.innerHTML = guest.name;
-			disponible_connect.hidden = true;
-			no_disponible_connect.hidden = true;
-			$mediaConfiguration.hidden = false;
-			header_llamda.hidden = false;
-			$("#llamadaModal").modal("hide");
-			aceptar_llamada.disabled = false;
-			if (document.getElementById("input_folio_atencion").value == "") {
-				try {
-					let split = guestConnection.folio.split("/");
-					document.getElementById("input_folio_atencion").value =
-						split[0];
-					document.getElementById("buscar-btn").click();
-				} catch (error) { }
-			} else {
-				try {
-					// ../../data/restore-folio
-					// var xhttp = new XMLHttpRequest();
-
-					// var data = new FormData();
-					// data.append(
-					// 	"folio",
-					// 	document.getElementById("input_folio_atencion").value
-					// );
-					// data.append(
-					// 	"year",
-					// 	document.getElementById("year_select").value
-					// );
-
-					// xhttp.onreadystatechange = function() {
-					// 	if (this.readyState == 4 && this.status == 200) {
-					// 		// Maneja la respuesta del servidor aquí
-					// 	}
-					// };
-					// xhttp.open("POST", "../../data/restore-folio", true);
-					// xhttp.send(data);
-					borrarTodo();
-
-					let split = guestConnection.folio.split("/");
-					document.getElementById("input_folio_atencion").value =
-						split[0];
-					document.getElementById("buscar-btn").click();
-					// buscar_btn.classList.add("d-none");
-				} catch (error) { }
-			}
-
-			agentVideoService.registerOnGuestDisconnected(() => {
+	try {
+		agentVideoService.acceptCall(
+			"agn_vf",
+			"main_video",
+			(response, agent, { guest, guestConnection }) => {
+				console.log("[ACCEPT_CALL]", { response, agent, guest, guestConnection });
+				clearVideoCall();
+				video_container.style.display = "block";
+				document.querySelector(
+					"#secondary_video_details_name"
+				).innerHTML = `${agent.names} ${agent.lastnames}`;
+				document.querySelector("#main_video_details_name").innerHTML =
+					guest.name;
+				folio_llamada.innerHTML = guestConnection.folio;
+				denunciante_nombre_llamada.innerHTML = guest.name;
+				disponible_connect.hidden = true;
+				no_disponible_connect.hidden = true;
+				$mediaConfiguration.hidden = false;
+				header_llamda.hidden = false;
+				$("#llamadaModal").modal("hide");
 				aceptar_llamada.disabled = false;
-				console.log("Guest disconnected");
-				agentVideoService.disconnectAgent(() => {
-					console.log("¡Agente desconectado con éxito!");
-					clearVideoCall();
-				});
-				Swal.fire({
-					icon: "error",
-					text: "El usuario se desconecto.",
-					showConfirmButton: false,
-					timer: 3000,
-					timerProgressBar: true
-				});
-			});
+				if (document.getElementById("input_folio_atencion").value == "") {
+					try {
+						let split = guestConnection.folio.split("/");
+						document.getElementById("input_folio_atencion").value =
+							split[0];
+						document.getElementById("buscar-btn").click();
+					} catch (error) { }
+				} else {
+					try {
+						// ../../data/restore-folio
+						// var xhttp = new XMLHttpRequest();
 
-			agentVideoService.registerOnNewtworkQualityChanged(
-				(event, host) => {
-					const signal = createSignalLevel(event.newValue);
-					if (host.host) {
-						networkQualitySignalAgentButton.classList.remove(
-							"d-none"
-						);
-						networkQualitySignalAgentButton.innerHTML = signal;
-					} else {
-						networkQualitySignalGuestButton.classList.remove(
-							"d-none"
-						);
-						networkQualitySignalGuestButton.innerHTML = signal;
-					}
+						// var data = new FormData();
+						// data.append(
+						// 	"folio",
+						// 	document.getElementById("input_folio_atencion").value
+						// );
+						// data.append(
+						// 	"year",
+						// 	document.getElementById("year_select").value
+						// );
+
+						// xhttp.onreadystatechange = function() {
+						// 	if (this.readyState == 4 && this.status == 200) {
+						// 		// Maneja la respuesta del servidor aquí
+						// 	}
+						// };
+						// xhttp.open("POST", "../../data/restore-folio", true);
+						// xhttp.send(data);
+						borrarTodo();
+
+						let split = guestConnection.folio.split("/");
+						document.getElementById("input_folio_atencion").value =
+							split[0];
+						document.getElementById("buscar-btn").click();
+						// buscar_btn.classList.add("d-none");
+					} catch (error) { }
 				}
-			);
 
-			agentVideoService.toggleVideoFailConection(toggle => {
-				toogleVideoDenunciante(toggle);
-				console.log(toastAgent, "toastAgent");
-				$(toastAgent).removeClass("hide");
-				$(toastAgent).addClass("fade show");
-				setTimeout(() => {
-					$(toastAgent).removeClass("show");
-					$(toastAgent).addClass("fade hide");
-				}, 9000);
-			});
-		}
-	);
+				agentVideoService.registerOnGuestDisconnected(() => {
+					aceptar_llamada.disabled = false;
+					console.log("Guest disconnected");
+					agentVideoService.disconnectAgent(() => {
+						console.log("¡Agente desconectado con éxito!");
+						clearVideoCall();
+					});
+					Swal.fire({
+						icon: "error",
+						text: "El usuario se desconecto.",
+						showConfirmButton: false,
+						timer: 3000,
+						timerProgressBar: true
+					});
+				});
+
+				agentVideoService.registerOnNewtworkQualityChanged(
+					(event, host) => {
+						const signal = createSignalLevel(event.newValue);
+						if (host.host) {
+							networkQualitySignalAgentButton.classList.remove(
+								"d-none"
+							);
+							networkQualitySignalAgentButton.innerHTML = signal;
+						} else {
+							networkQualitySignalGuestButton.classList.remove(
+								"d-none"
+							);
+							networkQualitySignalGuestButton.innerHTML = signal;
+						}
+					}
+				);
+
+				agentVideoService.toggleVideoFailConection(toggle => {
+					toogleVideoDenunciante(toggle);
+					console.log(toastAgent, "toastAgent");
+					$(toastAgent).removeClass("hide");
+					$(toastAgent).addClass("fade show");
+					setTimeout(() => {
+						$(toastAgent).removeClass("show");
+						$(toastAgent).addClass("fade hide");
+					}, 9000);
+				});
+			}
+		);
+	} catch (err) {
+		console.error('[ERROR_ACCEPT_CALL]', err);
+	}
+
 });
 
 function createSignalLevel(levelSignal) {

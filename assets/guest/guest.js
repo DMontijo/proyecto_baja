@@ -3,7 +3,7 @@
  *
  *  AGENT CONNECTIONS TO VIDEO SERVICE SDK
  *
- * @author César Arley Ojeda Escobar
+ * @author Yo Contigo IT
  ****************************************/
 
 import VideoCall from "./VideoService.js";
@@ -144,12 +144,12 @@ export class VideoServiceGuest {
 		this.#guestDetails = details;
 
 		this.#socket.on("exception", function (data) {
-			console.warn("event", data ? data : "No event");
+			console.warn("[VD_EXCEPTION_EVENT]", data ? data : "No event");
 			if (typeof onerror === "function") onerror(data);
 		});
 
 		this.#socket.on("disconnect", function (data) {
-			console.warn("ON Disconnect SERVER reloading", data);
+			console.warn("[ON_DISCONNECT_SERVER_RELOADING]", data);
 			setInterval(function () {
 				location.reload();
 			}, 9000);
@@ -224,7 +224,7 @@ export class VideoServiceGuest {
 				this.#socket.disconnect();
 				this.#loggedOutSound.play();
 			} catch (e) {
-				console.warn('OnDisconnect => ', e);
+				console.error('[VD_ERROR_DISCONNECT]', e);
 			}
 
 			if (typeof callback === "function") callback(resp);
@@ -239,17 +239,18 @@ export class VideoServiceGuest {
 	 */
 	registerOnVideoReady(localVideoSelector, remoteVideoSelector, callback) {
 		this.#socket.on("video-ready", response => {
-			console.log(response);
+			console.log('[VD_VIDEO_READY]', response);
 
 			localStorage.setItem(SESSION_RECOVER_KEY, JSON.stringify({ sessionId: response.sessionId, createdAt: new Date() }));
 
 			this.agentData = response.agent;
 
-			this.#videoCallService = new VideoCall({ remoteVideoSelector,
+			this.#videoCallService = new VideoCall({
+				remoteVideoSelector,
 				audioSource: this.audioStream,
 				videoSource: this.videoStream,
 			});
-			
+
 			this.#videoCallService.connectVideoCall(
 				response.token,
 				localVideoSelector,
@@ -261,17 +262,17 @@ export class VideoServiceGuest {
 	}
 
 	/**
-     * Register the network quality
-     * 
-     * @param {Function} callback - This method is executed after session is connected
-     */
-	registerOnNewtworkQualityChanged(callback){
+	 * Register the network quality
+	 * 
+	 * @param {Function} callback - This method is executed after session is connected
+	 */
+	registerOnNewtworkQualityChanged(callback) {
 		if (!this.#videoCallService) return;
 
 		this.#videoCallService.registerOnNewtworkQualityChanged((event) => {
 			if (typeof callback === "function") callback(event);
 		});
-	} 
+	}
 
 	/**
 	 * Register recording status changes
@@ -319,7 +320,7 @@ export class VideoServiceGuest {
 			this.#videoCallService?.session.disconnect();
 			this.#socket.disconnect();
 		} catch (e) {
-			console.error(e);
+			console.error('[VD_ERROR_DISCONNECT_GUEST]', e);
 		}
 
 		if (typeof callback === "function") callback(response);

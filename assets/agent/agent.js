@@ -2,7 +2,7 @@
  *
  *  AGENT CONNECTIONS TO VIDEO SERVICE SDK
  *
- * @author César Arley Ojeda Escobar
+ * @author Yo Contigo IT
  ****************************************/
 
 import VideoCall from "./VideoService.js";
@@ -127,12 +127,14 @@ export class VideoServiceAgent {
 				...this.#socketConfig,
 				extraHeaders: this.#socketHeaders
 			});
+			console.log('[VD_SOCKET_INFO]', this.#socket)
 		} catch (err) {
+			console.log('[VD_SOCKET_ERROR]', err)
 			throw ExceptionSocketIONotImported();
 		}
 
 		this.#socket.on("exception", function (response) {
-			console.warn("event", response ? response : "No event");
+			console.warn("[VD_EXCEPTION_EVENT]", response ? response : "No event");
 			if (typeof onerror === "function") onerror(response);
 		});
 
@@ -153,7 +155,9 @@ export class VideoServiceAgent {
 				this.agentData = response.agent;
 				try {
 					this.#loggedInSound.play();
-				} catch (error) { }
+				} catch (error) {
+					console.error('[VD_LOGGED_SOUND_ERROR]', error);
+				}
 
 				if (typeof callback === "function") callback(response);
 			}
@@ -163,23 +167,23 @@ export class VideoServiceAgent {
 	toggleVideoFailConection(callback) {
 		this.#socket.on("mute-video", ({ toggleVideo }) => {
 			this.guestVideo = toggleVideo.toogleVideoGuest;
-			console.log(toggleVideo, 'guestviceo');
+			console.log('[VD_GUEST_VIDEO]', toggleVideo)
 			if (typeof callback === "function") callback(toggleVideo);
 		});
 	}
 
 	/**
-     * Register the network quality
-     * 
-     * @param {Function} callback - This method is executed after session is connected
-     */
-	registerOnNewtworkQualityChanged(callback){
+	 * Register the network quality
+	 * 
+	 * @param {Function} callback - This method is executed after session is connected
+	 */
+	registerOnNewtworkQualityChanged(callback) {
 		if (!this.#videoCallService) return;
 
 		this.#videoCallService.registerOnNewtworkQualityChanged((event, host) => {
 			if (typeof callback === "function") callback(event, host);
 		});
-	} 
+	}
 
 	/**
 	 * Register the listener for guest connections
@@ -218,7 +222,7 @@ export class VideoServiceAgent {
 			this.#socket.disconnect();
 			this.#videoCallService?.session.disconnect();
 		} catch (e) {
-			console.warn(e);
+			console.error('[VD_ERROR_DISCONNECT_AGENT]', e);
 		}
 
 		if (typeof callback === "function") callback();
@@ -233,7 +237,7 @@ export class VideoServiceAgent {
 		try {
 			this.#emit("close-video-call");
 		} catch (e) {
-			console.warn(e);
+			console.error('[VD_ERROR_END_VIDEO_CALL]', e);
 		} finally {
 			if (typeof callback === "function") callback();
 		}
@@ -254,30 +258,34 @@ export class VideoServiceAgent {
 				accepted: "accepted-call"
 			},
 			response => {
+				console.log('[CONNECT_CALL_RESPONSE]', response);
 				this.#sessionId = response.sessionId;
 				this.#connectionId = response.connectionId;
 				this.#recordingId = response.recordingId;
 
-				this.#phoneRing.pause();
-				console.log(this.agentData);
+				try {
+					this.#phoneRing.pause();
 
-				
-				this.#videoCallService = new VideoCall({ remoteVideoSelector,
-					audioSource: this.audioStream,
-					videoSource: this.videoStream,
-				});
-				
-				this.#videoCallService.registerOnSessionDisconnected();
-				
-				this.#videoCallService.connectVideoCall(
-					response.token,
-					localVideoSelector,
-					() => {
-						this.#phoneRing.pause();
-					}
-				);
+					this.#videoCallService = new VideoCall({
+						remoteVideoSelector,
+						audioSource: this.audioStream,
+						videoSource: this.videoStream,
+					});
 
-				if (typeof callback === "function") callback(response, this.agentData, this.guestData);
+					this.#videoCallService.registerOnSessionDisconnected();
+
+					this.#videoCallService.connectVideoCall(
+						response.token,
+						localVideoSelector,
+						() => {
+							this.#phoneRing.pause();
+						}
+					);
+
+					if (typeof callback === "function") callback(response, this.agentData, this.guestData);
+				} catch (err) {
+					console.error('[ACCEPT_CALL_ERROR]', err)
+				}
 			}
 		);
 	}
@@ -515,13 +523,13 @@ export class VideoServiceAgent {
 	 */
 	reloadAgentVideoCall(callback) {
 		this.#emit('reload-agent-video-call', {}, async (response) => {
-			console.log(response);
+			console.log('[VD_RELOAD_AGENT_VIDEOCALL]', response);
 			this.#connectionId = response.connectionId;
 			await this.#videoCallService.forceDisconnection();
 			this.#videoCallService.connectVideoCall(
 				response.token,
 				this.#localVideoSelector,
-				typeof callback === "function" ?  callback(response): undefined
+				typeof callback === "function" ? callback(response) : undefined
 			);
 		})
 	}
