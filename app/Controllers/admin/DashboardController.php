@@ -1437,7 +1437,8 @@ class DashboardController extends BaseController
 		];
 		$this->_usuariosModel->set($data)->where('ID', $id)->update();
 		$datosBitacora = [
-			'ACCION' => 'Edito la contraseña del usuario ' . $id,
+			'ACCION' => 'Edito la contraseña de un usuario',
+			'NOTAS' => 'Usuario id:' . $id
 		];
 		$this->_bitacoraActividad($datosBitacora);
 
@@ -5309,34 +5310,35 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
 		$url = $this->urlApi;
-		$datosBitacora = [
-			'ACCION' => 'Consulto videos',
-			'NOTAS' => 'FOLIO: ' . $folio
-		];
 
 		$endpointFolio = $url . 'recordings/folio?folio=' . $folio;
 		$responseFolio = $this->_curlGetService($endpointFolio);
-		// return json_encode($responseFolio);
+
 		if ($responseFolio != null) {
-			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
-
-			foreach ($responseFolio as $key => $conections) {
-
-				if (isset($conections->url) && $conections->url != null) {
-					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
-					$responseid = $this->_curlGetService($endpointId);
-				}
-			}
 			try {
-				$this->_bitacoraActividad($datosBitacora);
+				$this->_bitacoraActividad([
+					'ACCION' => 'Consulto videos',
+					'NOTAS' => 'FOLIO: ' . $folio
+				]);
 			} catch (\Exception $e) {
 			}
-		}
-		if (isset($responseid)) {
-			return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
-		} else {
 			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+
+			// foreach ($responseFolio as $key => $conections) {
+
+			// 	if (isset($conections->url) && $conections->url != null) {
+			// 		$endpointId = $this->urlApi . 'recordings/' . $conections->id;
+			// 		$responseid = $this->_curlGetService($endpointId);
+			// 	}
+			// }
+		} else {
+			return json_encode(['status' => 0]);
 		}
+		// if (isset($responseid)) {
+		// 	return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
+		// } else {
+		// 	return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+		// }
 	}
 
 	/**

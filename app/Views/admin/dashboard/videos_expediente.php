@@ -39,7 +39,7 @@
 												$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14];
 											} ?>
 											<tr>
-											<td class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
+												<td class="text-center"><button type="button" class="btn btn-primary btn-sm" onclick="viewVideo(<?= $folio->ANO ?>,<?= $folio->FOLIOID ?>)"><i class="fas fa-video"></i></button></td>
 												<td class="text-center font-weight-bold"><?= $folio->FOLIOID ?></td>
 												<td class="text-center font-weight-bold"><?= $folio->ANO ?></td>
 												<td class="text-center font-weight-bold"><?= ($expedienteid ? $expedienteid : '') . '/' . $folio->TIPOEXPEDIENTECLAVE ?></td>
@@ -69,7 +69,7 @@
 	<div class="modal-dialog modal-dialog-centered mw-100 w-50">
 		<div class="modal-content" style="box-shadow: 0px 0px 55px 9px rgba(0,0,0,0.66)!important;">
 			<div class="modal-header bg-primary justify-content-center">
-				<h5 class="modal-title font-weight-bold text-white">VIDEOS DEL EXPEDIENTE REGISTRADOS</h5>
+				<h5 class="modal-title font-weight-bold text-white">VIDEOS DEL EXPEDIENTE</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -79,22 +79,22 @@
 				<div class="row" id="videos_expediente_spinner">
 					<div class="col-12">
 						<div class="spinner-border text-primary" role="status">
-							<span class="sr-only">Cargando...</span>
+							<span class="sr-only">Buscando...</span>
 						</div>
-						<p>CARGANDO ...</p>
+						<p>Buscando ...</p>
 					</div>
 				</div>
 				<div class="row d-none" id="videos_expediente_empty">
 					<div class="col-12">
 						<p class="text-primary">
-							No hay videos grabados en este expediente.
+							No se encontraron videos en este expediente.
 						</p>
 					</div>
 				</div>
 				<div class="table-responsive">
 					<table id="table-videos" class="table table-bordered table-hover table-striped table-light d-none">
 						<tr>
-							<th class="text-center bg-primary text-white">VIDEO</th>
+							<!-- <th class="text-center bg-primary text-white">VIDEO</th> -->
 						</tr>
 					</table>
 				</div>
@@ -108,16 +108,14 @@
 		$("#folios_expediente").DataTable({
 			responsive: false,
 			lengthChange: false,
-			autoWidth: true,
+			autoWidth: false,
 			ordering: true,
 			order: [
 				[2, 'DESC'],
-								[1, 'DESC'],
-
-
+				[1, 'DESC'],
 			],
 			searching: true,
-			pageLength: 25,
+			pageLength: 30,
 			// dom: 'Bfrtip',
 			// buttons: [
 			// 	'copy', 'excel', 'pdf'
@@ -147,14 +145,20 @@
 			method: "POST",
 			dataType: "json",
 			success: function(response) {
-
-				//se obtiene el ultimo video disponible
-				let videos = response.responseVideos.filter(video => video.url);
-				if (videos.length > 0) {
-					llenarTablaVideos(videos);
-					document.getElementById('videos_expediente_spinner').classList.add('d-none');
-					document.getElementById('videos_expediente_empty').classList.add('d-none');
-					document.getElementById('table-videos').classList.remove('d-none');
+				if (response.status == 1) {
+					console.log('[VIDEOS]', response);
+					//se obtiene el ultimo video disponible
+					let videos = response.responseVideos.filter(video => video.url);
+					if (videos.length > 0) {
+						llenarTablaVideos(videos);
+						document.getElementById('videos_expediente_spinner').classList.add('d-none');
+						document.getElementById('videos_expediente_empty').classList.add('d-none');
+						document.getElementById('table-videos').classList.remove('d-none');
+					} else {
+						document.getElementById('videos_expediente_spinner').classList.add('d-none');
+						document.getElementById('videos_expediente_empty').classList.remove('d-none');
+						document.getElementById('table-videos').classList.add('d-none');
+					}
 				} else {
 					document.getElementById('videos_expediente_spinner').classList.add('d-none');
 					document.getElementById('videos_expediente_empty').classList.remove('d-none');
