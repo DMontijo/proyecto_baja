@@ -5309,6 +5309,10 @@ class DashboardController extends BaseController
 		$folio = $this->request->getPost('folio');
 		$data['folio'] = $folio;
 		$url = $this->urlApi;
+		$datosBitacora = [
+			'ACCION' => 'Consulto videos',
+			'NOTAS' => 'FOLIO: ' . $folio
+		];
 
 		$endpointFolio = $url . 'recordings/folio?folio=' . $folio;
 		$responseFolio = $this->_curlGetService($endpointFolio);
@@ -5322,6 +5326,10 @@ class DashboardController extends BaseController
 					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
 					$responseid = $this->_curlGetService($endpointId);
 				}
+			}
+			try {
+				$this->_bitacoraActividad($datosBitacora);
+			} catch (\Exception $e) {
 			}
 		}
 		if (isset($responseid)) {
