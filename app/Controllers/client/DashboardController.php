@@ -247,9 +247,9 @@ class DashboardController extends BaseController
 		$folio = $this->_folioModelRead->where('ANO', $data->year)->where('FOLIOID', $array[1])->where('STATUS', 'ABIERTO')->first();
 
 		if ($folio) {
-			// $this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
-			//Redirección denuncia telefónica.
-			$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia_telefonica');
+			$this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia');
+			// Redirección denuncia telefónica.
+			// $this->_loadView('Video denuncia', 'video-denuncia', '', $data, 'video_denuncia_telefonica');
 		} else {
 			return redirect()->to(base_url('denuncia/dashboard'));
 		}
