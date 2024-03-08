@@ -39,6 +39,7 @@ export class VideoServiceAgent {
 	#phoneRing = new Audio("../../assets/agent/assets/sounds/income_call.wav");
 	#loggedInSound = new Audio("../../assets/agent/assets/sounds/login.m4a");
 	#loggedOutSound = new Audio("../../assets/agent/assets/sounds/logout.m4a");
+	static activeAudios = [];
 
 	agentVideo = true;
 	agentAudio = true;
@@ -109,6 +110,9 @@ export class VideoServiceAgent {
 
 		this.#agentUUID = agentUUID;
 		this.#socketConfig = config.socketConfig ?? {};
+
+		// Añadir las instancias de Audio a la lista estática
+		VideoServiceAgent.activeAudios.push(this.#phoneRing);
 	}
 
 	/**
@@ -141,7 +145,9 @@ export class VideoServiceAgent {
 		this.#socket.on("disconnect", (response) => {
 			try {
 				this.#loggedOutSound.play();
-			} catch (error) { }
+			} catch (error) {
+				console.log('[VD_DISCONNECT_ERROR]', error)
+			}
 			if (typeof ondisconnect === "function") ondisconnect(response)
 		});
 
@@ -564,5 +570,17 @@ export class VideoServiceAgent {
 		const _callback = callback ?? function () { };
 
 		this.#socket.emit(eventName, _data, _callback);
+	}
+
+	static pauseAllAudios() {
+		VideoServiceAgent.activeAudios.forEach(audio => {
+			try {
+				if (!audio.paused) {
+					audio.pause();
+				}
+			} catch (error) {
+				console.error("[ERROR_PAUSE_AUDIO]", error);
+			}
+		});
 	}
 }

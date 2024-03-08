@@ -16,6 +16,8 @@ const video_container = document.getElementById("video_container");
 const startRecord = document.querySelector("#start-recording");
 const stopRecord = document.querySelector("#stop-recording");
 
+const $stopAudios = document.getElementById("stop_audios");
+
 // NETWORK QUALITY SIGNAL
 const networkQualitySignalGuestButton = document.getElementById(
 	"network_quality_signal_guest"
@@ -77,6 +79,10 @@ var myInterval;
 $mediaConfiguration.addEventListener("click", async () => {
 	$(mediaDevicesModal).modal("show");
 	initMediaDevices();
+});
+
+$stopAudios.addEventListener("click", async () => {
+	pauseAllAudios();
 });
 
 const agentVideoService = new VideoServiceAgent(agentUUID, { apiURI, apiKey });
@@ -869,6 +875,10 @@ const llenarSelectConDispositivosDisponiblesAudioIOS = () => {
 			});
 		}
 	});
+};
+
+function pauseAllAudios() {
+	VideoServiceAgent.pauseAllAudios();
 };
 
 function initMediaDevices() {
