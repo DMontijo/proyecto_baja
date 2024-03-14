@@ -88,3 +88,5 @@ define('X_API_KEY', 'vssk_fd61131c-c0c8-42ff-a381-9b3a87da2b34'); //Key para la 
 // define('VIDEOCALL_URL', 'https://openviduprotesting-api.fgebc.gob.mx/');
 define('VIDEOCALL_URL', 'http://vd-sin-alb.fgebc.gob.mx/');
 define('EMAIL_TOKEN', 'mlsn.cee8ce91422fac4e94a3483c40408a3f3d85de4e4a2fb660bd818dc76b8ad774'); //Token de MailSend
+define('TOKEN_SMS', '540ed8b426.wv9HgdIlyfkoyfNP+eS+ZKUafNWDnPWOv/EAM842P8w='); //Token de SMS
+

@@ -144,7 +144,7 @@
 		document.querySelector('#validate_btn').setAttribute('disabled', true);
 		var data = {
 			'email': document.querySelector('#correo').value,
-			'telefono': document.querySelector('#telefono').value
+			'telefono': document.querySelector('#codigo_pais').value+document.querySelector('#telefono').value
 
 		}
 

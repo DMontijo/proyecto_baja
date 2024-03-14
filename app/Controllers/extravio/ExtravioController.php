@@ -181,7 +181,7 @@ class ExtravioController extends BaseController
 
 			if ($response->uuid) {
 				$this->_denunciantesModel->insert($data);
-				$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'], $password);
+				$this->_sendEmailPassword($data['CORREO'], $data['CODIGO_PAIS'] . $data['TELEFONO'], $password);
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS e ingresa.');
 			}
 		} else {
@@ -299,7 +299,7 @@ class ExtravioController extends BaseController
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
 
-		$sendSMS = $this->sendSMS("Te estamos atendiendo", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("PASSWORD", $telefono, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 
 		try {
 			$result = $mailersend->email->send($emailParams);
@@ -311,7 +311,7 @@ class ExtravioController extends BaseController
 		if ($result) {
 			return true;
 		} else {
-			if ($sendSMS == "") {
+			if ($sendSMS->status == 200) {
 				return true;
 			} else {
 				return false;
@@ -345,7 +345,7 @@ class ExtravioController extends BaseController
 			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("PASSWORD", $user->CODIGO_PAIS . $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 		try {
 			$result = $mailersend->email->send($emailParams);
 		} catch (MailerSendValidationException $e) {
@@ -357,7 +357,7 @@ class ExtravioController extends BaseController
 		if ($result) {
 			return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 		} else {
-			if ($sendSMS == "") {
+			if ($sendSMS->status == 200) {
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 			} else {
 				return redirect()->to(base_url('/constancia_extravio'))->with('message_error', 'Error');
@@ -577,25 +577,44 @@ class ExtravioController extends BaseController
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 
-		$endpoint = "http://enviosms.ddns.net/API/";
+		$endpoint = "https://tess-track.vercel.app/api/sms/send";
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Authorization: Bearer ' . TOKEN_SMS
+		);
+
 		$data = array();
-		$data['UsuarioID'] = 1;
-		$data['Nombre'] = $tipo;
+		$data['name'] = $tipo;
 		$lstMensajes = array();
-		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$obj = array("message" => $mensaje, "phone" =>  $celular);
 		$lstMensajes[] = $obj;
-		$data['lstMensajes'] = $lstMensajes;
+		$data['messages'] = $lstMensajes;
 
-		$httpClient = new Client([
-			'base_uri' => $endpoint
-		]);
+		$ch = curl_init();
 
-		$response = $httpClient->post('campañas/enviarSMS', [
-			'json' => $data
-		]);
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
 
-		$respuestaServ = $response->getBody()->getContents();
+		if ($result === false) {
+			$result = array(
+				'status' => 401,
+				'error' => 'Curl failed: ' . curl_error($ch)
+			);
+		} else {
+			$result = json_decode($result, true);
+		}
 
-		return json_decode($respuestaServ);
+		curl_close($ch);
+
+		return $result;
 	}
 }
