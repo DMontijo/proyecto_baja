@@ -710,7 +710,7 @@ class DashboardController extends BaseController
 			->findAll();
 
 		foreach ($data->usuario as $user) {
-			if ($user->MUNICIPIOSOFICINASID) {
+			if ($user->MUNICIPIOSOFICINASID && $user->ROLID == 13) {
 
 				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID, $user->MUNICIPIOSOFICINASID);
 				$user->MUNICIPIODESCR = $visualizador['municipios'][0]->municipios_concatenados;
@@ -1082,7 +1082,7 @@ class DashboardController extends BaseController
 		$data->roles = $this->_rolesUsuariosModelRead->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
 		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID <= 5')->findAll();
 		$data->usuario = $this->_usuariosModelRead->asObject()->where('ID', $id)->first();
-		if ($data->usuario->MUNICIPIOSOFICINASID) {
+		if ($data->usuario->MUNICIPIOSOFICINASID && $data->usuario->ROLID == 13) {
 			$municipiosOficinas = json_decode($data->usuario->MUNICIPIOSOFICINASID);
 			$data->municipioSeleccionadoIDs = array_column($municipiosOficinas, 'MUNICIPIOID');
 			$data->oficinaSeleccionadaIDs = array_column($municipiosOficinas, 'OFICINAID');
@@ -1372,6 +1372,7 @@ class DashboardController extends BaseController
 				'ZONAID' => trim($this->request->getPost('zona_usuario')),
 				'MUNICIPIOID' => trim($this->request->getPost('municipio')),
 				'OFICINAID' => trim($this->request->getPost('oficina')),
+				'MUNICIPIOSOFICINASID'=> NULL
 			];
 		}
 		if (!($data['CORREO'] === $usuario->CORREO)) {
