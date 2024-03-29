@@ -76,14 +76,14 @@ class Database extends Config
 		'failover' => [],
 		'port'     => 3306,
 	];
-	
+
 	/**
 	 * This database connection is used when generate reports
 	 * Only read
 	 * @var array
 	 */
 
-	 public $reporte_read = [
+	public $reporte_read = [
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-instance-3-us-east-1a.cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
@@ -111,7 +111,7 @@ class Database extends Config
 	 * @var array
 	 */
 
-	 public $development = [
+	public $development = [
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
@@ -139,7 +139,7 @@ class Database extends Config
 	 * @var array
 	 */
 
-	 public $development_read = [
+	public $development_read = [
 		'DSN'      => '',
 		'hostname' => 'database-video-denuncia-baja-california-dev-cluster.cluster-ro-cenwfxggsegs.us-east-1.rds.amazonaws.com',
 		'username' => 'fgebc_admin',
