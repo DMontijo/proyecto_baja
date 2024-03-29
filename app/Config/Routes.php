@@ -460,6 +460,7 @@ $routes->group('denuncia_litigantes', function ($routes) {
 		$routes->post('subir_documentos', 'litigantes/DashboardController::subir_documentos');
 		$routes->get('denuncias', 'litigantes/DashboardController::denuncias');
 		$routes->get('perfil', 'litigantes/DashboardController::profile');
+		$routes->post('delete-archivo-by-id', 'litigantes/DashboardController::deleteArchivoById');
 
 		$routes->get('denuncia_persona_moral', 'litigantes/DashboardController::denuncia_persona_moral');
 		$routes->post('create_denuncia_persona_moral', 'litigantes/DashboardController::create_denuncia_persona_moral');

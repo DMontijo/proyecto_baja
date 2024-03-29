@@ -1645,7 +1645,8 @@ class DashboardController extends BaseController
 			$data->status = "COMPLETADO";
 			$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
 
-		}else {
+		}
+		else {
 			return redirect()->to(base_url('/denuncia_litigantes/dashboard/pantalla_final'))->with('message_error', 'No se pueden añadir mas documentos a este folio.');
 		}
 	}
@@ -1819,6 +1820,58 @@ class DashboardController extends BaseController
 			return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 		}
 	}
+
+	/**
+	 * Función para eliminar archivos externos conforme a su id
+	 * Recibe por metodo POST el folio, año y archivo id para su eliminación
+	 * Devuelve todos los datos necesarios para la actualizacion de las tablas visuales
+	 */
+	public function deleteArchivoById()
+	{
+		try {
+			$folio = trim($this->request->getPost('folio'));
+			$year = trim($this->request->getPost('year'));
+			$archivoid = trim($this->request->getPost('archivoid'));
+		
+			$deletearchivo = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIOARCHIVOID', $archivoid)->delete();
+
+			if ($deletearchivo) {
+				$datados = (object) array();
+
+				$datados->archivosexternos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
+				if ($datados->archivosexternos) {
+					foreach ($datados->archivosexternos as $key => $archivos) {
+						//Se codifica para que la imagén pueda ser visual
+						$file_info = new \finfo(FILEINFO_MIME_TYPE);
+						$type = $file_info->buffer($archivos->ARCHIVO);
+						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
+					}
+				}
+				$archivoDenunciaEscrita = $this->_archivoExternoModel->asObject()->where('TIPO','DENUNCIA ESCRITA')->where('FOLIOID', $folio)->where('ANO', $year)->countAllResults();
+
+				if ($archivoDenunciaEscrita >0) {
+					
+					return json_encode(['status' => 1, 'archivos' => $datados]);
+				}else{
+					$dataFolio = [
+						'STATUS' => "PENDIENTE",
+					];
+					$updateFolio = $this->_folioModel->set($dataFolio)->where('FOLIOID', $folio)->where('ANO', $year)->update();
+					if ($updateFolio) {
+						return json_encode(['status' => 1, 'archivos' => $datados]);
+					} else {
+						return json_encode(['status' => 0]);
+					}
+				}
+			} else {
+				return json_encode(['status' => 0]);
+			}
+		} catch (\Exception $e) {
+			return json_encode(['status' => 0]);
+		}
+	}
+
+
 	/**Funcion para que el agente pueda cambiar el poder actual de la persona moral */
 	function cambiarPoderActual()
 	{
