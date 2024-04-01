@@ -205,6 +205,7 @@
 						document.getElementById('subirDocSubmit').disabled = true;
 						document.getElementById('finalizarDenuncia').textContent = "He finalizado de agregar documentación y anexos correspondientes."
 					} else {
+						document.getElementById('subirDocSubmit').disabled = false;
 						document.getElementById('finalizarDenuncia').disabled = true;
 						document.getElementById('finalizarDenuncia').textContent = "CREAR DENUNCIA.";
 
