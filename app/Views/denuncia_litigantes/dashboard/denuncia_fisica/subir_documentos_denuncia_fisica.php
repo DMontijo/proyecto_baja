@@ -48,7 +48,7 @@
 								<tr id="<?= $index ?>">
 									<td class="fw-bold col-3 text-center p-3"><?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION ?> </td>
 									<td class="fw-bold col-3 text-center p-3">
-									<a class ="btn btn-primary "id="downloadArchivo" href="<?= $archivo->ARCHIVO; ?>" download="<?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION; ?>"></a><i class="bi bi-download"></i>
+									<a id="downloadArchivo" class="btn btn-primary"href="<?= $archivo->ARCHIVO; ?>" download="<?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION; ?>" target="_blank"><i class="bi bi-download"></i></a>
 										<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(<?= $archivo->FOLIOARCHIVOID ?>)'><i class='bi bi-trash'></i></button>
 									</td>
 
@@ -141,13 +141,10 @@
 		console.log(archivos);
 
 		for (let i = 0; i < archivos.length; i++) {
-			console.log(archivos);
-			const btnDescargar = `<button class="btn btn-primary"><a id="downloadArchivo" href="${archivos[i].ARCHIVO} " download="${archivos[i].ARCHIVODESCR} + '.'+ ${archivos[i].EXTENSION} "></a><i class="bi bi-download"></i></button>`
-			console.log(btnDescargar);
+			const btnDescargar = `< id="downloadArchivo"  class="btn btn-primary" href="${archivos[i].ARCHIVO} " download="${archivos[i].ARCHIVODESCR} + '.'+ ${archivos[i].EXTENSION} " target="_blank"><i class="bi bi-download"></i></a>`
 
 			var btnEliminarArchivo =
 				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='bi bi-trash'></i></button>`;
-			console.log("btnEliminarArchivo: ", btnEliminarArchivo);
 
 			var fila =
 				`<tr id="row${i}">` +
@@ -159,9 +156,6 @@
 			$("#adicionados").text(""); //esta instruccion limpia el div adicioandos para que no se vayan acumulando
 			var nFilas = $("#table-archivos tr").length;
 			$("#adicionados").append(nFilas - 1);
-			///Funcion de descarga de archivos
-			console.log("document.querySelector('#downloadArchivo'): ", document.querySelector('#downloadArchivo'));
-
 		}
 	}
 	(function() {
