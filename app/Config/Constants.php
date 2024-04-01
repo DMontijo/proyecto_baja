@@ -85,8 +85,8 @@ define('TOKEN_API', 'FGEBC_5F^5uJsT16M%jZL');          //Hash conexion a Justici
 define('KEY_128', 'A2832DE3C0B2289253D4B383404E8C1C'); //Key conexion a Justicia
 define('X_API_KEY', 'vssk_fd61131c-c0c8-42ff-a381-9b3a87da2b34'); //Key para la api de videollamada
 // define('VIDEOCALL_URL', 'https://openvidupro-api.fgebc.gob.mx/');
-define('VIDEOCALL_URL', 'https://openviduprotesting-api.fgebc.gob.mx/');
-// define('VIDEOCALL_URL', 'http://vd-sin-alb.fgebc.gob.mx/');
+// define('VIDEOCALL_URL', 'https://openviduprotesting-api.fgebc.gob.mx/');
+define('VIDEOCALL_URL', 'http://vd-sin-alb.fgebc.gob.mx/');
 define('EMAIL_TOKEN', 'mlsn.cee8ce91422fac4e94a3483c40408a3f3d85de4e4a2fb660bd818dc76b8ad774'); //Token de MailSend
 define('TOKEN_SMS', '540ed8b426.wv9HgdIlyfkoyfNP+eS+ZKUafNWDnPWOv/EAM842P8w='); //Token de SMS
 
