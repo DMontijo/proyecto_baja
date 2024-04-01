@@ -48,7 +48,7 @@
 								<tr id="<?= $index ?>">
 									<td class="fw-bold col-3 text-center p-3"><?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION ?> </td>
 									<td class="fw-bold col-3 text-center p-3">
-										<button class="btn btn-primary"><a id="downloadArchivo" href="<?= $archivo->ARCHIVO; ?>" download="<?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION; ?>"></a><i class="bi bi-download"></i></button>
+									<a class ="btn btn-primary "id="downloadArchivo" href="<?= $archivo->ARCHIVO; ?>" download="<?= $archivo->ARCHIVODESCR . '.' . $archivo->EXTENSION; ?>"></a><i class="bi bi-download"></i>
 										<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(<?= $archivo->FOLIOARCHIVOID ?>)'><i class='bi bi-trash'></i></button>
 									</td>
 
