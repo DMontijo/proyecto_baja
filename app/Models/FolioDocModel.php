@@ -87,7 +87,7 @@ class FolioDocModel extends Model
 	{
 		$strQuery = 'SELECT FOLIODOC.FOLIOID, FOLIODOC.ANO, FOLIODOC.NUMEROEXPEDIENTE, FOLIODOC.FECHAREGISTRO, FOLIO.FECHAREGISTRO, FOLIO.FECHASALIDA,FOLIO.STATUS
 			FROM FOLIODOC
-			INNER JOIN FOLIO ON FOLIO.FOLIOID = FOLIODOC.FOLIOID';
+			INNER JOIN FOLIO ON FOLIO.FOLIOID = FOLIODOC.FOLIOID AND FOLIO.ANO = FOLIODOC.ANO';
 		$count = 0;
 		foreach ($obj as $clave => $valor) {
 			if ($clave != 'fechaInicio' && $clave != 'fechaFin' && $clave != 'horaInicio' && $clave != 'horaFin') {
@@ -118,7 +118,7 @@ class FolioDocModel extends Model
 			(isset($obj['horaInicio']) ? (date('H:i:s', strtotime($obj['horaInicio']))) : '00:00:00') . '" AS DATETIME)' . ' AND ' . 'CAST("' .
 			(isset($obj['fechaFin']) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($obj['fechaFin'])) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($obj['fechaFin']))))) : date("Y-m-d")) . ' ' .
 			(isset($obj['horaFin']) ? (date('H:i:s', strtotime($obj['horaFin']))) : '23:59:59') . '" AS DATETIME)';
-		$strQuery = $strQuery . ' GROUP BY FOLIODOC.FOLIOID';
+		$strQuery = $strQuery . ' GROUP BY FOLIODOC.FOLIOID, FOLIODOC.ANO';
 		$result = $this->db->query($strQuery)->getResult();
 
 		$dataView = (object)array();

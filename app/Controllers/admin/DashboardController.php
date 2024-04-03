@@ -693,7 +693,7 @@ class DashboardController extends BaseController
 		$roles = [1, 2, 6, 7, 9, 11];
 
 		if (in_array($agente->ROLID, $roles)) {
-			$data->cantidad_folios = count($this->_folioModelRead->asObject()->findAll());
+			// $data->cantidad_folios = count($this->_folioModelRead->asObject()->findAll());
 			$data->cantidad_abiertos = count($this->_folioModelRead->asObject()->where('STATUS', 'ABIERTO')->findAll());
 			$data->cantidad_derivados = count($this->_folioModelRead->asObject()->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_canalizados = count($this->_folioModelRead->asObject()->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
@@ -704,7 +704,7 @@ class DashboardController extends BaseController
 			$data->sesiones_denunciantes = count($this->_sesionesDenunciantesModelRead->sesiones_abiertas()->result);
 			$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 		} else {
-			$data->cantidad_folios = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
+			// $data->cantidad_folios = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->findAll());
 			$data->cantidad_abiertos = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'ABIERTO')->findAll());
 			$data->cantidad_derivados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'DERIVADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
 			$data->cantidad_canalizados = count($this->_folioModelRead->asObject()->where('AGENTEATENCIONID', session('ID'))->where('STATUS', 'CANALIZADO')->where('FECHASALIDA BETWEEN "' . date('Y-m-d') . ' 00:00:00' . '" and "' . date('Y-m-d', strtotime("+ 1 day")) . ' 00:00:00' . '"')->findAll());
@@ -739,7 +739,7 @@ class DashboardController extends BaseController
 			->findAll();
 
 		foreach ($data->usuario as $user) {
-			if ($user->MUNICIPIOSOFICINASID) {
+			if ($user->MUNICIPIOSOFICINASID && $user->ROLID == 13) {
 
 				$visualizador = $this->_usuariosModelRead->user_visualizador($user->ID, $user->MUNICIPIOSOFICINASID);
 				$user->MUNICIPIODESCR = $visualizador['municipios'][0]->municipios_concatenados;
@@ -1151,7 +1151,7 @@ class DashboardController extends BaseController
 		$data->roles = $this->_rolesUsuariosModelRead->asObject()->where('NOMBRE_ROL !=', 'SUPERUSUARIO')->findAll();
 		$data->municipios = $this->_municipiosModelRead->asObject()->where('ESTADOID', 2)->where('MUNICIPIOID <= 5')->findAll();
 		$data->usuario = $this->_usuariosModelRead->asObject()->where('ID', $id)->first();
-		if ($data->usuario->MUNICIPIOSOFICINASID) {
+		if ($data->usuario->MUNICIPIOSOFICINASID && $data->usuario->ROLID == 13) {
 			$municipiosOficinas = json_decode($data->usuario->MUNICIPIOSOFICINASID);
 			$data->municipioSeleccionadoIDs = array_column($municipiosOficinas, 'MUNICIPIOID');
 			$data->oficinaSeleccionadaIDs = array_column($municipiosOficinas, 'OFICINAID');
@@ -1531,7 +1531,7 @@ class DashboardController extends BaseController
 		];
 
 		if ($this->validate(['correo_usuario' => 'required|valid_email|is_unique[USUARIOS.CORREO]'])) {
-			if ($data['ROLID'] != '5' && $data['ROLID'] != '13') {
+			if ($data['ROLID'] != '5' &&  $data['ROLID'] != '12' && $data['ROLID'] != '13') {
 				try {
 					$dataApi = array();
 					$dataApi['names'] = $this->request->getPost('nombre_usuario');
@@ -1620,6 +1620,7 @@ class DashboardController extends BaseController
 				'ZONAID' => trim($this->request->getPost('zona_usuario')),
 				'MUNICIPIOID' => trim($this->request->getPost('municipio')),
 				'OFICINAID' => trim($this->request->getPost('oficina')),
+				'MUNICIPIOSOFICINASID'=> NULL
 			];
 		}
 		if (!($data['CORREO'] === $usuario->CORREO)) {
@@ -1629,7 +1630,7 @@ class DashboardController extends BaseController
 		}
 
 		if ($usuario) {
-			if ($data['ROLID'] != '5' &&  $data['ROLID'] != '13') {
+			if ($data['ROLID'] != '5'  &&  $data['ROLID'] != '12' &&  $data['ROLID'] != '13') {
 				try {
 					try {
 						$videoUser = $this->_updateUserVideo($usuario->TOKENVIDEO, $data['NOMBRE'], $data['APELLIDO_PATERNO'] . ' ' . $data['APELLIDO_MATERNO'], $data['CORREO'], $data['SEXO'], $data['ROLID']);
@@ -1685,7 +1686,8 @@ class DashboardController extends BaseController
 		];
 		$this->_usuariosModel->set($data)->where('ID', $id)->update();
 		$datosBitacora = [
-			'ACCION' => 'Edito la contraseña del usuario ' . $id,
+			'ACCION' => 'Edito la contraseña de un usuario',
+			'NOTAS' => 'Usuario id:' . $id
 		];
 		$this->_bitacoraActividad($datosBitacora);
 
@@ -2894,27 +2896,46 @@ class DashboardController extends BaseController
 	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
+		$endpoint = "https://tess-track.vercel.app/api/sms/send";
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Authorization: Bearer ' . TOKEN_SMS
+		);
 
-		$endpoint = "http://enviosms.ddns.net/API/";
 		$data = array();
-		$data['UsuarioID'] = 1;
-		$data['Nombre'] = $tipo;
+		$data['name'] = $tipo;
 		$lstMensajes = array();
-		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$obj = array("message" => $mensaje, "phone" =>  $celular);
 		$lstMensajes[] = $obj;
-		$data['lstMensajes'] = $lstMensajes;
+		$data['messages'] = $lstMensajes;
 
-		$httpClient = new Client([
-			'base_uri' => $endpoint
-		]);
+		$ch = curl_init();
 
-		$response = $httpClient->post('campañas/enviarSMS', [
-			'json' => $data
-		]);
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
 
-		$respuestaServ = $response->getBody()->getContents();
+		if ($result === false) {
+			$result = array(
+				'status' => 401,
+				'error' => 'Curl failed: ' . curl_error($ch)
+			);
+		} else {
+			$result = json_decode($result, true);
+		}
 
-		return json_decode($respuestaServ);
+		curl_close($ch);
+
+		return $result;
+		
 	}
 	/**
 	 * Función para enviar email cuando el folio es derivado o canalizado. También se envía SMS.
@@ -3001,7 +3022,7 @@ class DashboardController extends BaseController
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
 
-		$sendSMS = $this->sendSMS("Nuevo expediente", $denunciante->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
+		$sendSMS = $this->sendSMS("RECORD", $denunciante->CODIGO_PAIS .$denunciante->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu numero de expediente es:' . $expediente_guiones . '/' . $tipoExpediente->TIPOEXPEDIENTECLAVE);
 		try {
 			$validationEmail = validateEmail($to);
 			if (!$validationEmail) {
@@ -3022,7 +3043,7 @@ class DashboardController extends BaseController
 		if ($result) {
 			return true;
 		} else {
-			if ($sendSMS == "") {
+			if ($sendSMS->status == 200) {
 				return true;
 			} else {
 				return false;
@@ -3409,7 +3430,6 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
-		$agenteId = "";
 		if (session('ID')) {
 			$agenteId = session('ID');
 		} else {
@@ -3720,6 +3740,9 @@ class DashboardController extends BaseController
 		$telefonica = $this->request->getPost('denuncia_tel');
 		$electronica = $this->request->getPost('denuncia_electronica');
 
+		if (!session('ID')) {
+			return json_encode(['status' => 0, 'error' => 'Sesión finalizada por inactividad, vuelve a iniciar sesión.']);
+		}
 		try {
 			if (!empty($tiposExpedienteId) && !empty($folio) && !empty($municipio) && !empty($estado) && !empty($notas)) {
 				$folioRow = $this->_folioModelRead->where('ANO', $year)->where('FOLIOID', $folio)->where('STATUS', 'EN PROCESO')->where('EXPEDIENTEID IS NULL')->first();
@@ -6222,23 +6245,32 @@ class DashboardController extends BaseController
 
 		$endpointFolio = $url . 'recordings/folio?folio=' . $folio;
 		$responseFolio = $this->_curlGetService($endpointFolio);
-		// return json_encode($responseFolio);
+
 		if ($responseFolio != null) {
-			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
-
-			foreach ($responseFolio as $key => $conections) {
-
-				if (isset($conections->url) && $conections->url != null) {
-					$endpointId = $this->urlApi . 'recordings/' . $conections->id;
-					$responseid = $this->_curlGetService($endpointId);
-				}
+			try {
+				$this->_bitacoraActividad([
+					'ACCION' => 'Consulto videos',
+					'NOTAS' => 'FOLIO: ' . $folio
+				]);
+			} catch (\Exception $e) {
 			}
-		}
-		if (isset($responseid)) {
-			return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
-		} else {
 			return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+
+			// foreach ($responseFolio as $key => $conections) {
+
+			// 	if (isset($conections->url) && $conections->url != null) {
+			// 		$endpointId = $this->urlApi . 'recordings/' . $conections->id;
+			// 		$responseid = $this->_curlGetService($endpointId);
+			// 	}
+			// }
+		} else {
+			return json_encode(['status' => 0]);
 		}
+		// if (isset($responseid)) {
+		// 	return json_encode(['status' => 1, 'responseVideos' => $responseFolio, 'marcasVideo' => $responseid]);
+		// } else {
+		// 	return json_encode(['status' => 1, 'responseVideos' => $responseFolio]);
+		// }
 	}
 
 	/**
@@ -7290,12 +7322,12 @@ class DashboardController extends BaseController
 					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad')  !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7328,12 +7360,12 @@ class DashboardController extends BaseController
 					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
 					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7364,12 +7396,12 @@ class DashboardController extends BaseController
 					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
 					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad')  !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7398,12 +7430,12 @@ class DashboardController extends BaseController
 				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-				'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+				'MARCAID' => $this->request->getPost('marca_ad')  !== NULL ? $this->request->getPost('marca_ad') : NULL,
 				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
 				'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
-				'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad') !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 				'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7484,12 +7516,12 @@ class DashboardController extends BaseController
 					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7522,12 +7554,12 @@ class DashboardController extends BaseController
 					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
 					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7558,12 +7590,12 @@ class DashboardController extends BaseController
 					'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 					'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 					'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-					'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+					'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 					'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 					'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
 					'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
-					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+					'MODELOID' => $this->request->getPost('linea_vehiculo_ad') !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+					'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 					'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 					'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 					'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -7593,12 +7625,12 @@ class DashboardController extends BaseController
 				'ESTADOEXTRANJEROIDPLACA' => $this->request->getPost('estado_extranjero_vehiculo_ad') ? $this->request->getPost('estado_extranjero_vehiculo_ad') : NULL,
 				'NUMEROSERIE' => $this->request->getPost('serie_vehiculo') ? $this->request->getPost('serie_vehiculo') : NULL,
 				'VEHICULODISTRIBUIDORID' => $this->request->getPost('distribuidor_vehiculo_ad') ? $this->request->getPost('distribuidor_vehiculo_ad') : NULL,
-				'MARCAID' => $this->request->getPost('marca_ad') ? $this->request->getPost('marca_ad') : NULL,
+				'MARCAID' => $this->request->getPost('marca_ad') !== NULL ? $this->request->getPost('marca_ad') : NULL,
 				'MARCADESCR' => isset($marcadescr->VEHICULOMARCADESCR) ? $marcadescr->VEHICULOMARCADESCR : NULL,
 				'MODELODESCR' => isset($modelodescr->VEHICULOMODELODESCR) ? $modelodescr->VEHICULOMODELODESCR : NULL,
 				'MARCADEXAC' => $this->request->getPost('marca_exacta') ? $this->request->getPost('marca_exacta') : NULL,
-				'MODELOID' => $this->request->getPost('linea_vehiculo_ad') ? $this->request->getPost('linea_vehiculo_ad') : NULL,
-				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') ? $this->request->getPost('version_vehiculo_ad') : NULL,
+				'MODELOID' => $this->request->getPost('linea_vehiculo_ad') !== NULL ? $this->request->getPost('linea_vehiculo_ad') : NULL,
+				'VEHICULOVERSIONID' => $this->request->getPost('version_vehiculo_ad') !== NULL ? $this->request->getPost('version_vehiculo_ad') : NULL,
 				'VEHICULOSERVICIOID' => $this->request->getPost('servicio_vehiculo_ad') ? $this->request->getPost('servicio_vehiculo_ad') : NULL,
 				'SEGUROVIGENTE' => $this->request->getPost('seguro_vigente_vehiculo') ? $this->request->getPost('seguro_vigente_vehiculo') : NULL,
 				'TRANSMISION' => $this->request->getPost('transmision_vehiculo') ? $this->request->getPost('transmision_vehiculo') : NULL,
@@ -8835,7 +8867,7 @@ class DashboardController extends BaseController
 		$data->nacionalidadVictima = $this->_nacionalidadModelRead->asObject()->where('PERSONANACIONALIDADID',   $data->victima[0]['NACIONALIDADID'])->first();
 		$data->edoCivilVictima = $this->_estadoCivilModelRead->asObject()->where('PERSONAESTADOCIVILID',   $data->victima[0]['ESTADOCIVILID'])->first();
 		//Rasgos de la victima
-		$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+		$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $victima)->first();
 
 		//Info imputado
 		$data->imputado = $this->_folioPersonaFisicaModelRead->asObject()->where('FOLIOID', $data->folio->FOLIOID)->where('ANO', $data->folio->ANO)->where('PERSONAFISICAID', $imputado)->first();
@@ -9677,7 +9709,7 @@ class DashboardController extends BaseController
 			$expedienteid =  $arrayExpediente[1] . $arrayExpediente[2] . $arrayExpediente[4] . $arrayExpediente[5] . '-' . $arrayExpediente[6] . $arrayExpediente[7] . $arrayExpediente[8] . $arrayExpediente[9] . '-' . $arrayExpediente[10] . $arrayExpediente[11] . $arrayExpediente[12] . $arrayExpediente[13] . $arrayExpediente[14] . '/' . ($data->tipoExpediente->TIPOEXPEDIENTECLAVE ? $data->tipoExpediente->TIPOEXPEDIENTECLAVE : '-');;
 
 			//VICTIMA RASGOS PERSONA DESAPARECIDA
-			$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('PERSONAFISICAID', $victima)->first();
+			$data->mediaFiliacionVictima = $this->_folioMediaFiliacionRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->where('PERSONAFISICAID', $victima)->first();
 			if ($data->victima[0]['DESAPARECIDA'] == 'S' && $data->mediaFiliacionVictima) {
 				$colorOjos = $this->_ojoColorModelRead->asObject()->where('OJOCOLORID', $data->mediaFiliacionVictima->OJOCOLORID)->first();
 				$colorCabello = $this->_cabelloColorModelRead->asObject()->where('CABELLOCOLORID', $data->mediaFiliacionVictima->CABELLOCOLORID)->first();

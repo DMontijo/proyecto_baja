@@ -56,7 +56,8 @@ $routes->group('admin', function ($routes) {
 	$routes->post('login', 'admin/LoginController::login_auth');
 	$routes->get('logout', 'admin/LoginController::logout');
 	$routes->post('cerrar-sesion', 'admin/LoginController::cerrar_sesiones');
-	$routes->get('actualizar-sesion', 'admin/LoginController::checkLastActivity');
+	$routes->get('actualizar-sesion','admin/LoginController::checkLastActivity');
+	$routes->get('checar-sesion','admin/LoginController::checkSesion');
 
 	$routes->group('dashboard', ['filter' => 'adminAuth'], function ($routes) {
 		$routes->get('/', 'admin/DashboardController::index');

@@ -2,7 +2,7 @@
  *
  *  VIDEO SERVICE
  *
- * @author César Arley Ojeda Escobar
+ * @author Yo Contigo IT
  ****************************************/
 
 import { ExceptionOpenViduNotImported, ExceptionMissingParameter, ExceptionConstructorMissingParameter, ExceptionOpenViduSessionNotCreated } from "./exceptions.js";
@@ -15,7 +15,7 @@ export default class VideoCall {
 
 
     #token;
-    
+
     #OV;
     #session;
     #remoteVideoSelector;
@@ -58,11 +58,11 @@ export default class VideoCall {
         this.#publishVideo = typeof config.startWithVideo !== 'undefined' ? config.startWithVideo : true;
         this.#audioSource = config.audioSource ?? undefined;
         this.#videoSource = config.videoSource ?? undefined;
- 
+
         this.#session.on('streamCreated', event => {
             this.#session.subscribe(event.stream, this.#remoteVideoSelector);
         });
-    
+
     }
 
     /**
@@ -111,25 +111,25 @@ export default class VideoCall {
         this.#localVideoSelector = localVideoSelector;
 
         this.#session.connect(this.#token)
-        .then(() => {
-            this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
-                audioSource: this.#audioSource,     // The source of audio. If undefined default microphone
-                videoSource: this.#videoSource,     // The source of video. If undefined default webcam
-                publishAudio: this.#publishAudio,   // Whether you want to start publishing with your audio unmuted or not
-                publishVideo: this.#publishVideo,   // Whether you want to start publishing with your video enabled or not
-                resolution: this.#resolution,       // The resolution of your video
-                frameRate: 30,			            // The frame rate of your video
-                insertMode: 'APPEND',	            // How the video is inserted in the target element 'video-container'
-                mirror: false       	            // Whether to mirror your local video or not
+            .then(() => {
+                this.#publisher = this.#OV.initPublisher(this.#localVideoSelector, {
+                    audioSource: this.#audioSource,     // The source of audio. If undefined default microphone
+                    videoSource: this.#videoSource,     // The source of video. If undefined default webcam
+                    publishAudio: this.#publishAudio,   // Whether you want to start publishing with your audio unmuted or not
+                    publishVideo: this.#publishVideo,   // Whether you want to start publishing with your video enabled or not
+                    resolution: this.#resolution,       // The resolution of your video
+                    frameRate: 30,			            // The frame rate of your video
+                    insertMode: 'APPEND',	            // How the video is inserted in the target element 'video-container'
+                    mirror: false       	            // Whether to mirror your local video or not
+                });
+
+                this.#session.publish(this.#publisher);
+
+                if (typeof callback === 'function') callback();
+            })
+            .catch(error => {
+                console.log('[ERROR_CONNECTING_TO_SESSION]', error);
             });
-
-            this.#session.publish(this.#publisher);
-
-            if (typeof callback === 'function') callback();
-        })
-        .catch(error => {
-            console.log('There was an error connecting to the session:', error.code, error.message);
-        });
     }
 
     /**

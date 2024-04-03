@@ -138,7 +138,7 @@ class OTPController extends BaseController
 			}
 
 			if ($tel) {
-				$sendSMS = $this->sendSMS("Nuevo codigo", $tel, 'Notificaciones FGEBC/Estimado usuario, tu codigo es: ' . $otp);
+				$sendSMS = $this->sendSMS("CODE", $tel, 'Notificaciones FGEBC/Estimado usuario, tu codigo es: ' . $otp);
 			}
 			try {
 				$validationEmail = validateEmail($to);
@@ -161,8 +161,7 @@ class OTPController extends BaseController
 			if ($result) {
 				return json_encode((object)['status' => 200]);
 			} else {
-				// $data = $sendSMS;
-				if ($sendSMS == "") {
+				if ($sendSMS->status == 200) {
 					return json_encode((object)['status' => 200]);
 				} else {
 					return json_encode((object)['status' => 500, 'data' => $sendSMS]);
@@ -232,25 +231,64 @@ class OTPController extends BaseController
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 
-		$endpoint = "http://enviosms.ddns.net/API/";
+		// $endpoint = "http://enviosms.ddns.net/API/";
+		// $data = array();
+		// $data['UsuarioID'] = 1;
+		// $data['Nombre'] = $tipo;
+		// $lstMensajes = array();
+		// $obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		// $lstMensajes[] = $obj;
+		// $data['lstMensajes'] = $lstMensajes;
+
+		// $httpClient = new Client([
+		// 	'base_uri' => $endpoint
+		// ]);
+
+		// $response = $httpClient->post('campañas/enviarSMS', [
+		// 	'json' => $data
+		// ]);
+
+		// $respuestaServ = $response->getBody()->getContents();
+
+		// return json_decode($respuestaServ);
+		$endpoint = "https://tess-track.vercel.app/api/sms/send";
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Authorization: Bearer ' . TOKEN_SMS
+		);
+
 		$data = array();
-		$data['UsuarioID'] = 1;
-		$data['Nombre'] = $tipo;
+		$data['name'] = $tipo;
 		$lstMensajes = array();
-		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$obj = array("message" => $mensaje, "phone" =>  $celular);
 		$lstMensajes[] = $obj;
-		$data['lstMensajes'] = $lstMensajes;
+		$data['messages'] = $lstMensajes;
 
-		$httpClient = new Client([
-			'base_uri' => $endpoint
-		]);
+		$ch = curl_init();
 
-		$response = $httpClient->post('campañas/enviarSMS', [
-			'json' => $data
-		]);
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
 
-		$respuestaServ = $response->getBody()->getContents();
+		if ($result === false) {
+			$result = array(
+				'status' => 401,
+				'error' => 'Curl failed: ' . curl_error($ch)
+			);
+		} else {
+			$result = json_decode($result, true);
+		}
 
-		return json_decode($respuestaServ);
+		curl_close($ch);
+
+		return $result;
 	}
 }

@@ -203,6 +203,10 @@ class LoginController extends BaseController
 			$session->set('last_activity', date("Y-m-d H:i:s"));
 		}
 	}
+	/**Funcion para validar que tenga iniciada sesion */
+	public function checkSesion(){
+		return session('ID')?json_encode(['status' => 1]):json_encode(['status' => 0]) ;
+	}
 	/**
 	 * Función para verifica si el usuario ha iniciado sesión y es un administrador. 
 	 *

@@ -20,7 +20,7 @@ export function ExceptionOpenViduNotImported() {
     error.message = `
     OpenVidu module has not been imported, use:
 
-    <script type="text/javascript" src="./agent/assets/openvidu-browser-2.27.0.min.js"></script>
+    <script type="text/javascript" src="./agent/assets/openvidu-browser-2.29.0.min.js"></script>
     `;
     error.name = 'ExceptionOpenViduNotImported';
     return error;

@@ -2,7 +2,7 @@
  *
  *  EXTRA SOCKETS CLASSES
  *
- * @author César Arley Ojeda Escobar
+ * @author Yo Contigo IT
  ****************************************/
 
 import { ExceptionConstructorMissingParameter, ExceptionSocketIONotImported } from './exceptions.js';
@@ -69,7 +69,7 @@ export class RoomsSockets {
         }
 
         this.#socket.on('exception', function (data) {
-            console.warn('RoomsSockets event: ', data);
+            console.warn('[ROOMS_SOCKETS_EVENT]', data);
         });
 
         this.#socket.on('disconnect', () => {
@@ -158,7 +158,7 @@ export class PriorityLinesSockets {
         }
 
         this.#socket.on('exception', function (data) {
-            console.warn('PriorityLinesSockets event: ', data);
+            console.warn('[PRIORITY_LINES_SOCKETS_EVENT]', data);
         });
 
         this.#socket.on('disconnect', () => {

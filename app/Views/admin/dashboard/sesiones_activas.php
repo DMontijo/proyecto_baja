@@ -30,6 +30,7 @@
 											<th class="text-center">AGENTE</th>
 											<th class="text-center">NAVEGADOR</th>
 											<th class="text-center">SISTEMA OPERATIVO</th>
+											<th class="text-center">IP</th>
 											<th class="text-center">FECHA INICIO SESIÓN</th>
 											<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 												<th class="text-center"></th>
@@ -42,7 +43,8 @@
 												<td class="text-center"><?= $sesionesAdmin->NOMBRE . ' ' . $sesionesAdmin->APELLIDO_PATERNO ?></td>
 												<td class="text-center"><?= $sesionesAdmin->AGENTE_HTTP ?></td>
 												<td class="text-center"><?= $sesionesAdmin->AGENTE_SO ?></td>
-												<td class="text-center"><?= date('d-m-Y H:i:s',strtotime($sesionesAdmin->FECHAINICIO)) ?></td>
+												<td class="text-center"><?= $sesionesAdmin->IP_USUARIO ?></td>
+												<td class="text-center"><?= date('d-m-Y H:i:s', strtotime($sesionesAdmin->FECHAINICIO)) ?></td>
 												<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 													<td class="text-center">
 														<a href="<?= base_url('/admin/dashboard/cerrar_sesiones_general?id_usuario=') . $sesionesAdmin->ID_USUARIO ?>" class="btn btn-primary text-white"> CERRAR SESIÓN</a>
@@ -60,6 +62,7 @@
 											<th class="text-center">DENUNCIANTE</th>
 											<th class="text-center">NAVEGADOR</th>
 											<th class="text-center">SISTEMA OPERATIVO</th>
+											<th class="text-center">IP</th>
 											<th class="text-center">FECHA INICIO SESIÓN</th>
 											<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 												<th class="text-center"></th>
@@ -72,6 +75,7 @@
 												<td class="text-center"><?= $sesionesDenunciantes->NOMBRE . ' ' . $sesionesDenunciantes->APELLIDO_PATERNO ?></td>
 												<td class="text-center"><?= $sesionesDenunciantes->DENUNCIANTE_HTTP ?></td>
 												<td class="text-center"><?= $sesionesDenunciantes->DENUNCIANTE_SO ?></td>
+												<td class="text-center"><?= $sesionesDenunciantes->IP_DENUNCIANTE ?></td>
 												<td class="text-center"><?= $sesionesDenunciantes->FECHAINICIO ?></td>
 												<?php if (in_array(session('ROLID'), $rolesToMonitor)) { ?>
 													<td class="text-center">

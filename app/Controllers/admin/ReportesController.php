@@ -1011,7 +1011,6 @@ class ReportesController extends BaseController
 		unlink($uniqueFilePath);
 	}
 
-
 	public function createRegistroDiarioXlsxOriginal()
 	{
 		//Datos del filtro
@@ -1367,8 +1366,6 @@ class ReportesController extends BaseController
 		header("Content-Transfer-Encoding: binary");
 		header("Cache-Control: max-age=0");
 		$writer->save("php://output");
-
-		ob_end_flush();
 	}
 	/**
 	 * Vista para ingresar a los reportes de firmas FIEL
