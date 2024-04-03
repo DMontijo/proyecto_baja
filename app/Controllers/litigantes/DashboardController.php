@@ -453,8 +453,8 @@ class DashboardController extends BaseController
 			// ->groupBy('PERSONASMORALES.RFC')
 			// ->findAll();
 
-		$this->_folioPersonaMoralModelRead->asObject()
-		->select('PERSONASMORALES.RAZONSOCIAL,PERSONASMORALES.MARCACOMERCIAL,PERSONASMORALES.RFC,PERSONASMORALES.PERSONAMORALID,FOLIO.DENUNCIANTEID,RELACIONPODERLITIGANTE.FECHAFINPODER,DENUNCIANTES.CORREO')
+			$this->_folioPersonaMoralModelRead->asObject()
+			->select('PERSONASMORALES.RAZONSOCIAL,PERSONASMORALES.MARCACOMERCIAL,PERSONASMORALES.RFC,PERSONASMORALES.PERSONAMORALID,FOLIO.DENUNCIANTEID,RELACIONPODERLITIGANTE.FECHAFINPODER,DENUNCIANTES.CORREO')
 			->join('PERSONASMORALES', 'PERSONASMORALES.PERSONAMORALID = FOLIOPERSONAMORAL.PERSONAMORALID')
 			->join('RELACIONPODERLITIGANTE', 'RELACIONPODERLITIGANTE.PERSONAMORALID = PERSONASMORALES.PERSONAMORALID')
 			->join('FOLIO', 'FOLIO.FOLIOID = FOLIOPERSONAMORAL.FOLIOID')
@@ -1157,7 +1157,7 @@ class DashboardController extends BaseController
 				'FECHAINICIOPODER' => $this->request->getPost('fecha_inicio_poder') != "" ? $this->request->getPost('fecha_inicio_poder') : NULL,
 				'FECHAFINPODER' => $this->request->getPost('fecha_fin_poder') != "" ? $this->request->getPost('fecha_fin_poder') : NULL,
 				'CARGO' => $this->request->getPost('cargo'),
-				'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,	
+				'DESCRIPCIONCARGO' => $this->request->getPost('descr_cargo') != "" ? $this->request->getPost('descr_cargo') : NULL,
 			];
 
 			$this->_relacionPoderLitigantes->save($dataPoder);
@@ -1189,13 +1189,13 @@ class DashboardController extends BaseController
 			'ARCHIVODESCR' =>  isset($nombre) ? strtoupper($nombre) : $poder_existente->NOMBREARCHIVO,
 			'ARCHIVO' => $poder_data ? $poder_data : $poder_existente->PODERARCHIVO,
 			'EXTENSION' => $poder_archivo ? $poder_archivo->getClientExtension() : $extension,
-			'TIPO'=> 'PODER'
+			'TIPO' => 'PODER'
 		];
 
 		$relacionPoder = $this->_relacionMoralPoderRead->asObject()->select('PODERID,PERSONAMORALID, PODERVOLUMEN,PODERNONOTARIO,PODERNOPODER')->where('PERSONAMORALID', $personamoralid)->where('ACTIVO', 1)->first();
 		$poderid = !$relacionPoder ? $this->_relacionPoderLitigantes->getInsertID() : $relacionPoder->PODERID;
 
-		$updatePersonaMoral = $this->_personasMoralesModel->where('PERSONAMORALID',$personamoralid)->set('PODERID', $poderid)->update();
+		$updatePersonaMoral = $this->_personasMoralesModel->where('PERSONAMORALID', $personamoralid)->set('PODERID', $poderid)->update();
 
 
 		//Datos a insertar en folio
@@ -1621,7 +1621,7 @@ class DashboardController extends BaseController
 		$data = (object) array();
 		$folioData = $this->_folioModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->first();
 		$countDocumentos = count($this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll());
-		
+
 		if ($folioData->STATUS == 'PENDIENTE' && $countDocumentos < 2) {
 			$data->archivos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			if ($data->archivos) {
@@ -1633,7 +1633,7 @@ class DashboardController extends BaseController
 			}
 			$data->status = "PENDIENTE";
 			$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
-		}else if ($folioData->STATUS == 'ABIERTO' && ($countDocumentos == 2 || $countDocumentos == 1) ) {
+		} else if ($folioData->STATUS == 'ABIERTO' && ($countDocumentos == 2 || $countDocumentos == 1)) {
 			$data->archivos = $this->_archivoExternoModelRead->asObject()->where('FOLIOID', $folio)->where('ANO', $year)->findAll();
 			if ($data->archivos) {
 				foreach ($data->archivos as $key => $archivos) {
@@ -1644,9 +1644,7 @@ class DashboardController extends BaseController
 			}
 			$data->status = "COMPLETADO";
 			$this->_loadViewDenunciaPersonaFisica('Dashboard', 'dashboard', '', $data, 'subir_documentos_denuncia_fisica');
-
-		}
-		else {
+		} else {
 			return redirect()->to(base_url('/denuncia_litigantes/dashboard/pantalla_final'))->with('message_error', 'No se pueden añadir mas documentos a este folio.');
 		}
 	}
@@ -1800,7 +1798,7 @@ class DashboardController extends BaseController
 			'ARCHIVODESCR' =>  strtoupper($nombre),
 			'ARCHIVO' => $documento_extra_data,
 			'EXTENSION' => $documento_extra->getClientExtension(),
-			'TIPO'=> 'DENUNCIA ESCRITA'
+			'TIPO' => 'DENUNCIA ESCRITA'
 		];
 		$dataFolio = [
 			'STATUS' => "ABIERTO",
@@ -1816,7 +1814,7 @@ class DashboardController extends BaseController
 			} else {
 				return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 			}
-		}else{
+		} else {
 			return redirect()->to(base_url($url))->with('message_error', 'No se pudo realizar el envio.');
 		}
 	}
@@ -1832,7 +1830,7 @@ class DashboardController extends BaseController
 			$folio = trim($this->request->getPost('folio'));
 			$year = trim($this->request->getPost('year'));
 			$archivoid = trim($this->request->getPost('archivoid'));
-		
+
 			$deletearchivo = $this->_archivoExternoModel->where('FOLIOID', $folio)->where('ANO', $year)->where('FOLIOARCHIVOID', $archivoid)->delete();
 
 			if ($deletearchivo) {
@@ -1847,12 +1845,12 @@ class DashboardController extends BaseController
 						$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
 					}
 				}
-				$archivoDenunciaEscrita = $this->_archivoExternoModel->asObject()->where('TIPO','DENUNCIA ESCRITA')->where('FOLIOID', $folio)->where('ANO', $year)->countAllResults();
+				$archivoDenunciaEscrita = $this->_archivoExternoModel->asObject()->where('TIPO', 'DENUNCIA ESCRITA')->where('FOLIOID', $folio)->where('ANO', $year)->countAllResults();
 
-				if ($archivoDenunciaEscrita >0) {
-					
+				if ($archivoDenunciaEscrita > 0) {
+
 					return json_encode(['status' => 1, 'archivos' => $datados]);
-				}else{
+				} else {
 					$dataFolio = [
 						'STATUS' => "PENDIENTE",
 					];
@@ -1914,14 +1912,14 @@ class DashboardController extends BaseController
 						foreach ($data->archivosexternos as $key => $archivos) {
 							$file_info = new \finfo(FILEINFO_MIME_TYPE);
 							$type = $file_info->buffer($archivos->ARCHIVO);
-			
+
 							$archivos->ARCHIVO = 'data:' . $type . ';base64,' . base64_encode($archivos->ARCHIVO);
 						}
 					}
-					return json_encode(['status'=>1, 'archivos'=>$data->archivosexternos]);
+					return json_encode(['status' => 1, 'archivos' => $data->archivosexternos]);
 				}
-			}else{
-				return json_encode(['status'=>0]);
+			} else {
+				return json_encode(['status' => 0]);
 			}
 		}
 	}
@@ -2284,19 +2282,30 @@ class DashboardController extends BaseController
 			->setText('Se ha generado un nuevo folio. SU FOLIO ES: ' . $folio . '/' . $year . ' Para darle seguimiento a su caso ingrese a su cuenta en el Centro de Denuncia Tecnológica e inicie su video denuncia con el folio generado.')
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
+		$sendSMS = $this->sendSMS("Nuevo folio generado", $user->CODIGO_PAIS . $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu folio es: ' . $folio . '/' . $year);
+
 
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
+			$validationEmail = validateEmail($to);
+			if (!$validationEmail) {
+				$result = false;
+			} else {
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+			}
+		} catch (\Throwable $error) {
 			$result = false;
 		}
+
 		if ($result) {
 			return true;
 		} else {
-			if ($sendSMS == "") {
+			if ($sendSMS->status == 200) {
 				return true;
 			} else {
 				return false;
@@ -2312,27 +2321,45 @@ class DashboardController extends BaseController
 	 */
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
+		$endpoint = "https://tess-track.vercel.app/api/sms/send";
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Authorization: Bearer ' . TOKEN_SMS
+		);
 
-		$endpoint = "http://enviosms.ddns.net/API/";
 		$data = array();
-		$data['UsuarioID'] = 1;
-		$data['Nombre'] = $tipo;
+		$data['name'] = $tipo;
 		$lstMensajes = array();
-		$obj = array("Celular" => $celular, "Mensaje" => $mensaje);
+		$obj = array("message" => $mensaje, "phone" =>  $celular);
 		$lstMensajes[] = $obj;
-		$data['lstMensajes'] = $lstMensajes;
+		$data['messages'] = $lstMensajes;
 
-		$httpClient = new Client([
-			'base_uri' => $endpoint
-		]);
+		$ch = curl_init();
 
-		$response = $httpClient->post('campañas/enviarSMS', [
-			'json' => $data
-		]);
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
 
-		$respuestaServ = $response->getBody()->getContents();
+		if ($result === false) {
+			$result = array(
+				'status' => 401,
+				'error' => 'Curl failed: ' . curl_error($ch)
+			);
+		} else {
+			$result = json_decode($result, true);
+		}
 
-		return json_decode($respuestaServ);
+		curl_close($ch);
+
+		return $result;
 	}
 	/**
 	 * Función para cargar cualquier vista en cualquier función.

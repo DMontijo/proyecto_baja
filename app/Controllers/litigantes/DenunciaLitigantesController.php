@@ -22,7 +22,7 @@ class DenunciaLitigantesController extends BaseController
 	private $_sesionesDenunciantesModel;
 	private $_sesionesDenunciantesModelRead;
 
-	
+
 	private $_nacionalidadModelRead;
 	private $_estadosCivilesModelRead;
 	private $_personaIdiomaModelRead;
@@ -50,7 +50,7 @@ class DenunciaLitigantesController extends BaseController
 		$this->_sesionesDenunciantesModelRead = model('SesionesDenunciantesModel', true, $this->db_read);
 		$this->_denunciantesModelRead = model('DenunciantesModel', true, $this->db_read);
 
-		
+
 		//Models
 		$this->_nacionalidadModelRead = model('PersonaNacionalidadModel', true, $this->db_read);
 		$this->_estadosCivilesModelRead = model('PersonaEstadoCivilModel', true, $this->db_read);
@@ -69,7 +69,6 @@ class DenunciaLitigantesController extends BaseController
 		$this->_folioModelRead = model('FolioModel', true, $this->db_read);
 		$this->db = \Config\Database::connect();
 		$this->urlApi = VIDEOCALL_URL . "guests/";
-
 	}
 	/**
 	 * Vista de Login-Denuncia litigantes
@@ -102,7 +101,7 @@ class DenunciaLitigantesController extends BaseController
 		$data->ocupaciones = $this->_ocupacionModelRead->asObject()->findAll();
 		$this->_loadView('Nueva solicitud', $data, 'register');
 	}
-	
+
 	/**
 	 * Función para crear un nuevo litigante
 	 * Recibe con metodo POST los datos del formulario
@@ -203,13 +202,13 @@ class DenunciaLitigantesController extends BaseController
 
 			//Verifica que el correo sea unico
 			if ($this->validate(['correo' => 'required|is_unique[DENUNCIANTES.CORREO]'])) {
-					//Datos para el servicio de videollamada
-					$dataApi2 = [
-						'NOMBRE' => $this->request->getPost('nombre'),
-						'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
-						'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
-						'CORREO' => $this->request->getPost('correo'),
-					];
+				//Datos para el servicio de videollamada
+				$dataApi2 = [
+					'NOMBRE' => $this->request->getPost('nombre'),
+					'APELLIDO_PATERNO' => $this->request->getPost('apellido_paterno'),
+					'APELLIDO_MATERNO' => $this->request->getPost('apellido_materno'),
+					'CORREO' => $this->request->getPost('correo'),
+				];
 				$dataApi = array();
 				$dataApi['name'] = $this->request->getPost('nombre') . ' ' . $this->request->getPost('apellido_paterno');
 				$dataApi['details'] = $dataApi2;
@@ -218,20 +217,17 @@ class DenunciaLitigantesController extends BaseController
 				$response = $this->_curlPost($this->urlApi, $dataApi);
 				$data['UUID'] = $response->uuid;
 
-					//Insercion de datos
-					$insertLitigante = $this->_denunciantesModel->insert($data);
-					if ($insertLitigante) {
-						//Envio de contraseña
-					$this->_sendEmailPassword($data['CORREO'], $data['TELEFONO'],$password);
+				//Insercion de datos
+				$insertLitigante = $this->_denunciantesModel->insert($data);
+				if ($insertLitigante) {
+					//Envio de contraseña
+					$this->_sendEmailPassword($data['CORREO'], $data['CODIGO_PAIS'] . $data['TELEFONO'], $password);
 					session()->setFlashdata('message', 'Inicia sesión con tu correo y la contraseña que llegará a tu correo electrónico y/o mensajes SMS.');
 					return redirect()->to(base_url('/denuncia_litigantes'))->with('message_success', 'Inicia sesión con la contraseña que llegará a tu correo electrónico y/o mensajes SMS y comienza tu denuncia.');
-					}
-					
-				
+				}
 			} else {
 				// return redirect()->back()->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo');
 				return redirect()->to(base_url('/denuncia_litigantes/register'))->with('message', 'Hubo un error en los datos o puede que ya exista un registro con el mismo correo.');
-
 			}
 		} catch (\Throwable $th) {
 			return redirect()->to(base_url('/denuncia_litigantes/register'))->with('message', 'Hubo un error, no fue posible crear tu registro.');
@@ -384,7 +380,7 @@ class DenunciaLitigantesController extends BaseController
 		}
 		return $password;
 	}
-/**
+	/**
 	 * Función para enviar un correo con la contraseña generada al litigante
 	 *
 	 * @param  mixed $to
@@ -426,7 +422,7 @@ class DenunciaLitigantesController extends BaseController
 			}
 		}
 	}
-/**
+	/**
 	 * Función para enviar mensajes SMS
 	 *
 	 * @param  mixed $tipo
@@ -436,26 +432,45 @@ class DenunciaLitigantesController extends BaseController
 	public function sendSMS($tipo, $celular, $mensaje)
 	{
 
-		$endpoint = "http://enviosms.ddns.net/API/";
+		$endpoint = "https://tess-track.vercel.app/api/sms/send";
+		$headers = array(
+			'Content-Type: application/json',
+			'Access-Control-Allow-Origin: *',
+			'Access-Control-Allow-Credentials: true',
+			'Access-Control-Allow-Headers: Content-Type',
+			'Authorization: Bearer ' . TOKEN_SMS
+		);
+
 		$data = array();
-		$data['UsuarioID'] = 1;
-		$data['Nombre'] = $tipo;
+		$data['name'] = $tipo;
 		$lstMensajes = array();
-		$obj = array("Celular" =>  $celular, "Mensaje" => $mensaje);
+		$obj = array("message" => $mensaje, "phone" =>  $celular);
 		$lstMensajes[] = $obj;
-		$data['lstMensajes'] = $lstMensajes;
+		$data['messages'] = $lstMensajes;
 
-		$httpClient = new Client([
-			'base_uri' => $endpoint
-		]);
+		$ch = curl_init();
 
-		$response = $httpClient->post('campañas/enviarSMS', [
-			'json' => $data
-		]);
+		curl_setopt($ch, CURLOPT_URL, $endpoint);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		$result = curl_exec($ch);
 
-		$respuestaServ = $response->getBody()->getContents();
+		if ($result === false) {
+			$result = array(
+				'status' => 401,
+				'error' => 'Curl failed: ' . curl_error($ch)
+			);
+		} else {
+			$result = json_decode($result, true);
+		}
 
-		return json_decode($respuestaServ);
+		curl_close($ch);
+
+		return $result;
 	}
 	private function _isAuth()
 	{
@@ -490,19 +505,29 @@ class DenunciaLitigantesController extends BaseController
 			->setText('Usted ha generado un nuevo registro en el Centro de Denuncia Tecnológica. Para acceder debes ingresar los siguientes datos. USUARIO: ' . $to . 'CONTRASEÑA' . $password)
 			->setReplyTo('notificacionfgebc@fgebc.gob.mx')
 			->setReplyToName('FGEBC');
-		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
+		$sendSMS = $this->sendSMS("Cambio de contraseña", $user->CODIGO_PAIS . $user->TELEFONO, 'Notificaciones FGEBC/Estimado usuario, tu contraseña es: ' . $password);
 		try {
-			$result = $mailersend->email->send($emailParams);
-		} catch (MailerSendValidationException $e) {
-			$result = false;
-		} catch (MailerSendRateLimitException $e) {
+			$validationEmail = validateEmail($to);
+			if (!$validationEmail) {
+				$result = false;
+			} else {
+				try {
+					$result = $mailersend->email->send($emailParams);
+				} catch (MailerSendValidationException $e) {
+					$result = false;
+				} catch (MailerSendRateLimitException $e) {
+					$result = false;
+				}
+			}
+		} catch (\Throwable $error) {
 			$result = false;
 		}
+
 
 		if ($result) {
 			return redirect()->to(base_url('/denuncia_litigantes'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 		} else {
-			if ($sendSMS == "") {
+			if ($sendSMS->status == 200) {
 				return redirect()->to(base_url('/denuncia_litigantes'))->with('message_success', 'Verifica tu nueva contraseña en tu correo electrónico y/o mensajes SMS.');
 			} else {
 				return redirect()->to(base_url('/denuncia_litigantes'))->with('message_error', 'Error');
@@ -517,5 +542,4 @@ class DenunciaLitigantesController extends BaseController
 		];
 		echo view("denuncia_litigantes/register/$view", $data);
 	}
-	
 }
