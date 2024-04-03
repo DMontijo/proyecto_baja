@@ -141,7 +141,7 @@
 		console.log(archivos);
 
 		for (let i = 0; i < archivos.length; i++) {
-			const btnDescargar = `< id="downloadArchivo"  class="btn btn-primary" href="${archivos[i].ARCHIVO} " download="${archivos[i].ARCHIVODESCR} + '.'+ ${archivos[i].EXTENSION} " target="_blank"><i class="bi bi-download"></i></a>`
+			const btnDescargar = `<a id="downloadArchivo"  class="btn btn-primary" href="${archivos[i].ARCHIVO} " download="${archivos[i].ARCHIVODESCR} + '.'+ ${archivos[i].EXTENSION} " target="_blank"><i class="bi bi-download"></i></a>`
 
 			var btnEliminarArchivo =
 				`<button type='button' id="deleteArchivobtn" class='btn btn-primary' onclick='deleteArchivo(${archivos[i].FOLIOARCHIVOID})'><i class='bi bi-trash'></i></button>`;
