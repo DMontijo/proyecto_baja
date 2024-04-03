@@ -186,33 +186,6 @@ class Database extends Config
 		'port'     => 3306,
 	];
 
-	/**
-	 * This database connection is used when generate reports
-	 * Only read
-	 * @var array
-	 */
-
-	public $reporte_read = [
-		'DSN'      => '',
-		'hostname' => 'database-video-denuncia-baja-california-instance-3-us-east-1a.cenwfxggsegs.us-east-1.rds.amazonaws.com',
-		'username' => 'fgebc_admin',
-		'password' => 'fgebc_dba0wner',
-		'database' => 'cdtec',
-		'DBDriver' => 'MySQLi',
-		'DBPrefix' => '',
-		'pConnect' => false,
-		'DBDebug'  => (ENVIRONMENT !== 'production'),
-		'charset'  => 'utf8',
-		'DBCollat' => 'utf8_general_ci',
-		'swapPre'  => '',
-		'encrypt'  => false,
-		'compress' => false,
-		'strictOn' => false,
-		'failover' => [],
-		'port'     => 3306,
-	];
-
-
 
 
 	/**
