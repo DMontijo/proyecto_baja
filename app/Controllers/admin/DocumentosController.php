@@ -249,8 +249,7 @@ class DocumentosController extends BaseController
 			$victimas = $this->_folioPersonaFisicaModelRead->get_victimas($folio, $year);
 			$correos = $this->_folioPersonaFisicaModelRead->get_correos_persona($folio, $year);
 			$correosNoti = $this->_folioPersonaMoralModelRead->get_correos_notificacion($folio, $year);
-
-			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos]);
+			return json_encode(['status' => 1, 'documentos' => $documentos, 'victimas' => $victimas, "imputados" => $imputados, 'correos' => $correos, 'correosNoti'=> $correosNoti]);
 		}
 		if ($expediente) {
 			$documentos = $this->_folioDocModelRead->get_by_folio($folio, $year);

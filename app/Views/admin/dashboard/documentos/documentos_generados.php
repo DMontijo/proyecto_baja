@@ -153,7 +153,6 @@
 						const victimas = response.victimas;
 						const correos = response.correos;
 						const correosNoti = response.correosNoti;
-
 						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
@@ -266,6 +265,8 @@
 						const imputados = response.imputados;
 						const victimas = response.victimas;
 						const correos = response.correos;
+						const correosNoti = response.correosNoti;
+
 						//llena las tablas y selects necesarios para su implementacion
 						let tabla_documentos = document.querySelectorAll('#table-documentos tr');
 						tabla_documentos.forEach(row => {
