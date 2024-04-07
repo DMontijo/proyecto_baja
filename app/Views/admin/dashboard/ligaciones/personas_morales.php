@@ -26,7 +26,7 @@
                                             <th class="text-center">ESTADO</th>
                                             <th class="text-center">MUNICIPIO</th>
                                             <th class="text-center">SOLICITUD DE CAMBIO</th>
-                                            v <th class="text-center">VENCIMIENTO</th>
+                                            <th class="text-center">VENCIMIENTO</th>
 
                                             <th class="text-center"></th>
                                         </tr>

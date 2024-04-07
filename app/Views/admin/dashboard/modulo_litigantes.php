@@ -29,7 +29,7 @@
 					<div class="col-12 p-0 m-0">
 						<div class="input-group mb-1">
 							<input type="text" class="form-control" id="input_folio_atencion_lit" placeholder="No. de folio" value="<?= isset($body_data->folio) ? $body_data->folio : '' ?>">
-						</div>|
+						</div>
 					</div>
 				</div>
 				<button id="buscar-btn-lit" class="btn btn-secondary btn-block" role="button"><i class="fas fa-search"></i> Buscar</button>
