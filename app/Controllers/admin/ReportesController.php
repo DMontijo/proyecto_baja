@@ -1939,7 +1939,6 @@ class ReportesController extends BaseController
 			if (!(($row - 4) >= count($documentos))) $row++;
 			$num++;
 		}
-		unset($sheet);
 		$sheet->getStyle('A1:N1')->applyFromArray($styleCab);
 		$sheet->getStyle('A2:N2')->applyFromArray($styleCab);
 
@@ -1948,6 +1947,8 @@ class ReportesController extends BaseController
 
 		$sheet->mergeCells('A1:N1');
 		$sheet->mergeCells('A2:N2');
+		unset($sheet);
+
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('FGEBC');
 		$drawing->setDescription('LOGO');
@@ -2017,6 +2018,7 @@ class ReportesController extends BaseController
 		$dataView->empleados = $empleado;
 		$dataView->dataInfo = $dataInfo;
 		$dataView->filterParams = (object)$dataPost;
+		var_dump($dataView);exit;
 
 		$this->_loadView('Reporte Canalización y Derivación', 'registro_candev', '', $dataView, 'registro_candev');
 	}
