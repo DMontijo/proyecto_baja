@@ -1336,7 +1336,7 @@ class FirmaController extends BaseController
 					try {
 						$validationEmail = validateEmail($to);
 						if(!$validationEmail){
-							return json_encode((object)['status' => 0]);
+							return json_encode((object)['status' => 0,'message'=> 'Correo no valido']);
 						} else {
 							try {
 								$result = $mailersend->email->send($emailParams);
@@ -1353,7 +1353,7 @@ class FirmaController extends BaseController
 				
 								return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
 							} else {
-								return json_encode((object)['status' => 0]);
+								return json_encode((object)['status' => 0, 'message'=> 'Sin resultado']);
 							}
 						}
 					} catch (\Throwable $error) {
@@ -1364,7 +1364,7 @@ class FirmaController extends BaseController
 				try {
 					$validationEmail = validateEmail($to);
 					if(!$validationEmail){
-						return json_encode((object)['status' => 0]);
+						return json_encode((object)['status' => 0,'message'=> 'Correo no valido']);
 					} else {
 						try {
 							$result = $mailersend->email->send($emailParams);
@@ -1381,11 +1381,11 @@ class FirmaController extends BaseController
 			
 							return json_encode((object)['status' => 1, 'sendpolice' => $sendPolice]);
 						} else {
-							return json_encode((object)['status' => 0]);
+							return json_encode((object)['status' => 0, 'message'=> 'Sin resultado']);
 						}
 					}
 				} catch (\Throwable $error) {
-					return json_encode((object)['status' => 0]);
+					return json_encode((object)['status' => 0, 'message'=> 'Error de ejecución']);
 				}
 			}
 		} else {
