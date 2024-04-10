@@ -1239,6 +1239,7 @@
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
+					console.log(jqXHR, textStatus, errorThrown);
 					Swal.fire({
 						icon: 'error',
 						text: 'No fue posible enviar el documento',
