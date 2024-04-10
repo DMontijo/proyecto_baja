@@ -1182,6 +1182,8 @@
 					btn_enviarcorreoDocUni.disabled = true;
 				},
 				success: function(response) {
+					console.log(response);
+
 					if (response.status == 1) {
 						Swal.fire({
 							icon: 'success',
