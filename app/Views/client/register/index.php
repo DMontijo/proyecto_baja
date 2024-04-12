@@ -1255,6 +1255,7 @@ if ($agent->isMobile()) {
 					method: "POST",
 					dataType: "json",
 					success: function(response) {
+						console.log(response);
 						if (response.exist === 1) {
 							e.target.value = '';
 							prevBtn.click();
