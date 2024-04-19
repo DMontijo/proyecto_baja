@@ -140,7 +140,7 @@ class FolioPersonaFisicaModel extends Model
 		$builder->join('PERSONACALIDADJURIDICA', 'PERSONACALIDADJURIDICA.PERSONACALIDADJURIDICAID = FOLIOPERSONAFISICA.CALIDADJURIDICAID');
 		$builder->where('FOLIOID', $folio);
 		$builder->where('ANO', $year);
-		$builder->where('(CALIDADJURIDICAID = 1 OR CALIDADJURIDICAID = 6 OR CALIDADJURIDICAID = 3)');
+		$builder->where('(CALIDADJURIDICAID = 1 OR CALIDADJURIDICAID = 6 OR CALIDADJURIDICAID = 3 OR CALIDADJURIDICAID = 5)');
 
 		$query = $builder->get();
 		return $query->getResult('array');
