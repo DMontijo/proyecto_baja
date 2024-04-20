@@ -209,7 +209,7 @@
 						option_smsu.disabled = true;
 						option_smsu.selected = true;
 						send_mail_select_uni.add(option_smsu, null);
-						if (tipo_denuncia == "ES") {
+						if (tipo_denuncia == "ES" && correosNoti.length >0) {
 							correosNoti.forEach(correo => {
 								if (correo != '') {
 									const option = document.createElement('option');
@@ -323,7 +323,7 @@
 						option_smsu.disabled = true;
 						option_smsu.selected = true;
 						send_mail_select_uni.add(option_smsu, null);
-						if (tipo_denuncia == "ES") {
+						if (tipo_denuncia == "ES" && correosNoti.length >0) {
 							correosNoti.forEach(correo => {
 								if (correo != '') {
 									const option = document.createElement('option');
