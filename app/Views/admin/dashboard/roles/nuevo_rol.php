@@ -11,7 +11,7 @@
 
 				<div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-3" style="margin: 0 auto;">
 					<label class="font-weight-bold" for="rol_input">Rol de usuario</label>
-					<input type="text" name="rol_input" class="form-control" id="rol_input" required>
+					<input type="text" name="rol_input" class="form-control" id="rol_input" oninput="mayuscTextarea(this)"required>
 				</div>
 				<div class="col-12 pt-5 text-center">
 					<button type="submit" id="btn-submit" class="btn btn-primary font-weight-bold">
@@ -42,6 +42,10 @@
 
 </section>
 <script>
+	function mayuscTextarea(e) {
+		e.value = e.value.toUpperCase();
+	}
+
 	$(function() {
 		$("#table-rol").DataTable({
 			responsive: false,
