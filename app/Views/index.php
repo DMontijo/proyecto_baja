@@ -70,7 +70,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="col-4 d-none d-md-block text-center">
+		<div class="col-4 d-none d-md-block text-center">
 			<div class="card text-center bg-transparent border-0" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
 				<div class="card-body">
 					<a href="<?= base_url() ?>/denuncia_litigantes" class="text-decoration-none" onclick="handleClickBTN(event)" name="DenunciaLitigantes" id="DenunciaLitigantes">
@@ -79,7 +79,7 @@
 					</a>
 				</div>
 			</div>
-		</div> -->
+		</div>
 	</section>
 	<section class="row d-block d-lg-none">
 		<div class="col-12 fw-bold text-center mb-4">
@@ -116,7 +116,7 @@
 			</a>
 		</div>
 	</section>
-	<!-- <section class="row d-block d-lg-none">
+	<section class="row d-block d-lg-none">
 		<div class="col-12 mt-4" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Para continuar debes aceptar el aviso de privacidad de datos y los términos y condiciones">
 			<a href="<?= base_url() ?>/denuncia_litigantes" onclick="handleClickBTN(event)" class="text-decoration-none" name="DenunciaLitigantes" id="DenunciaLitigantes">
 				<div class="card text-white bg-light border-3 border-primary shadow rounded-3 mb-4">
@@ -131,7 +131,7 @@
 				</div>
 			</a>
 		</div>
-	</section> -->
+	</section>
 	<section>
 		<div class="row">
 			<div class="col-12 text-center">
