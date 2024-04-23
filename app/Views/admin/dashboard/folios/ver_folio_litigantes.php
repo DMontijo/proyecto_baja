@@ -34,10 +34,6 @@
 	<?php }
 if ($body_data->datosFolio->INSTITUCIONREMISIONID) { ?>
 		<strong>INSTITUTO REMITIDO: </strong><?= $body_data->datosFolio->INSTITUCIONREMISIONDESCR ?> <br>
-	<?php }
-if ($body_data->datosFolio->AGENTEASIGNADOID && empty($body_data->datosFolio->MEDIADORID)) { ?>
-		<strong>AGENTE ASIGNADO: </strong><?= $body_data->datosFolio->NOMBRE . ' ' . $body_data->datosFolio->PRIMERAPELLIDO . ' ' . $body_data->datosFolio->SEGUNDOAPELLIDO  ?><br>
-		<strong>OFICINA ASIGNADA: </strong><?= $body_data->datosFolio->OFICINADESCR ?><br>
 	<?php } ?>
 	</div>
 	<?php if (!$body_data->datosFolio->AGENTEASIGNADOID && $body_data->datosFolio->MUNICIPIOASIGNADOID) { ?>

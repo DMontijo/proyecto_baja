@@ -817,24 +817,29 @@ class FoliosController extends BaseController
 		if ($data->datosFolio->MUNICIPIOASIGNADOID  && $data->datosFolio->TIPOEXPEDIENTEID) {
 			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
 		}
+
 		//Cuando estan remitidos
 		if ($data->datosFolio->AGENTEASIGNADOID) {
-			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
 			if ($data->datosFolio) {
-				$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('EMPLEADOS', 'EMPLEADOS.EMPLEADOID = FOLIO.AGENTEASIGNADOID AND EMPLEADOS.MUNICIPIOID = FOLIO.MUNICIPIOASIGNADOID')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+				$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
+
 			} else {
 				$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIO.FOLIOID', $data->folio)->where('FOLIO.ANO', $data->year)->join('MUNICIPIO', 'FOLIO.MUNICIPIOASIGNADOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('BANDEJARAC', 'BANDEJARAC.MEDIADORID = FOLIO.AGENTEASIGNADOID AND BANDEJARAC.FOLIOID = FOLIO.FOLIOID AND BANDEJARAC.ANO = FOLIO.ANO')->join('TIPOEXPEDIENTE', 'FOLIO.TIPOEXPEDIENTEID = TIPOEXPEDIENTE.TIPOEXPEDIENTEID')->first();
 			}
 		}
 
+
 		//Cuando es derivado
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'DERIVADO') {
 			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('DERIVACIONES', 'FOLIO.INSTITUCIONREMISIONID = DERIVACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = DERIVACIONES.MUNICIPIOID')->first();
 		}
+
 		//Cuando es canalizado
 		if ($data->datosFolio->INSTITUCIONREMISIONMUNICIPIOID && $data->datosFolio->STATUS == 'CANALIZADO') {
 			$data->datosFolio = $this->_folioModelRead->asObject()->where('FOLIOID', $data->folio)->where('ANO', $data->year)->join('MUNICIPIO', 'FOLIO.INSTITUCIONREMISIONMUNICIPIOID = MUNICIPIO.MUNICIPIOID AND MUNICIPIO.ESTADOID =2')->join('CANALIZACIONES', 'FOLIO.INSTITUCIONREMISIONID = CANALIZACIONES.INSTITUCIONREMISIONID AND FOLIO.INSTITUCIONREMISIONMUNICIPIOID = CANALIZACIONES.MUNICIPIOID')->first();
 		}
+
 
 		$data->rolPermiso = $this->_rolesPermisosModelRead->asObject()->where('ROLID', session('ROLID'))->findAll();
 
