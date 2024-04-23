@@ -409,7 +409,7 @@ class FolioModel extends Model
 			(isset($fechaFin) ? (isset($obj['horaFin']) ? date("Y-m-d", strtotime($fechaFin)) : date("Y-m-d", strtotime(date("Y-m-d", strtotime($fechaFin))))) : date("Y-m-d")) . ' ' .
 			(isset($horaFin) ? (date('H:i:s', strtotime($horaFin))) : '23:59:59') . '" AS DATETIME)';
 
-		$strQuery = $strQuery . 'AND TIPODENUNCIA != "ES"';
+		$strQuery = $strQuery . 'AND TIPODENUNCIA != "ES" AND TIPODENUNCIA != "PR"';
 		$strQuery = $strQuery . 'GROUP BY FOLIO.FOLIOID, FOLIO.ANO';
 		$result = $this->db->query($strQuery)->getResult();
 
